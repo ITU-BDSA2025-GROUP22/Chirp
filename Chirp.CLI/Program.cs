@@ -36,5 +36,3 @@ if (args[0] == "cheep")
         sw.WriteLine("UTC:                 {0}", utcTime.ToString("T"));
     }
 }
-
-//test 4
