@@ -482,3 +482,42 @@ $RECYCLE.BIN/
 
 # Vim temporary swap files
 *.swp
+# Common IntelliJ Platform excludes
+**/.idea/**/workspace.xml
+**/.idea/**/tasks.xml
+**/.idea/shelf/*
+**/.idea/dictionaries
+**/.idea/httpRequests/
+
+# Sensitive or high-churn files
+**/.idea/**/dataSources/
+**/.idea/**/dataSources.ids
+**/.idea/**/dataSources.xml
+**/.idea/**/dataSources.local.xml
+**/.idea/**/sqlDataSources.xml
+**/.idea/**/dynamic.xml
+
+# Rider-specific files
+**/.idea/**/*.iml
+**/.idea/**/contentModel.xml
+**/.idea/**/modules.xml
+
+# Build and output directories
+[Bb]in/
+[Oo]bj/
+vs/
+
+# User-specific files
+*.suo
+*.user
+
+# OS-specific files
+Thumbs.db
+Desktop.ini
+DS_Store
+
+# NuGet packages
+[Pp]ackages/
+
+# Backup and temporary files
+_UpgradeReport_Files/
