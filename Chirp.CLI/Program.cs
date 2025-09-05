@@ -2,7 +2,7 @@
 using System.IO;
 
 
-class Program
+public class Program
 {
     public record Cheep(string Author, string Message, long Timestamp);
 
