@@ -27,3 +27,6 @@ C:\Users\tore2\Documents\programming\BDSA\Chirp\Chirp.CLI\obj\Debug\net9.0\refin
 C:\Users\tore2\Documents\programming\BDSA\Chirp\Chirp.CLI\obj\Debug\net9.0\Chirp.CLI.pdb
 C:\Users\tore2\Documents\programming\BDSA\Chirp\Chirp.CLI\obj\Debug\net9.0\Chirp.CLI.genruntimeconfig.cache
 C:\Users\tore2\Documents\programming\BDSA\Chirp\Chirp.CLI\obj\Debug\net9.0\ref\Chirp.CLI.dll
+C:\Users\tore2\Documents\programming\BDSA\Chirp\Chirp.CLI\bin\Debug\net9.0\CsvHelper.dll
+C:\Users\tore2\Documents\programming\BDSA\Chirp\Chirp.CLI\obj\Debug\net9.0\Chirp.CLI.csproj.AssemblyReference.cache
+C:\Users\tore2\Documents\programming\BDSA\Chirp\Chirp.CLI\obj\Debug\net9.0\Chirp.CLI.csproj.Up2Date
