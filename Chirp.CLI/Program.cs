@@ -16,7 +16,6 @@ public class Program
 
         if (args[0] == "read")
         {
-
             foreach (var cheep in db.Read())
             {
                 Console.WriteLine($"{cheep.Author}: {cheep.Message} \n({cheep.Timestamp})\n");
