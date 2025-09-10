@@ -56,11 +56,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\tore2\\Documents\\programming\\Chirp\\Chirp.CLI\\Chirp.CLI.csproj",
+      "projectUniqueName": "C:\\Users\\tore2\\Documents\\programming\\BDSA\\Chirp\\Chirp.CLI\\Chirp.CLI.csproj",
       "projectName": "Chirp.CLI",
-      "projectPath": "C:\\Users\\tore2\\Documents\\programming\\Chirp\\Chirp.CLI\\Chirp.CLI.csproj",
+      "projectPath": "C:\\Users\\tore2\\Documents\\programming\\BDSA\\Chirp\\Chirp.CLI\\Chirp.CLI.csproj",
       "packagesPath": "C:\\Users\\tore2\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\tore2\\Documents\\programming\\Chirp\\Chirp.CLI\\obj\\",
+      "outputPath": "C:\\Users\\tore2\\Documents\\programming\\BDSA\\Chirp\\Chirp.CLI\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\tore2\\AppData\\Roaming\\NuGet\\NuGet.Config"
