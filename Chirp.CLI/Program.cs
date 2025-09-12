@@ -1,5 +1,8 @@
 ﻿using System;
 using System.IO;
+using System.CommandLine;
+using System.CommandLine.Invocation;
+using System.ComponentModel;
 
 using Chirp.CLI.SimpleDB;
 
@@ -10,16 +13,33 @@ public class Program
 
     public static void Main(string[] args)
     {
+        var cheepOption = new Option<string>(
+            name: "--cheep"
+        );
+        var readOption = new Option<bool>(
+            name: "--read"
+        )
+        {
+            Arity = ArgumentArity.Zero // <-- This makes it a switch/flag
+        };
+
+        var rootCommand = new RootCommand("userArgs");
+        rootCommand.Add(readOption);
+        rootCommand.Add(cheepOption);
+        
         string path = "data/chirp_cli_db.csv";
 
         var db = new CSVDatabase<Cheep>(path);
-
-        if (args[0] == "read")
+        
+        ParseResult parseResult = rootCommand.Parse(args);
+        var readValue = parseResult.GetValue(readOption);
+        var cheepValue = parseResult.GetValue(cheepOption);
+        if (readValue)
         {
             UserInterface.PrintCheeps(db.Read());
         }
 
-        if (args[0] == "cheep")
+        if (cheepValue is not null)
         {
             var cheep = new Cheep(
                 Environment.UserName,

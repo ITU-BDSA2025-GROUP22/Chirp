@@ -47,6 +47,10 @@
             "CsvHelper": {
               "target": "Package",
               "version": "[33.1.0, )"
+            },
+            "System.CommandLine": {
+              "target": "Package",
+              "version": "[2.0.0-rc.1.25451.107, )"
             }
           },
           "imports": [
