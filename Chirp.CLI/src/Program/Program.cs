@@ -22,7 +22,8 @@ public class Program
         {
             Arity = ArgumentArity.Zero // <-- This makes it a switch/flag
         };
-
+        
+        //Creating custom commands
         var rootCommand = new RootCommand("userArgs");
         rootCommand.Add(readOption);
         rootCommand.Add(cheepOption);
