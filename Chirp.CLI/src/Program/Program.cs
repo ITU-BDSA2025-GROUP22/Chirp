@@ -14,10 +14,10 @@ public class Program
     public static void Main(string[] args)
     {
         var cheepOption = new Option<string>(
-            name: "--cheep"
+            name: "cheep"
         );
         var readOption = new Option<bool>(
-            name: "--read"
+            name: "read"
         )
         {
             Arity = ArgumentArity.Zero // <-- This makes it a switch/flag
