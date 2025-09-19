@@ -10,7 +10,7 @@ jobs:
     strategy:
       matrix:
         
-        
+        kind: ['linux', "windows", "macOS"]
         include:
           - kind: linux
             os: ubuntu-latest
@@ -37,19 +37,21 @@ jobs:
         shell: bash
         run: |
           
+          
+          tag="${GITHUB_REF_NAME:-${{ github.event.release.tag_name }}}"
+          release_name="Program-$tag-${{ matrix.target }}"
+          
           dotnet publish src/Program/Chirp.CLI.csproj \
-          --framework netcoreapp8.0 --runtime "${{ matrix.target }}" \
+          --framework net8.0 --runtime "${{ matrix.target }}" \
           -c Release \
           -p:PublishSingleFile=true \
           --self-contained false \
           -o "$release_name"
           
-          tag=$(git describe --tags --abbrev=0)
-          release_name="Program-$tag-${{ matrix.target }}"
           
           # dette sætter bare vores fil til en zip for windows or tar.gz for de 2 andre
           if [ "${{ matrix.target }}" == "win-x64" ]; then
-          7z a -tzip "${release_name}.zip" "./${release_name}/*"
+          Compress-Archive -Path "$release_name/*" -DestinationPath "${release_name}.zip"
           else
           tar czvf "${release_name}.tar.gz" "$release_name"
           fi
@@ -60,6 +62,7 @@ jobs:
       - name: Publish
         uses: softprops/action-gh-release@v2
         with:
-          files: "Chirp.CLI*"
+          files: "Program-*.zip"
+
         env:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
