@@ -1,0 +1,64 @@
+﻿name: Publish
+on:
+
+    
+  release:
+    types: [ published ]
+jobs:
+  build-matrix:
+    strategy:
+      matrix:
+        
+        kind: [ 'linux', 'windows', 'macOS' ]
+        include:
+          - kind: linux
+            os: ubuntu-latest
+            target: linux-x64
+          - kind: windows
+            os: windows-latest
+            target: win-x64
+          - kind: macOS
+            os: macos-latest
+            target: osx-x64
+    
+    runs-on: ${{matrix.os}}
+    env:
+      DOTNET_CLI_TELEMETRY_OPT OUT: "1"
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup dotnet
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+      - name: Build
+        shell: bash
+        run: dotnet publish ./src
+                  
+          dotnet publish src/Program/Chirp.CLI.csproj \
+          --framework netcoreapp8.0 --runtime "${{ matrix.target }}" \ 
+          -c Release \
+          -p:PublishSingleFile=true \ 
+          --self-contained false \
+          -o "$release_name"
+          
+          tag=$(git describe --tags --abbrev=0)
+          release_name="Program-$tag-${{ matrix.target }}"
+          
+          # dette sætter bare vores fil til en zip for windows or tar.gz for de 2 andre
+          if [ "${{ matrix.target }}" == "win-x64" ]; then
+          7z a -tzip "${release_name}.zip" "./${release_name}/*"
+          else
+          tar czvf "${release_name}.tar.gz" "$release_name"
+          fi
+         
+          
+          rm -r "$release_name"
+        
+      - name: Publish
+        uses: softprops/action-gh-release@v2
+        with:
+          files: "Program*"
+        env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
