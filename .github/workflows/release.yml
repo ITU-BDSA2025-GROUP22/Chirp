@@ -62,7 +62,9 @@ jobs:
       - name: Publish
         uses: softprops/action-gh-release@v2
         with:
-          files: "Program-*.zip"
+          files: |
+            Program-*.zip
+            Program-*.tar.gz
 
         env:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
