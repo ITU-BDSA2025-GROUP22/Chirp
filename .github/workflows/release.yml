@@ -1,6 +1,7 @@
 ﻿name: Publish
 on:
-
+  push:
+    tags: ['v*'] 
     
   release:
     types: [ published ]
@@ -9,7 +10,7 @@ jobs:
     strategy:
       matrix:
         
-        kind: [ 'linux', 'windows', 'macOS' ]
+        
         include:
           - kind: linux
             os: ubuntu-latest
@@ -23,7 +24,7 @@ jobs:
     
     runs-on: ${{matrix.os}}
     env:
-      DOTNET_CLI_TELEMETRY_OPT OUT: "1"
+      DOTNET_CLI_TELEMETRY_OPTOUT: "1"
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -31,15 +32,15 @@ jobs:
       - name: Setup dotnet
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: 8.0.x
+          dotnet-version: '8.0.x'
       - name: Build
         shell: bash
-        run: dotnet publish ./src
-                  
+        run: |
+          
           dotnet publish src/Program/Chirp.CLI.csproj \
-          --framework netcoreapp8.0 --runtime "${{ matrix.target }}" \ 
+          --framework netcoreapp8.0 --runtime "${{ matrix.target }}" \
           -c Release \
-          -p:PublishSingleFile=true \ 
+          -p:PublishSingleFile=true \
           --self-contained false \
           -o "$release_name"
           
@@ -59,6 +60,6 @@ jobs:
       - name: Publish
         uses: softprops/action-gh-release@v2
         with:
-          files: "Program*"
+          files: "Chirp.CLI*"
         env:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
