@@ -28,7 +28,7 @@ public class Program
         rootCommand.Add(readOption);
         rootCommand.Add(cheepOption);
         
-        string path = "../../data/chirp_cli_db.csv";
+        string path = "data\\chirp_cli_db.csv";
 
         var db = new CSVDatabase<Cheep>(path);
         

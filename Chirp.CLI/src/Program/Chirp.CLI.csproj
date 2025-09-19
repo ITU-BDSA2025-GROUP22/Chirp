@@ -8,7 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="data\" />
+    <Folder Include="..\..\data\" />
   </ItemGroup>
 
   <ItemGroup>
