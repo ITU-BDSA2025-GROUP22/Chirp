@@ -1,6 +1,7 @@
 name: .NET
 
 on:
+  workflow_dispatch: 
   push:
     branches: [main]
     
@@ -16,16 +17,19 @@ jobs:
     - uses: actions/checkout@v4
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
+      
       with:
         dotnet-version: 8.0.x
 
     - name: Restore dependencies
-      run: dotnet restore
+      run: dotnet restore Chirp.CLI/Chirp.sln
+      
     - name: Build
-      run: dotnet build --no-restore
+      run: dotnet build Chirp.CLI/Chirp.sln --no-restore
+     
     - name: Test
-      run: dotnet test --no-build --verbosity normal
-
+      run: dotnet test Chirp.CLI/Chirp.sln --no-build --verbosity normal
+     
 # Det hele minder rigtig meget om gradle. Det sådan i skal tænke det
 # hvor man builder, restore og tester sit projekt når man åbner
 # gradle var bare lokalt hvor det her er på github via ubuntu
