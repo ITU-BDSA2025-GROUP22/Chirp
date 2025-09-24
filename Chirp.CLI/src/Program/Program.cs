@@ -3,6 +3,9 @@ using System.IO;
 using System.CommandLine;
 using System.CommandLine.Invocation;
 using System.ComponentModel;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 
 using Chirp.CLI.SimpleDB;
 
@@ -13,6 +16,8 @@ public class Program
 
     public static void Main(string[] args)
     {
+        WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
+        WebApplication app = builder.Build();
         var cheepOption = new Option<string>(
             name: "cheep"
         );
