@@ -1,8 +1,9 @@
 ﻿namespace Chirp.CLI.SimpleDB;
-
+// THIS CLASS IS NOT RELEVANT FOR WEB APP
+// SHOULD LIKELY BE DELETED
 public static class UserInterface
 {
-    public static void PrintCheeps(IEnumerable<Program.Cheep> cheeps)
+    public static void PrintCheeps(IEnumerable<Cheep> cheeps)
     {
         foreach (var cheep in cheeps)
         {
@@ -10,7 +11,7 @@ public static class UserInterface
         }
     }
     //Static method for printing cheeps
-    public static void PrintCheeps(IEnumerable<Program.Cheep> cheeps, int num)
+    public static void PrintCheeps(IEnumerable<Cheep> cheeps, int num)
     {
         int count = 0;
         foreach (var cheep in cheeps)

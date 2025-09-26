@@ -23,7 +23,6 @@ public sealed class CSVDatabase<T> : IDatabaseRepository<T>
         using var writer = new StreamWriter(_path, append: true);
         using var csv = new CsvWriter(writer, CultureInfo.InvariantCulture);
         
-        csv.NextRecord();
         csv.WriteRecord(record);
         csv.NextRecord();
     }

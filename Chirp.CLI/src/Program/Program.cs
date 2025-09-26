@@ -9,51 +9,31 @@ using Microsoft.Extensions.Hosting;
 
 using Chirp.CLI.SimpleDB;
 
-namespace Chirp.CLI;
-public class Program
+var builder = WebApplication.CreateBuilder(args);
+var app = builder.Build();
+
+string path = "../../data/chirp_cli_db.csv";
+var db = new CSVDatabase<Cheep>(path);
+
+app.MapGet("/cheeps", () => db.Read());
+app.MapPost("/cheep", (Cheep cheep) =>
 {
-    public record Cheep(string Author, string Message, string Timestamp);
+    Console.WriteLine($"Received: {cheep.Author}, {cheep.Message}, {cheep.Timestamp}");
+    db.Store(cheep);
+    return Results.Ok();
+});
 
-    public static void Main(string[] args)
-    {
-        WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
-        WebApplication app = builder.Build();
-        var cheepOption = new Option<string>(
-            name: "cheep"
-        );
-        var readOption = new Option<bool>(
-            name: "read"
-        )
-        {
-            Arity = ArgumentArity.Zero // <-- This makes it a switch/flag
-        };
-        
-        //Creating custom commands
-        var rootCommand = new RootCommand("userArgs");
-        rootCommand.Add(readOption);
-        rootCommand.Add(cheepOption);
-        
-        string path = "../../data/chirp_cli_db.csv";
+app.Run();
 
-        var db = new CSVDatabase<Cheep>(path);
-        
-        ParseResult parseResult = rootCommand.Parse(args);
-        var readValue = parseResult.GetValue(readOption);
-        var cheepValue = parseResult.GetValue(cheepOption);
-        //reads all cheeps
-        if (readValue)
-        {
-            UserInterface.PrintCheeps(db.Read());
-        }
-        //stores cheep in database
-        if (cheepValue is not null)
-        {
-            var cheep = new Cheep(
-                Environment.UserName,
-                args[1],
-                DateTimeOffset.Now.ToLocalTime().ToString()
-            );
-            db.Store(cheep);
-        }
-    }
-}
+public record Cheep(string Author, string Message, string Timestamp);
+
+// kør med
+// dotnet run
+// åben ny terminal
+// kør så
+/*
+Invoke-RestMethod -Uri "http://localhost:5000/cheep" `
+    >>   -Method Post `
+    >>   -ContentType "application/json" `
+    >>   -Body '{"author":"ropf","message":"Hello from PowerShell!","timestamp":"1684229348"}  
+*/
