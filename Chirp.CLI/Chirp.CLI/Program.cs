@@ -12,7 +12,7 @@ namespace Chirp.CLI
 
         public static void Main(string[] args)
         {
-            string path = "../../data/chirp_cli_db.csv";
+            string path = "../data/chirp_cli_db.csv";
             var db = new CSVDatabase<Cheep>(path);
 
             // Define CLI options
