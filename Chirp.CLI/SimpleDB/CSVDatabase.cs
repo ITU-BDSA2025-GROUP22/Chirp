@@ -1,7 +1,7 @@
 ﻿using CsvHelper;
 using System.Globalization;
 
-namespace Chirp.CLI.SimpleDB;
+namespace Chirp.SimpleDB;
 
 public sealed class CSVDatabase<T> : IDatabaseRepository<T>
 {

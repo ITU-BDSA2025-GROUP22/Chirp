@@ -1,4 +1,6 @@
-﻿namespace Chirp.CLI.SimpleDB;
+﻿using Chirp.CLI;
+
+namespace Chirp.SimpleDB;
 // THIS CLASS IS NOT RELEVANT FOR WEB APP
 // SHOULD LIKELY BE DELETED
 public static class UserInterface
