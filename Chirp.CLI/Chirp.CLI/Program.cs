@@ -15,9 +15,9 @@ namespace Chirp.CLI
     {
         public record Cheep(string Author, string Message, string Timestamp);
 
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
-            var baseURL = "http://localhost:5012";
+            var baseURL = "http://localhost:5049";
             using HttpClient client = new();
             client.DefaultRequestHeaders.Accept.Clear();
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
@@ -25,10 +25,10 @@ namespace Chirp.CLI
             
             // Send an asynchronous HTTP GET request and automatically construct a Cheep object from the
             // JSON object in the body of the response
-            var cheeps = await client.GetFromJsonAsync<Cheep>("cheeps");
+         
             
-            string path = "../data/chirp_cli_db.csv";
-            var db = new CSVDatabase<Cheep>(path);
+            //string path = "../data/chirp_cli_db.csv";
+            //var db = new CSVDatabase<Cheep>(path);
 
             // Define CLI options
             var cheepOption = new Option<string>(
@@ -46,35 +46,37 @@ namespace Chirp.CLI
             var rootCommand = new RootCommand("Chirp CLI");
             rootCommand.Add(readOption);
             rootCommand.Add(cheepOption);
-            ParseResult parseResult = rootCommand.Parse(args);
             
-            await client.PostAsJsonAsync("cheep", cheep);
-
-            /*
-             ****OLD PARSING****
-
-            // Parse args
-            ParseResult parseResult = rootCommand.Parse(args);
+            var parseResult = rootCommand.Parse(args);
             var readValue = parseResult.GetValue(readOption);
             var cheepValue = parseResult.GetValue(cheepOption);
 
-            // Read all cheeps
             if (readValue)
             {
-                UserInterface.PrintCheeps(db.Read());
+                var cheeps = await client.GetFromJsonAsync<IEnumerable<Cheep>>("cheeps");
+                if (cheeps is not null)
+                {
+                    UserInterface.PrintCheeps(cheeps);
+                }
+                else
+                {
+                    Console.WriteLine("Could not find any cheeps");
+                }
             }
 
-            // Store a new cheep
-            if (cheepValue is not null)
+            if (cheepValue != null)
             {
                 var cheep = new Cheep(
                     Environment.UserName,
                     cheepValue,
                     DateTimeOffset.Now.ToLocalTime().ToString()
                 );
-
-                db.Store(cheep);
-            }*/
+                var response = await client.PostAsJsonAsync("cheep", cheep);
+                if (response.IsSuccessStatusCode)
+                    Console.WriteLine("Cheep posted successfully!");
+                else
+                    Console.WriteLine($"Failed to post cheep. Status code: {response.StatusCode}");
+            }
         }
     }
 }
