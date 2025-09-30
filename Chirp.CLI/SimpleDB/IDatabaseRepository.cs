@@ -1,4 +1,4 @@
-﻿namespace Chirp.CLI.SimpleDB;
+﻿namespace Chirp.SimpleDB;
 
 interface IDatabaseRepository<T>
 {

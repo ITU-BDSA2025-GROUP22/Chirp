@@ -1,7 +1,7 @@
 ﻿using CsvHelper;
 using System.Globalization;
 
-namespace Chirp.CLI.SimpleDB;
+namespace Chirp.SimpleDB;
 
 public sealed class CSVDatabase<T> : IDatabaseRepository<T>
 {
@@ -23,7 +23,6 @@ public sealed class CSVDatabase<T> : IDatabaseRepository<T>
         using var writer = new StreamWriter(_path, append: true);
         using var csv = new CsvWriter(writer, CultureInfo.InvariantCulture);
         
-        csv.NextRecord();
         csv.WriteRecord(record);
         csv.NextRecord();
     }
