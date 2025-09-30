@@ -5,10 +5,9 @@ using System.CommandLine.Invocation;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Net;
-
-// CLI CLIENTx
 using Chirp.SimpleDB;
 
+// CLI CLIENT
 namespace Chirp.CLI
 {
     public class Program
@@ -17,19 +16,13 @@ namespace Chirp.CLI
 
         public static async Task Main(string[] args)
         {
-            var baseURL = "http://localhost:5049";
+            //var baseURL = "http://localhost:5049";
+            var baseURL = "https://bdsagroup22chirpremotedb.azurewebsites.net";
             using HttpClient client = new();
             client.DefaultRequestHeaders.Accept.Clear();
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
             client.BaseAddress = new Uri(baseURL);
             
-            // Send an asynchronous HTTP GET request and automatically construct a Cheep object from the
-            // JSON object in the body of the response
-         
-            
-            //string path = "../data/chirp_cli_db.csv";
-            //var db = new CSVDatabase<Cheep>(path);
-
             // Define CLI options
             var cheepOption = new Option<string>(
                 name: "cheep"

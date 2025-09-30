@@ -6,18 +6,16 @@ using System.ComponentModel;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-
-// WEB SERVICE
-
 using Chirp.SimpleDB;
 
+// WEB SERVICE
 var builder = WebApplication.CreateBuilder(args);
 var app = builder.Build();
 
 string path = "../data/chirp_cli_db.csv";
 var db = new CSVDatabase<Cheep>(path);
 
-app.MapGet("/cheeps", () => db.Read());
+app.MapGet("/cheeps", () => Results.Json(db.Read().ToList()));
 app.MapPost("/cheep", (Cheep cheep) =>
 {
     Console.WriteLine($"Received: {cheep.Author}, {cheep.Message}, {cheep.Timestamp}");
