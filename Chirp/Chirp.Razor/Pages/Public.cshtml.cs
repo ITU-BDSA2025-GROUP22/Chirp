@@ -18,11 +18,4 @@ public class PublicModel : PageModel
         Cheeps = _service.GetCheeps();
         return Page();
     }
-    
-    public void OnGet2()
-    {
-        var db = new DBFacade();
-        Cheeps = db.GetAllCheeps();
-    }
-
 }

@@ -25,56 +25,54 @@ public class DBFacade
     public List<CheepViewModel> GetAllCheeps()
     {
         var cheeps = new List<CheepViewModel>();
+        
+        var sqlQuery = @"SELECT u.username, m.text, m.pub_date FROM 
+                                          ""message"" m JOIN ""user"" u ON m.author_id = u.user_id";
+        
         using (var connection = new SqliteConnection(_connectionString))
         {
             connection.Open();
-            var sql = @"SELECT u.username, m.text, m.pub_date FROM ""message"" m JOIN ""user"" u ON m.author_id = u.user_id";
 
+            var command = connection.CreateCommand();
+            command.CommandText = sqlQuery;
 
-            using (var command = new SqliteCommand(sql, connection))
+            using var reader = command.ExecuteReader();
+            while (reader.Read())
             {
-                using (var reader = command.ExecuteReader())
-                {
-                    while (reader.Read())
-                    {
-                        var author = reader.GetString(0);
-                        var message = reader.GetString(1);
-                        var timestamp = reader.GetInt64(2);
-                        var cheep = new CheepViewModel(author, message, UnixTimeStampToDateTimeString(timestamp));
-                        cheeps.Add(cheep);   
-                    }
-                }
+                var author = reader.GetString(0);
+                var message = reader.GetString(1);
+                var timestamp = reader.GetInt64(2);
+                var cheep = new CheepViewModel(author, message, UnixTimeStampToDateTimeString(timestamp));
+                cheeps.Add(cheep);
             }
         }
-
         return cheeps;
     }
     
     public List<CheepViewModel> GetCheepsByAuthor(string author)
     {
+        string sqlQuery = "SELECT u.username, m.text, m.pub_date\nFROM message m\nJOIN user u ON m.author_id = u.user_id\n " +
+                  "WHERE u.username = @author";
         var cheeps = new List<CheepViewModel>();
+        
         using (var connection = new SqliteConnection(_connectionString))
         {
             connection.Open();
-            var sql = "SELECT u.username, m.text, m.pub_date\nFROM message m\nJOIN user u ON m.author_id = u.user_id\n " +
-                      "WHERE u.username = @author";
-            using (var command = new SqliteCommand(sql, connection))
+
+            var command = connection.CreateCommand();
+            command.CommandText = sqlQuery;
+            command.Parameters.AddWithValue("@author", author);
+
+            using var reader = command.ExecuteReader();
+            while (reader.Read())
             {
-                command.Parameters.AddWithValue("@author", author);
-                using (var reader = command.ExecuteReader())
-                {
-                    while (reader.Read())
-                    {
-                        var dbauthor = reader.GetString(0);
-                        var message = reader.GetString(1);
-                        var timestamp = reader.GetInt64(2);
-                        var cheep = new CheepViewModel(dbauthor, message, UnixTimeStampToDateTimeString(timestamp));
-                        cheeps.Add(cheep);   
-                    }
-                }
+                var dbauthor = reader.GetString(0);
+                var message = reader.GetString(1);
+                var timestamp = reader.GetInt64(2);
+                var cheep = new CheepViewModel(dbauthor, message, UnixTimeStampToDateTimeString(timestamp));
+                cheeps.Add(cheep);
             }
         }
-
         return cheeps;
     }
     
