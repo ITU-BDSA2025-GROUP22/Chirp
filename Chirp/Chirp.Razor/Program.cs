@@ -35,3 +35,7 @@ app.UseRouting();
 app.MapRazorPages();
 
 app.Run();
+
+// Used for API testing
+// A Program class had to exist in order for the tests to be able to reference it
+public partial class Program { }
