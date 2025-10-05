@@ -3,6 +3,11 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// "DefaultConnection" is a name referring to our database 'chirp.db' inside 'appsettings.json'
+// This way we give EF Core context on our database schema
+string? connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+builder.Services.AddDbContext<ChirpContext>(options => options.UseSqlite(connectionString));
+
 builder.Services.AddRazorPages();
 builder.Services.AddSingleton<ICheepService, CheepService>();
 
