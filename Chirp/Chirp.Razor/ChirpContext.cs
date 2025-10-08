@@ -12,7 +12,8 @@ public class Author
 public class Cheep
 {
     public int CheepId { get; set; } 
-    public required string Text { get; set; }
+    
+    public required string Text { get; set; } 
     public long TimeStamp { get; set; } 
     
     public int AuthorId { get; set; }
@@ -21,7 +22,7 @@ public class Cheep
 
 public class ChirpContext : DbContext
 {
-    public DbSet<Cheep> Cheeps { get; set; }
+    public DbSet<Cheep> Cheeps { get; set; } 
     public DbSet<Author> Authors { get; set; }
 
     public ChirpContext(DbContextOptions<ChirpContext> options)
