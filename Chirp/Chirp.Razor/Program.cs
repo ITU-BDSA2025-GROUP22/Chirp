@@ -27,8 +27,8 @@ using (var scope = app.Services.CreateScope())
     // Seed data if database is empty
     if (!context.Cheeps.Any())
     {
-        var author1 = new Author { Username = "Helge" };
-        var author2 = new Author { Username = "Adrian" };
+        var author1 = new Author { Username = "Helge", Email = "helgenElgen@hotmail.dk", Password = "as5d4t44dsg45dge7g"};
+        var author2 = new Author { Username = "Adrian", Email = "adri@gmail.dk", Password = "uf99v0tqvnt0gjdd03g" };
         
         context.Authors.AddRange(author1, author2);
         
