@@ -37,5 +37,3 @@ public class Cheep
     public int AuthorId { get; set; }
     public required Author Author { get; set; } 
 }
-
-}
