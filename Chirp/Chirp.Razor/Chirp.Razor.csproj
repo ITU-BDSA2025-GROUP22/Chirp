@@ -20,4 +20,8 @@
       </None>
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Chirp.Infrastructure\Chirp.Infrastructure.csproj" />
+  </ItemGroup>
+
 </Project>
