@@ -10,23 +10,21 @@ public interface ICheepService
 
 public class CheepService : ICheepService
 {
-    private readonly DBFacade _db;
+    // depend on interface, never concrete classes, SOLID principles
+    private readonly ICheepDBFacade _db;
 
-    public CheepService()
+    public CheepService(ICheepDBFacade db)
     {
-        _db = new DBFacade();
-    }
-    public List<CheepViewModel> GetCheeps(int page)
-    {
-        return _db.GetPagedCheeps(page);
+        _db = db;
     }
     
-
+    public List<CheepViewModel> GetCheeps(int page)
+    {
+        return _db.GetCheeps(page);
+    }
+    
     public List<CheepViewModel> GetCheepsFromAuthor(string author, int page)
     {
-        return _db.GetPagedCheepsByAuthor(author, page);
+        return _db.GetCheepsByAuthor(author, page);
     }
-
-   
-
 }

@@ -2,6 +2,7 @@
 using Chirp.Razor;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -9,9 +10,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Chirp.Razor.Migrations
 {
     [DbContext(typeof(ChirpContext))]
-    partial class ChirpContextModelSnapshot : ModelSnapshot
+    [Migration("20251005200115_InitialDBSchema")]
+    partial class InitialDBSchema
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.9");
@@ -20,13 +23,11 @@ namespace Chirp.Razor.Migrations
                 {
                     b.Property<int>("AuthorId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER")
-                        .HasColumnName("user_id");
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("Username")
                         .IsRequired()
-                        .HasColumnType("TEXT")
-                        .HasColumnName("username");
+                        .HasColumnType("TEXT");
 
                     b.HasKey("AuthorId");
 
@@ -37,21 +38,17 @@ namespace Chirp.Razor.Migrations
                 {
                     b.Property<int>("CheepId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER")
-                        .HasColumnName("message_id");
+                        .HasColumnType("INTEGER");
 
                     b.Property<int>("AuthorId")
-                        .HasColumnType("INTEGER")
-                        .HasColumnName("author_id");
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("Text")
                         .IsRequired()
-                        .HasColumnType("TEXT")
-                        .HasColumnName("text");
+                        .HasColumnType("TEXT");
 
                     b.Property<long>("TimeStamp")
-                        .HasColumnType("INTEGER")
-                        .HasColumnName("pub_date");
+                        .HasColumnType("INTEGER");
 
                     b.HasKey("CheepId");
 
