@@ -9,7 +9,7 @@ public class DBFacadeTests
     [Fact]
     public void TestGetPagedCheeps()
     {
-        var cheeps = db.GetPagedCheeps(1, 32);
+        var cheeps = db.GetCheeps(1, 32);
 
         Assert.True(cheeps.Count <= 32);
     }
@@ -17,7 +17,7 @@ public class DBFacadeTests
     [Fact]
     public void TestGetCheepsByAuthor()
     {
-        var cheeps = db.GetPagedCheepsByAuthor("Adrian", 1, 32);
+        var cheeps = db.GetCheepsByAuthor("Adrian", 1, 32);
         
         Assert.Equal("Adrian", cheeps[0].Author);
     }
