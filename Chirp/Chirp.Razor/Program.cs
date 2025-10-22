@@ -15,9 +15,8 @@ await dbConn.OpenAsync();
 
 builder.Services.AddDbContext<ChirpContext>(options => options.UseSqlite(dbConn));
 builder.Services.AddRazorPages();
-builder.Services.AddScoped<ICheepDBFacade, DBFacade>();
-builder.Services.AddScoped<ICheepService, CheepService>();
 builder.Services.AddScoped<ICheepRepository, CheepRepository>();
+builder.Services.AddScoped<ICheepService, CheepService>();
 
 var app = builder.Build();
 

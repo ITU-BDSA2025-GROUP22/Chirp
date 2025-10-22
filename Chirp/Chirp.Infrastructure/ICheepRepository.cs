@@ -4,9 +4,9 @@ namespace Chirp.Infrastructure;
 
 public interface ICheepRepository
 {
-    public IEnumerable<Cheep> GetCheeps();
+    public List<CheepViewModel> GetCheeps(int page, int pageSize = 32);
     
-    public IEnumerable<Cheep> GetCheepsByAuthor(string author);
+    public List<CheepViewModel> GetCheepsByAuthor(string author, int page, int pageSize = 32);
 
     public void AddCheep(Cheep cheep);
 }

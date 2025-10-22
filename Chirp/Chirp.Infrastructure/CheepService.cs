@@ -13,9 +13,9 @@ public interface ICheepService
 public class CheepService : ICheepService
 {
     // depend on interface, never concrete classes, SOLID principles
-    private readonly ICheepDBFacade _db;
+    private readonly ICheepRepository _db;
 
-    public CheepService(ICheepDBFacade db)
+    public CheepService(ICheepRepository db)
     {
         _db = db;
     }
