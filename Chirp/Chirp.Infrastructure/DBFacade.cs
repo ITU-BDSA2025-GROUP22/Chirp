@@ -1,9 +1,9 @@
-using Microsoft.Data.Sqlite;
-using Chirp.Razor;
+//using Microsoft.Data.Sqlite;
+using Chirp.Infrastructure;
 
 using Microsoft.EntityFrameworkCore;
 
-namespace Chirp.Razor;
+namespace Chirp.Infrastructure;
 
 public class DBFacade : ICheepDBFacade
 {

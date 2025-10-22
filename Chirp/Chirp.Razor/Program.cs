@@ -1,3 +1,5 @@
+using Chirp.Core;
+using Chirp.Infrastructure;
 using Chirp.Razor;
 
 using Microsoft.Data.Sqlite;
@@ -15,6 +17,7 @@ builder.Services.AddDbContext<ChirpContext>(options => options.UseSqlite(dbConn)
 builder.Services.AddRazorPages();
 builder.Services.AddScoped<ICheepDBFacade, DBFacade>();
 builder.Services.AddScoped<ICheepService, CheepService>();
+builder.Services.AddScoped<ICheepRepository, CheepRepository>();
 
 var app = builder.Build();
 
