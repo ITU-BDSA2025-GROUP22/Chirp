@@ -11,6 +11,11 @@ public class AuthorRepository : IAuthorRepository
         _context = context;
     }
     
+    public void CreateAuthor(Author author)
+    {
+        _context.Authors.Add(author);
+    }
+    
     public Author? GetAuthorByName(string name)
     {
         return _context.Authors.FirstOrDefault(a => a.Username == name);

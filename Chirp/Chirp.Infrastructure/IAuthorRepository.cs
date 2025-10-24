@@ -4,6 +4,7 @@ namespace Chirp.Infrastructure;
 
 public interface IAuthorRepository
 {
+    void CreateAuthor(Author author);
     Author? GetAuthorByName(string name);
     Author? GetAuthorByEmail(string email);
     List<Author> GetAuthor(int page, int pageSize = 32);
