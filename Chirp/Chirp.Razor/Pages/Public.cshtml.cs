@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Chirp.Core;
 using Chirp.Infrastructure;
 using System.Security.Claims;
-using System.Threading.Tasks; // Tilføjet for Task.FromResult
 
 namespace Chirp.Razor.Pages;
 
@@ -24,8 +23,7 @@ public class PublicModel : PageModel
         _authorRepository = authorRepository;
         _context = context;
     }
-
-    // RETTET HER: 'async' er fjernet, og vi returnerer Task.FromResult
+    
     public Task<IActionResult> OnGetAsync(int page = 1, int pageSize = 32)
     {
         Cheeps = _cheepRepository.GetCheeps(page, pageSize);
