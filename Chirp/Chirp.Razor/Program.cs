@@ -1,7 +1,6 @@
 using Chirp.Core;
 using Chirp.Infrastructure;
 using Chirp.Razor;
-
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 
@@ -28,30 +27,7 @@ using (var scope = app.Services.CreateScope())
     context.Database.EnsureCreated();
     
     // Seed data if database is empty
-    if (!context.Cheeps.Any())
-    {
-        var author1 = new Author { Username = "Helge", Email = "helgenElgen@hotmail.dk", Password = "as5d4t44dsg45dge7g"};
-        var author2 = new Author { Username = "Adrian", Email = "adri@gmail.dk", Password = "uf99v0tqvnt0gjdd03g" };
-        
-        context.Authors.AddRange(author1, author2);
-        
-        var cheep1 = new Cheep 
-        { 
-            Text = "Hello, BDSA students!", 
-            TimeStamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds(),
-            Author = author1
-        };
-        
-        var cheep2 = new Cheep 
-        { 
-            Text = "Welcome to Chirp!", 
-            TimeStamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds(),
-            Author = author2
-        };
-        
-        context.Cheeps.AddRange(cheep1, cheep2);
-        context.SaveChanges();
-    }
+    DbInitializer.SeedDatabase(context);
 }
 
 // Configure the HTTP request pipeline.
