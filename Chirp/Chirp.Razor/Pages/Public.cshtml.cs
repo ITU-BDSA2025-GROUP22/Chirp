@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Chirp.Core;
 using Chirp.Infrastructure;
 using System.Security.Claims;
+using System.Threading.Tasks; // Tilføjet for Task.FromResult
 
 namespace Chirp.Razor.Pages;
 
@@ -24,20 +25,21 @@ public class PublicModel : PageModel
         _context = context;
     }
 
-    public async Task<IActionResult> OnGetAsync(int page = 1, int pageSize = 32)
+    // RETTET HER: 'async' er fjernet, og vi returnerer Task.FromResult
+    public Task<IActionResult> OnGetAsync(int page = 1, int pageSize = 32)
     {
         Cheeps = _cheepRepository.GetCheeps(page, pageSize);
-        return Page();
+        return Task.FromResult<IActionResult>(Page());
     }
 
     public async Task<IActionResult> OnPostAsync()
     {
-        if (!User.Identity.IsAuthenticated)
+        if (User.Identity?.IsAuthenticated != true)
         {
             return Unauthorized();
         }
-
-        var userName = User.Identity.Name;
+        
+        var userName = User.Identity?.Name;
         var userEmail = User.FindFirst(ClaimTypes.Email)?.Value;
 
         if (string.IsNullOrEmpty(userName) || string.IsNullOrEmpty(userEmail))
@@ -65,7 +67,7 @@ public class PublicModel : PageModel
         {
             Author = author,
             Text = CheepText,
-            TimeStamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds()
+            TimeStamp = DateTime.UtcNow
         };
 
         _cheepRepository.AddCheep(newCheep);

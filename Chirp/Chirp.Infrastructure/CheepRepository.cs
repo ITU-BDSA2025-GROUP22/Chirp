@@ -61,8 +61,6 @@ public class CheepRepository : ICheepRepository
     
     private static string UnixTimeStampToDateTimeString(DateTime dateTime)
     {
-        // Unix timestamp is seconds past epoch
-        
         dateTime = dateTime.ToLocalTime();
         return dateTime.ToString("MM/dd/yy H:mm:ss");
       
