@@ -11,6 +11,9 @@ public class CheepRepositoryTests
     private readonly CheepRepository _repository;
     private readonly ChirpContext _context;
 
+    /// <summary>
+    /// Sets up an in-memory database with 2 authors and 2 cheeps before each test.
+    /// </summary>
     public CheepRepositoryTests()
     {
         var options = new DbContextOptionsBuilder<ChirpContext>()
@@ -35,6 +38,9 @@ public class CheepRepositoryTests
         _repository = new CheepRepository(_context);
     }
 
+    /// <summary>
+    /// Tests that GetCheeps returns all cheeps, ordered newest first.
+    /// </summary>
     [Fact]
     public void TestGetCheeps()
     {
@@ -44,6 +50,9 @@ public class CheepRepositoryTests
         Assert.Equal("Børge", cheeps[0].Author);
     }
 
+    /// <summary>
+    /// Tests that GetCheepsByAuthor only returns cheeps from the specified author.
+    /// </summary>
     [Fact]
     public void TestGetCheepsByAuthor()
     {
@@ -53,6 +62,9 @@ public class CheepRepositoryTests
         Assert.Equal("Adrian", cheeps[0].Author);
     }
 
+    /// <summary>
+    /// Tests that AddCheep correctly adds a new cheep to the database.
+    /// </summary>
     [Fact]
     public void TestAddCheep()
     {
@@ -60,7 +72,7 @@ public class CheepRepositoryTests
         var newCheep = new Cheep 
         { 
             Author = author, 
-            Text = "En helt ny cheep!", 
+            Text = "A brand new cheep!", 
             TimeStamp = 999
         };
 
@@ -71,6 +83,6 @@ public class CheepRepositoryTests
 
         Assert.Single(cheeps);
         Assert.Equal("Adrian", cheeps[0].Author);
-        Assert.Equal("En helt ny cheep!", cheeps[0].Message);
+        Assert.Equal("A brand new cheep!", cheeps[0].Message);
     }
 }
