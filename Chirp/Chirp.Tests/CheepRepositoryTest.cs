@@ -36,7 +36,7 @@ public class CheepRepositoryTests
     }
 
     [Fact]
-    public void TestGetPagedCheeps()
+    public void TestGetCheeps()
     {
         var cheeps = _repository.GetCheeps(1, 32);
 
