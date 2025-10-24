@@ -2,7 +2,7 @@ INSERT INTO Authors VALUES(1,'Roger Histand','Roger+Histand@hotmail.com','AZ0ser
 INSERT INTO Authors VALUES(2,'Luanna Muro','Luanna-Muro@ku.dk','iuN9GA9kRoMQW54696JGUML74QKYNKFaG9mFNozJzqQ=');
 INSERT INTO Authors VALUES(3,'Wendell Ballan','Wendell-Ballan@gmail.com','vVriphatZcCvXc0ZUS2Ckvy4gd2gHAnf8e+RiLDQYOQ=');
 INSERT INTO Authors VALUES(4,'Nathan Sirmon','Nathan+Sirmon@dtu.dk','ZGdhIGPBl7njqKYbQcqnjWQc9sQY87cDa+18wF7yM2g=');
-INSERT INTO Authors VALUES(5,'Quintin Sitts','Quintin+Sitts@itu.dk','27HtBoU04PqtFJ9z/dohIvVUyvzSAvYTH0/QtapJTYs=');
+INSERT INTO Authors VALUES(5 ,'Quintin Sitts','Quintin+Sitts@itu.dk','27HtBoU04PqtFJ9z/dohIvVUyvzSAvYTH0/QtapJTYs=');
 INSERT INTO Authors VALUES(6,'Mellie Yost','Mellie+Yost@ku.dk','MRncmO4qOdPAim0Uc8WDtp2AiQ2LAjfcb3MCvDC/fFc=');
 INSERT INTO Authors VALUES(7,'Malcolm Janski','Malcolm-Janski@gmail.com','qlNxORrJB4MA3HPgq35lxc+smAa1RWbQzGcavhLwsR4=');
 INSERT INTO Authors VALUES(8,'Octavio Wagganer','Octavio.Wagganer@dtu.dk','6/B1TZy7FKmfHOWmO5U+fPCvdbpNvjyh0BMRbNLnEtY=');
