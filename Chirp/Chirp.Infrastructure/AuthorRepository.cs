@@ -1,9 +1,4 @@
-//using Microsoft.Data.Sqlite;
-using Chirp.Infrastructure;
-
-using Microsoft.EntityFrameworkCore;
 using Chirp.Core;
-using System.Linq; 
 
 namespace Chirp.Infrastructure;
 
@@ -19,6 +14,11 @@ public class AuthorRepository : IAuthorRepository
     public Author? GetAuthorByName(string name)
     {
         return _context.Authors.FirstOrDefault(a => a.Username == name);
+    }
+    
+    public Author? GetAuthorByEmail(string email)
+    {
+        return _context.Authors.FirstOrDefault(a => a.Email == email);
     }
     
     public List<Author> GetAuthor(int page, int pageSize = 32)
