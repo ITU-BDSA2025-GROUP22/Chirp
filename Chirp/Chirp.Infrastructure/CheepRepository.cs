@@ -34,6 +34,11 @@ public class CheepRepository : ICheepRepository
         return query;
     }
     
+    public void AddCheep(Cheep cheep)
+    {
+        _context.Cheeps.Add(cheep);
+    }
+    
     public List<CheepViewModel> GetCheepsByAuthor(string author, int page, int pageSize = 32)
     {
         var cheeps = new List<CheepViewModel>();
@@ -47,11 +52,6 @@ public class CheepRepository : ICheepRepository
                      LIMIT @pageSize OFFSET @offset";*/
     
         return cheeps;
-    }
-    
-    public void AddCheep(Cheep cheep)
-    {
-        
     }
     
     private static string UnixTimeStampToDateTimeString(double unixTimeStamp)
