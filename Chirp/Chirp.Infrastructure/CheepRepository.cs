@@ -41,7 +41,6 @@ public class CheepRepository : ICheepRepository
     
     public List<CheepViewModel> GetCheepsByAuthor(string author, int page, int pageSize = 32)
     {
-        //var cheeps = new List<CheepViewModel>();
         int offset = (page - 1) * pageSize;
 
         var query = _context.Cheeps
@@ -56,7 +55,6 @@ public class CheepRepository : ICheepRepository
             .Skip(offset)
             .Take(pageSize)
             .ToList();
-        
     
         return query;
     }
