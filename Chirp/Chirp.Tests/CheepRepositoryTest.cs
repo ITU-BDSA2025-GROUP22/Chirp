@@ -16,6 +16,7 @@ public class CheepRepositoryTests
     /// </summary>
     public CheepRepositoryTests()
     {
+        string pattern = "MM-dd-yy";
         var options = new DbContextOptionsBuilder<ChirpContext>()
             .UseInMemoryDatabase(databaseName: "TestDb") 
             .Options;
@@ -30,6 +31,7 @@ public class CheepRepositoryTests
         _context.Authors.AddRange(author1, author2);
 
         _context.Cheeps.AddRange(
+            
             new Cheep { Author = author1, Text = "Adrians cheep", TimeStamp = 100 },
             new Cheep { Author = author2, Text = "Børges cheep", TimeStamp = 200 }
         );
