@@ -1,8 +1,6 @@
 ﻿using Chirp.Infrastructure;
 using Chirp.Core;
 using Microsoft.EntityFrameworkCore; 
-using Xunit;
-using System.Linq;
 
 namespace Chirp.Tests;
 
@@ -53,6 +51,16 @@ public class AuthorRepositoryTests
         Assert.NotNull(author);
         Assert.Equal("Adrian", author.Username);
     }
+
+    [Fact]
+    public void GetAuthorByEmailTest()
+    {
+        var author = _repository.GetAuthorByEmail("adrian@test.com");
+        
+        Assert.NotNull(author);
+        Assert.Equal("Adrian", author.Username);
+    }
+    
     
     
 }
