@@ -62,7 +62,7 @@ public class AuthorRepositoryTests
     }
     
     [Fact]
-    public void GetAuthorTest()
+    public void GetAuthorsTest()
     {
         var authors = _repository.GetAuthors(1, 32);
 
