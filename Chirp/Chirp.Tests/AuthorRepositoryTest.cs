@@ -61,6 +61,12 @@ public class AuthorRepositoryTests
         Assert.Equal("Adrian", author.Username);
     }
     
-    
-    
+    [Fact]
+    public void GetAuthorTest()
+    {
+        var authors = _repository.GetAuthors(1, 32);
+
+        Assert.Equal(2, authors.Count);
+        Assert.Contains(authors, a => a.Username == "Adrian");
+    }
 }

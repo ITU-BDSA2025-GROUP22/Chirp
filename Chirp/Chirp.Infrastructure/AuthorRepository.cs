@@ -26,7 +26,7 @@ public class AuthorRepository : IAuthorRepository
         return _context.Authors.FirstOrDefault(a => a.Email == email);
     }
     
-    public List<Author> GetAuthor(int page, int pageSize = 32)
+    public List<Author> GetAuthors(int page, int pageSize = 32)
     {   
         int offset = (page - 1) * pageSize;
 
