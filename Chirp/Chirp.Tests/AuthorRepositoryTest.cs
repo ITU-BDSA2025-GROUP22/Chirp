@@ -33,6 +33,19 @@ public class AuthorRepositoryTests
     }
 
     [Fact]
+    public void CreateAuthorTest()
+    {
+        var testAuthor = new Author { Username = "Jones", Password = "abc", Email = "jones@test.com"};
+        _repository.CreateAuthor(testAuthor);
+        _context.SaveChanges();
+        
+        Assert.NotNull(testAuthor);
+        Assert.Equal("Jones", testAuthor.Username);
+        Assert.Equal("abc", testAuthor.Password);
+        Assert.Equal("jones@test.com", testAuthor.Email);
+    }
+        
+    [Fact]
     public void GetAuthorByNameTest()
     {
         var author = _repository.GetAuthorByName("Adrian");
@@ -40,4 +53,6 @@ public class AuthorRepositoryTests
         Assert.NotNull(author);
         Assert.Equal("Adrian", author.Username);
     }
+    
+    
 }
