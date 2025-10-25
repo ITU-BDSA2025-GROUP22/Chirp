@@ -9,6 +9,9 @@ public class AuthorRepositoryTests
     private readonly IAuthorRepository _repository;
     private readonly ChirpContext _context;
 
+    /// <summary>
+    /// Sets up an in-memory database and seeds it with test authors.
+    /// </summary>
     public AuthorRepositoryTests()
     {
         var options = new DbContextOptionsBuilder<ChirpContext>()
@@ -30,6 +33,9 @@ public class AuthorRepositoryTests
         _repository = new AuthorRepository(_context);
     }
 
+    /// <summary>
+    /// Tests that CreateAuthor(Author author) successfully adds an author.
+    /// </summary>
     [Fact]
     public void CreateAuthorTest()
     {
@@ -43,6 +49,9 @@ public class AuthorRepositoryTests
         Assert.Equal("jones@test.com", testAuthor.Email);
     }
         
+    /// <summary>
+    /// Tests GetAuthorByName(string name) for an existing author.
+    /// </summary>
     [Fact]
     public void GetAuthorByNameTest()
     {
@@ -52,6 +61,9 @@ public class AuthorRepositoryTests
         Assert.Equal("Adrian", author.Username);
     }
 
+    /// <summary>
+    /// Tests GetAuthorByEmail(string email) for an existing author.
+    /// </summary>
     [Fact]
     public void GetAuthorByEmailTest()
     {
@@ -61,6 +73,9 @@ public class AuthorRepositoryTests
         Assert.Equal("Adrian", author.Username);
     }
     
+    /// <summary>
+    /// Tests GetAuthors(int page, int pageSize) returns the correct list.
+    /// </summary>
     [Fact]
     public void GetAuthorsTest()
     {
