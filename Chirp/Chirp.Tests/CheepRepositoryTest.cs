@@ -44,7 +44,7 @@ public class CheepRepositoryTests
     /// Tests that GetCheeps returns all cheeps, ordered newest first.
     /// </summary>
     [Fact]
-    public void TestGetCheeps()
+    public void GetCheepsTest()
     {
         var cheeps = _repository.GetCheeps(1, 32);
 
@@ -56,7 +56,7 @@ public class CheepRepositoryTests
     /// Tests that GetCheepsByAuthor only returns cheeps from the specified author.
     /// </summary>
     [Fact]
-    public void TestGetCheepsByAuthor()
+    public void GetCheepsByAuthorTest()
     {
         var cheeps = _repository.GetCheepsByAuthor("Adrian", 1, 32);
         
@@ -68,7 +68,7 @@ public class CheepRepositoryTests
     /// Tests that AddCheep correctly adds a new cheep to the database.
     /// </summary>
     [Fact]
-    public void TestAddCheep()
+    public void AddCheepTest()
     {
         var author = _context.Authors.First(a => a.Username == "Adrian");
         var newCheep = new Cheep 
