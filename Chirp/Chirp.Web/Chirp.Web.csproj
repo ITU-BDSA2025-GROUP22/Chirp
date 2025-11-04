@@ -5,7 +5,6 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <UserSecretsId>62ac5090-5afc-4fdf-ac45-4f20e6d2dc35</UserSecretsId>
-    <RootNamespace>Chirp.Razor</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

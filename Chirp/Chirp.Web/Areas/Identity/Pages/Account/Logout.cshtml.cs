@@ -5,13 +5,13 @@
 using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
-using Chirp.Razor.Areas.Identity;
+using Chirp.Web.Areas.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 
-namespace Chirp.Razor.Areas.Identity.Pages.Account
+namespace Chirp.Web.Areas.Identity.Pages.Account
 {
     public class LogoutModel : PageModel
     {

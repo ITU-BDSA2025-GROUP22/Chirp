@@ -4,7 +4,7 @@ using Chirp.Core;
 using Chirp.Infrastructure;
 using System.Security.Claims;
 
-namespace Chirp.Razor.Pages;
+namespace Chirp.Web.Pages;
 
 public class PublicModel : PageModel
 {
