@@ -1,10 +1,10 @@
 using Chirp.Core;
 using Chirp.Infrastructure;
-using Chirp.Razor;
+using Chirp.Web;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
-using Chirp.Razor.Areas.Identity;
+using Chirp.Web.Areas.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 
