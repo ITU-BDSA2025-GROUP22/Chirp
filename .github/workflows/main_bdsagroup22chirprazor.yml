@@ -12,7 +12,7 @@ on:
 
 env:
   AZURE_WEBAPP_NAME: bdsagroup22chirprazor
-  CHIRP_WEB_PATH: "Chirp/Chirp.Web/Chirp.Web.csproj"
+  CHIRP_WEB_PATH: "Chirp/src/Chirp.Web/Chirp.Web.csproj"
   SOLUTION_PATH: "Chirp/Chirp.sln"
   
 jobs:
@@ -71,5 +71,6 @@ jobs:
           app-name: 'bdsagroup22chirprazor'
           slot-name: 'Production'
           package: .
+
 
 
