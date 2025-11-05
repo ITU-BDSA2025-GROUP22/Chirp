@@ -7,8 +7,14 @@ on:
   push:
     branches:
       - main
+      
   workflow_dispatch:
 
+env:
+  AZURE_WEBAPP_NAME: bdsagroup22chirprazor
+  CHIRP_WEB_PATH: "Chirp/Chirp.Web/Chirp.Web.csproj"
+  SOLUTION_PATH: "Chirp.sln"
+  
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -22,21 +28,21 @@ jobs:
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '8.x'
-
+      
+      - name: Restore
+        run: dotnet restore ${{ env.SOLUTION_PATH }}
+        
       - name: Build with dotnet
-        run: dotnet build Chirp/Chirp.sln --configuration Release
-  
-      - name: dotnet publish
-        run: dotnet publish Chirp/Chirp.Web/Chirp.Web.csproj -c Release -o ./publish
+        run: dotnet build ${{ env.SOLUTION_PATH }} --configuration Release --no-restore
 
-      - name: List published files
-        run: ls -R ./publish
+      - name: dotnet publish
+        run: dotnet publish ${{ env.CHIRP_WEB_PATH }} -c Release --no-restore --no-build -o ${{env.DOTNET_ROOT}}/myapp
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
         with:
           name: .net-app
-          path: ./publish
+          path: ${{env.DOTNET_ROOT}}/myapp
 
   deploy:
     runs-on: ubuntu-latest
@@ -50,7 +56,6 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: .net-app
-          path: ./deployment
       
       - name: Login to Azure
         uses: azure/login@v2
@@ -63,14 +68,6 @@ jobs:
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v3
         with:
-          app-name: 'bdsagroup22chirprazor'
+          app-name: 'bdsa2025group6chirp'
           slot-name: 'Production'
-          package: ./deployment
-
-          
-
-
-
-
-
-
+          package: .
