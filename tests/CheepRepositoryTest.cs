@@ -16,7 +16,6 @@ public class CheepRepositoryTests
     /// </summary>
     public CheepRepositoryTests()
     {
-        string pattern = "MM-dd-yy";
         var options = new DbContextOptionsBuilder<ChirpContext>()
             .UseInMemoryDatabase(databaseName: "TestDb") 
             .Options;
