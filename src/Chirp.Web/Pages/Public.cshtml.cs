@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.ComponentModel.DataAnnotations;
+
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Chirp.Core;
 using Chirp.Infrastructure;
@@ -13,8 +15,10 @@ public class PublicModel : PageModel
     private readonly ChirpContext _context;
 
     public List<CheepViewModel> Cheeps { get; set; } = new List<CheepViewModel>();
-
+    
+    
     [BindProperty]
+    [StringLength(160)]
     public string CheepText { get; set; } = "";
 
     public PublicModel(ICheepRepository cheepRepository, IAuthorRepository authorRepository, ChirpContext context)
