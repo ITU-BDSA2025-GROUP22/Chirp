@@ -12,9 +12,12 @@
     <PackageReference Include="coverlet.collector" Version="6.0.2" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="8.*" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="9.0.10" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.12.0" />
     <PackageReference Include="xunit" Version="2.9.2" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.8.2" />
+    <PackageReference Include="Microsoft.Playwright.NUnit" Version="1.*" />
+    <PackageReference Include="NUnit" Version="3.*" />
+    <PackageReference Include="NUnit3TestAdapter" Version="4.*" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.*" />
   </ItemGroup>
 
   <ItemGroup>
@@ -22,7 +25,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Chirp.Web\Chirp.Web.csproj" />
     <ProjectReference Include="..\src\Chirp.Core\Chirp.Core.csproj" />
     <ProjectReference Include="..\src\Chirp.Infrastructure\Chirp.Infrastructure.csproj" />
     <ProjectReference Include="..\src\Chirp.Web\Chirp.Web.csproj" />
