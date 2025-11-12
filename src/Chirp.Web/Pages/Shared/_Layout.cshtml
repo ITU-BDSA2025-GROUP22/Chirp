@@ -15,11 +15,11 @@
         <div>
             <a class="navigation_button" href="/" style="color: #333333;">Public Timeline</a>
             |
-            @if (User.Identity.IsAuthenticated && User.Identity != null)
+            @if (User.Identity?.IsAuthenticated == true)
             {
-                <a class="navigation_button" href="/user/@(User.Identity.Name)" style="color: #333333;">My timeline</a>    
+                <a class="navigation_button" href="/user/@(User.Identity!.Name)" style="color: #333333;">My Timeline</a>    
                 <a>|</a>
-                <a class="navigation_button" href="/Identity/Account/Logout" style="color: #333333;">Logout [@(User.Identity.Name)]</a>
+                <a class="navigation_button" href="/Identity/Account/Logout" style="color: #333333;">Logout [@(User.Identity!.Name)]</a>
             }
             else
             {
