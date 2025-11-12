@@ -1,10 +1,9 @@
-namespace PlaywrightTests;
-
-using System.Text.RegularExpressions;
 using Microsoft.Playwright;
 using Microsoft.Playwright.NUnit;
-using System;
-using System.Threading.Tasks;
+using NUnit.Framework;
+using System.Text.RegularExpressions;
+
+namespace PlaywrightTests;
 
 /**
     INSTALLATION MAY BE NEEDED TO RUN PLAYWRIGHT TESTS
@@ -47,6 +46,4 @@ public class EndToEndTests : PageTest
             // Expects the URL to contain intro.
             await Expect(Page).ToHaveURLAsync(new Regex(".*Register"));
         }
-      //  Microsoft.AspNetCore.Mvc.ViewFeatures.ViewDataDictionary`1[System.Object]
-      //  Microsoft.AspNetCore.Mvc.ViewFeatures.ViewDataDictionary`1[System.Object]
 }
