@@ -20,11 +20,8 @@
         @if (SignInManager.IsSignedIn(User))
         {
             <li style="display: inline;">
-                <a id="manage" style="text-decoration: none; color: inherit;" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hello @UserManager.GetUserName(User)!</a>
-            </li>
-            <li style="display: inline;">
                 <form id="logoutForm" style="display: inline; margin: 0;" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Page("/Public", new { area = "" })">
-                    <button id="logout" type="submit" style="padding: 0; border: none; background: none; cursor: pointer; color: blue; text-decoration: underline;">Logout</button>
+                    <button id="logout" type="submit" style="padding: 0; border: none; background: none; cursor: pointer; color: inherit; text-decoration: underline;">Logout [@UserManager.GetUserName(User)]</button>
                 </form>
             </li>
         }
