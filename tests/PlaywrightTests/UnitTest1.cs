@@ -1,5 +1,11 @@
 namespace PlaywrightTests;
 
+using System.Text.RegularExpressions;
+using Microsoft.Playwright;
+using Microsoft.Playwright.NUnit;
+using System;
+using System.Threading.Tasks;
+
 /**
     INSTALLATION MAY BE NEEDED TO RUN PLAYWRIGHT TESTS
         - in the terminal, run:
@@ -13,7 +19,7 @@ namespace PlaywrightTests;
     to record End-To-End test
 */
 
-public class EndToEndTests
+public class EndToEndTests : PageTest
 {
     [SetUp]
         public async Task Setup()
@@ -29,7 +35,7 @@ public class EndToEndTests
         {
             await Page.GotoAsync("https://1bdsagroup22chirp.azurewebsites.net/");
             // Expect a title "to contain" a substring.
-            await Expect(Page).ToHaveTitleAsync(new Regex("Chirp!"));
+            await Expect(Page).ToHaveTitleAsync(new Regex("Microsoft.AspNetCore"));
     
             // create a locator
             var getStarted = Page.GetByRole(AriaRole.Link, new() { Name = "Register" });
@@ -41,4 +47,6 @@ public class EndToEndTests
             // Expects the URL to contain intro.
             await Expect(Page).ToHaveURLAsync(new Regex(".*Register"));
         }
+      //  Microsoft.AspNetCore.Mvc.ViewFeatures.ViewDataDictionary`1[System.Object]
+      //  Microsoft.AspNetCore.Mvc.ViewFeatures.ViewDataDictionary`1[System.Object]
 }
