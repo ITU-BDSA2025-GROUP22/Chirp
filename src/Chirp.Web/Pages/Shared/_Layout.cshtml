@@ -17,7 +17,7 @@
             |
             @if (User.Identity?.IsAuthenticated == true)
             {
-                <a class="navigation_button" href="/user/@(User.Identity!.Name)" style="color: #333333;">my timeline</a>    
+                <a asp-page="/UserTimeline" asp-route-author="@User.Identity.Name" style="color: #333333;">my timeline</a>
                 <a>|</a>
                 <a class="navigation_button" href="/Identity/Account/Logout" style="color: #333333;">logout [@(User.Identity!.Name)]</a>
             }
