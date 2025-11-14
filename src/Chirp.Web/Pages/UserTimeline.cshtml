@@ -1,4 +1,5 @@
 ﻿@page "/{author}/{author.Username}"
+@using Chirp.Core
 @model Chirp.Web.Pages.UserTimelineModel
 @{
     ViewData["Title"] = "Chirp!";
@@ -7,10 +8,11 @@
 
 <div>
     <h2> My Timeline </h2>
-
+    @Model.OnGet(User.Identity?.Name)
     @if (Model.Cheeps.Any())
     {
         <ul id="messagelist" class="cheeps">
+            
             @foreach (var cheep in Model.Cheeps)
             {
                 <li>
