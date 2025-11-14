@@ -5,6 +5,8 @@ using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using Chirp.Web.Areas.Identity;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using AspNet.Security.OAuth.GitHub;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,14 +16,37 @@ string? connectionString = builder.Configuration.GetConnectionString("DefaultCon
 var dbConn = new SqliteConnection(connectionString);
 await dbConn.OpenAsync();
 
-builder.Services.AddDbContext<ChirpContext>(options => options.UseSqlite(dbConn));
-builder.Services.AddRazorPages();
-builder.Services.AddScoped<ICheepRepository, CheepRepository>();
-builder.Services.AddScoped<IAuthorRepository, AuthorRepository>();
-builder.Services.AddScoped<ICheepService, CheepService>();
-
-builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
+builder.Services
+    .AddDbContext<ChirpContext>(options => options.UseSqlite(dbConn))
+    .AddScoped<ICheepRepository, CheepRepository>()
+    .AddScoped<IAuthorRepository, AuthorRepository>()
+    .AddScoped<ICheepService, CheepService>()
+    .AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddEntityFrameworkStores<ChirpContext>();
+
+builder.Services
+    .AddAuthentication(options =>
+    {
+        // Default scheme for cookies (used by Identity)
+        options.DefaultScheme = IdentityConstants.ApplicationScheme;
+        options.DefaultSignInScheme = IdentityConstants.ExternalScheme;
+    })
+    .AddCookie()
+    .AddGitHub(options =>
+    {
+        options.ClientId = builder.Configuration["Authentication:GitHub:ClientId"];
+        options.ClientSecret = builder.Configuration["Authentication:GitHub:ClientSecret"];
+        options.CallbackPath = "/signin-github";
+    });
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(30);
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+});
+
+
+
 
 var app = builder.Build();
 
@@ -42,6 +67,9 @@ if (!app.Environment.IsDevelopment())
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
+app.UseAuthentication();
+app.UseAuthorization();
+app.UseSession();
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
