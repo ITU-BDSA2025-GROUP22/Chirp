@@ -13,19 +13,19 @@
     
     <nav style="justify-content: space-between; display: flex; align-items: center; padding: 0 1rem; background-color: #f0f0f0;">
         <div>
-            <a class="navigation_button" href="/" style="color: #333333;">Public Timeline</a>
+            <a class="navigation_button" href="/" style="color: #333333;">public timeline</a>
             |
             @if (User.Identity?.IsAuthenticated == true)
             {
-                <a class="navigation_button" href="/user/@(User.Identity!.Name)" style="color: #333333;">My Timeline</a>    
+                <a class="navigation_button" href="/user/@(User.Identity!.Name)" style="color: #333333;">my timeline</a>    
                 <a>|</a>
-                <a class="navigation_button" href="/Identity/Account/Logout" style="color: #333333;">Logout [@(User.Identity!.Name)]</a>
+                <a class="navigation_button" href="/Identity/Account/Logout" style="color: #333333;">logout [@(User.Identity!.Name)]</a>
             }
             else
             {
-                <a class="navigation_button" href="/Identity/Account/Register" style="color: #333333;">Register</a>
+                <a class="navigation_button" href="/Identity/Account/Register" style="color: #333333;">register</a>
                 <a>|</a>
-                <a class="navigation_button" href="/Identity/Account/Login" style="color: #333333;">Login</a>        
+                <a class="navigation_button" href="/Identity/Account/Login" style="color: #333333;">login</a>        
             }
         </div>
     </nav>
