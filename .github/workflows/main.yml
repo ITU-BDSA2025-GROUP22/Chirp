@@ -26,6 +26,9 @@ jobs:
       
     - name: Build
       run: dotnet build Chirp.sln --no-restore
+
+    - name: Install Playwright browsers
+      run: pwsh tests/bin/Debug/net8.0/playwright.ps1 install --with-deps
      
     - name: Test
       run: dotnet test Chirp.sln --no-build --verbosity normal

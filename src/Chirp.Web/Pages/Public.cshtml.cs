@@ -18,7 +18,7 @@ public class PublicModel : PageModel
     
     
     [BindProperty]
-    [StringLength(160)]
+    [StringLength(160)] 
     public string CheepText { get; set; } = "";
 
     public PublicModel(ICheepRepository cheepRepository, IAuthorRepository authorRepository, ChirpContext context)

@@ -1,47 +1,38 @@
-﻿@using Microsoft.AspNetCore.Identity
-@using Chirp.Infrastructure
-@inject SignInManager<ApplicationUser> SignInManager
-@inject UserManager<ApplicationUser> UserManager
-
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>@ViewData["Title"] - Chirp</title>
+    <title>@ViewData["Chirp"]</title>
     <link href="/css/style.css" rel="stylesheet" type="text/css" />
     <link rel="icon" type="image/png" href="/favicon/favicon.ico">
 </head>
 <body>
 <div class=page>
+    <h1>
+        <a href="/"><img src="/images/icon1.png" alt="Icon1"/></a>Chirp!
+    </h1>
     
-    <h1><a href="/" style="text-decoration: none; color: inherit;"><img src="/images/icon1.png" alt="Icon1"/>Chirp!</a></h1>
-
-    <div class="login-container" style="text-align: right; margin-bottom: 20px;">
-        <ul style="list-style-type: none; margin: 0; padding: 0; display: inline-flex; gap: 15px;">
-        @if (SignInManager.IsSignedIn(User))
-        {
-            <li style="display: inline;">
-                <a id="manage" style="text-decoration: none; color: inherit;" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hello @UserManager.GetUserName(User)!</a>
-            </li>
-            <li style="display: inline;">
-                <form id="logoutForm" style="display: inline; margin: 0;" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Page("/Public", new { area = "" })">
-                    <button id="logout" type="submit" style="padding: 0; border: none; background: none; cursor: pointer; color: blue; text-decoration: underline;">Logout</button>
-                </form>
-            </li>
-        }
-        else
-        {
-            <li style="display: inline;">
-                <a style="text-decoration: none; color: inherit;" id="register" asp-area="Identity" asp-page="/Account/Register">Register</a>
-            </li>
-            <li style="display: inline;">
-                <a style="text-decoration: none; color: inherit;" id="login" asp-area="Identity" asp-page="/Account/Login">Login</a>
-            </li>
-        }
-        </ul>
-    </div>
-
+    <nav style="display: flex; justify-content: space-between; align-items: center; padding: 0 1rem; background-color: #f0f0f0;">
+        <div>
+            <a class="navigation_button" href="/" style="color: #333333;">Public Timeline</a>
+            |
+            @if (User.Identity?.IsAuthenticated == true)
+            {
+                <a class="navigation_button" href="/user/@(User.Identity!.Name)" style="color: #333333;">My Timeline</a>    
+                <a>|</a>
+                <a class="navigation_button" href="/Identity/Account/Logout" style="color: #333333;">Logout [@(User.Identity!.Name)]</a>
+            }
+            else
+            {
+                <a class="navigation_button" href="/Identity/Account/Register" style="color: #333333;">Register</a>
+                <a>|</a>
+                <a class="navigation_button" href="/Identity/Account/Login" style="color: #333333;">Login</a>        
+            }
+        </div>
+    </nav>
+    
+    @await RenderSectionAsync("Scripts", required: false)
     <div class=body>
-            @RenderBody()
+        @RenderBody()
     </div>
     <div class=footer>
         Chirp &mdash; An ASP.NET Application
@@ -49,5 +40,4 @@
 </div>
 
 </body>
-@await RenderSectionAsync("Scripts", required: false)
 </html>
