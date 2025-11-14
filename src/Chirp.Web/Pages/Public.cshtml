@@ -30,3 +30,15 @@
         <em>There are no cheeps so far.</em>
     }
 </div>
+
+@if (User.Identity.IsAuthenticated){
+    <div class="cheepbox">
+        <h3>What's on your mind @(User.Identity.Name)?</h3>
+        <form method="post">
+            <input style="float: left" type="text" asp-for="CheepText">
+            <input type="submit" value="Share" >
+            <input name="__RequestVerificationToken" type="hidden">
+        </form >
+    </div>
+}
+

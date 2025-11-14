@@ -9,7 +9,7 @@ namespace PlaywrightTests;
     INSTALLATION MAY BE NEEDED TO RUN PLAYWRIGHT TESTS
         - in the terminal, run:
             bin/Debug/net8.0/playwright.ps1 install --with-deps
-        
+
         - this is a PowerShell script - it might need execution permissions:
             Set-ExecutionPolicy -ExecutionPolicy RemoteSigned
 
@@ -21,29 +21,39 @@ namespace PlaywrightTests;
 public class EndToEndTests : PageTest
 {
     [SetUp]
-        public async Task Setup()
-        {
-            await Context.Tracing.StartAsync(new()
-            {
-                Screenshots = true,
-                Snapshots = true
-            });
-        }
-        [Test]
-        public async Task HomepageHasPlaywrightInTitleAndGetStartedLinkLinkingtoTheIntroPage()
-        {
-            await Page.GotoAsync("https://1bdsagroup22chirp.azurewebsites.net/");
-            // Expect a title "to contain" a substring.
-            await Expect(Page).ToHaveTitleAsync(new Regex("Microsoft.AspNetCore"));
+    public async Task Setup()
+    {
+        await Context.Tracing.StartAsync(new() { Screenshots = true, Snapshots = true });
+    }
+
+    [Test]
+    public async Task NewUserCanRegisterAccount()
+    {
+        await Page.GotoAsync("https://1bdsagroup22chirp.azurewebsites.net/");
+        await Page.GetByRole(AriaRole.Link, new() { Name = "Register" }).ClickAsync();
+        await Page.GetByRole(AriaRole.Textbox, new() { Name = "Username" }).ClickAsync();
+        await Page.GetByRole(AriaRole.Textbox, new() { Name = "Username" }).FillAsync("myusername");
+        await Page.GetByRole(AriaRole.Textbox, new() { Name = "Email" }).ClickAsync();
+        await Page.GetByRole(AriaRole.Textbox, new() { Name = "Email" }).FillAsync("name@example.com");
+        await Page.GetByRole(AriaRole.Textbox, new() { Name = "Password", Exact = true }).ClickAsync();
+        await Page.GetByRole(AriaRole.Textbox, new() { Name = "Password", Exact = true }).FillAsync("123ABCabc!");
+        await Page.GetByRole(AriaRole.Textbox, new() { Name = "Confirm Password" }).ClickAsync();
+        await Page.GetByRole(AriaRole.Textbox, new() { Name = "Confirm Password" }).FillAsync("123ABCabc!");
+        await Page.GetByRole(AriaRole.Button, new() { Name = "Register" }).ClickAsync();
+    }
+
+    [Test]
+    public async Task UnregisteredUserCannotAccessAuthors()
+    {
+        await Page.GotoAsync("https://1bdsagroup22chirp.azurewebsites.net/");
+        await Page.GetByRole(AriaRole.Paragraph).Filter(new() { HasText = "Jacqualine Gilcoine Starbuck" })
+            .GetByRole(AriaRole.Link).ClickAsync();
+        var login = Page.GetByRole(AriaRole.Link, new() { Name = "Login" });
+        await Expect(login).ToHaveAttributeAsync("href", "/Identity/Account/Login");
+        await Expect(login).ToBeVisibleAsync();
+        await Expect(login).ToHaveTextAsync("Login");
+        await Expect(login).ToHaveAttributeAsync("href", "/Identity/Account/Login");
+    }
     
-            // create a locator
-            var getStarted = Page.GetByRole(AriaRole.Link, new() { Name = "Register" });
-            // Expect an attribute "to be strictly equal" to the value.
-            await Expect(getStarted).ToHaveAttributeAsync("href", "/Identity/Account/Register");
-    
-            // Click the get started link.
-            await getStarted.ClickAsync();
-            // Expects the URL to contain intro.
-            await Expect(Page).ToHaveURLAsync(new Regex(".*Register"));
-        }
+    // add more tests...
 }
