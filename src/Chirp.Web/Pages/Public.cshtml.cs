@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.ComponentModel.DataAnnotations;
+
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Chirp.Core;
 using Chirp.Infrastructure;
@@ -13,8 +15,12 @@ public class PublicModel : PageModel
     private readonly ChirpContext _context;
 
     public List<CheepViewModel> Cheeps { get; set; } = new List<CheepViewModel>();
-
+    
+    
     [BindProperty]
+    [Required]
+    [StringLength(160, ErrorMessage = "Maximum length is 160")]
+    [Display(Name = "Cheep Text")]
     public string CheepText { get; set; } = "";
 
     public PublicModel(ICheepRepository cheepRepository, IAuthorRepository authorRepository, ChirpContext context)
@@ -34,6 +40,7 @@ public class PublicModel : PageModel
     {
         if (User.Identity?.IsAuthenticated != true)
         {
+            
             return Unauthorized();
         }
         
@@ -74,4 +81,5 @@ public class PublicModel : PageModel
 
         return RedirectToPage();
     }
+    
 }
