@@ -2,6 +2,7 @@ namespace Chirp.Core;
 
 public class Author
 {
+    
     public int AuthorId { get; set; } 
     public required string Username { get; set; }
     public required string Email { get; set; }

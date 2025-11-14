@@ -18,7 +18,9 @@ public class PublicModel : PageModel
     
     
     [BindProperty]
-    [StringLength(160)] 
+    [Required]
+    [StringLength(160, ErrorMessage = "Maximum length is 160")]
+    [Display(Name = "Cheep Text")]
     public string CheepText { get; set; } = "";
 
     public PublicModel(ICheepRepository cheepRepository, IAuthorRepository authorRepository, ChirpContext context)
@@ -38,6 +40,7 @@ public class PublicModel : PageModel
     {
         if (User.Identity?.IsAuthenticated != true)
         {
+            
             return Unauthorized();
         }
         
@@ -78,4 +81,5 @@ public class PublicModel : PageModel
 
         return RedirectToPage();
     }
+    
 }
