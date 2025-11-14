@@ -48,7 +48,7 @@ public class EndToEndTests : PageTest
         await Page.GotoAsync("https://1bdsagroup22chirp.azurewebsites.net/");
         await Page.GetByRole(AriaRole.Paragraph).Filter(new() { HasText = "Jacqualine Gilcoine Starbuck" })
             .GetByRole(AriaRole.Link).ClickAsync();
-        var login = Page.GetByRole(AriaRole.Link, new() { Name = "Login" });
+        var login = Page.GetByRole(AriaRole.Link, new() { Name = "login" });
         await Expect(login).ToHaveAttributeAsync("href", "/Identity/Account/Login");
         await Expect(login).ToBeVisibleAsync();
         await Expect(login).ToHaveTextAsync("Login");
