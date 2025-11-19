@@ -33,10 +33,10 @@
     <div>
         @if (Model.CurrentPage > 1)
         {
-            <a href="/?page=@(Model.CurrentPage - 1)">Previous</a>
+            <a href="/?pageNumber=@(Model.CurrentPage - 1)">Previous</a>
         }
         
-        <a href="/?page=@(Model.CurrentPage + 1)">Next</a>
+        <a href="/?pageNumber=@(Model.CurrentPage + 1)">Next</a>
     </div>
 </div>
 

@@ -29,10 +29,11 @@ public class PublicModel : PageModel
         _context = context;
     }
     
-    public Task<IActionResult> OnGetAsync(int page = 1, int pageSize = 32)
+    public Task<IActionResult> OnGetAsync([FromQuery] int? pageNumber)
     {
-        CurrentPage = page;
-        Cheeps = _cheepRepository.GetCheeps(page, pageSize);
+        CurrentPage = pageNumber ?? 1;
+        
+        Cheeps = _cheepRepository.GetCheeps(CurrentPage);
         return Task.FromResult<IActionResult>(Page());
     }
 
