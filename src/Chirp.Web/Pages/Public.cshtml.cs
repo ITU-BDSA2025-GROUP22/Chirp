@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel.DataAnnotations;
-
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Chirp.Core;
@@ -15,7 +14,7 @@ public class PublicModel : PageModel
     private readonly ChirpContext _context;
 
     public List<CheepViewModel> Cheeps { get; set; } = new List<CheepViewModel>();
-    
+    public int CurrentPage { get; set; } = 1;
     
     [BindProperty]
     [Required]
@@ -32,6 +31,7 @@ public class PublicModel : PageModel
     
     public Task<IActionResult> OnGetAsync(int page = 1, int pageSize = 32)
     {
+        CurrentPage = page;
         Cheeps = _cheepRepository.GetCheeps(page, pageSize);
         return Task.FromResult<IActionResult>(Page());
     }
@@ -40,7 +40,6 @@ public class PublicModel : PageModel
     {
         if (User.Identity?.IsAuthenticated != true)
         {
-            
             return Unauthorized();
         }
         
@@ -81,5 +80,4 @@ public class PublicModel : PageModel
 
         return RedirectToPage();
     }
-    
 }
