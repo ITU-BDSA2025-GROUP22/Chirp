@@ -15,6 +15,7 @@ public class PublicModel : PageModel
 
     public List<CheepViewModel> Cheeps { get; set; } = new List<CheepViewModel>();
     public int CurrentPage { get; set; } = 1;
+    public bool HasNextPage { get; set; }
     
     [BindProperty]
     [Required]
@@ -34,6 +35,11 @@ public class PublicModel : PageModel
         CurrentPage = pageNumber ?? 1;
         
         Cheeps = _cheepRepository.GetCheeps(CurrentPage);
+        
+        int totalCheeps = _cheepRepository.GetTotalCheepCount();
+        
+        HasNextPage = (CurrentPage * 32) < totalCheeps;
+        
         return Task.FromResult<IActionResult>(Page());
     }
 
