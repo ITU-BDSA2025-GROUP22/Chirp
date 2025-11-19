@@ -12,6 +12,7 @@ public class PublicModel : PageModel
     private readonly ICheepRepository _cheepRepository;
     private readonly IAuthorRepository _authorRepository;
     private readonly ChirpContext _context;
+    private readonly IInputSanitizer _inputSanitizer;
 
     public List<CheepViewModel> Cheeps { get; set; } = new List<CheepViewModel>();
     public int CurrentPage { get; set; } = 1;
@@ -23,11 +24,17 @@ public class PublicModel : PageModel
     [Display(Name = "Cheep Text")]
     public string CheepText { get; set; } = "";
 
-    public PublicModel(ICheepRepository cheepRepository, IAuthorRepository authorRepository, ChirpContext context)
+    public PublicModel(
+        ICheepRepository cheepRepository, 
+        IAuthorRepository authorRepository, 
+        ChirpContext context,
+        IInputSanitizer inputSanitizer
+        )
     {
         _cheepRepository = cheepRepository;
         _authorRepository = authorRepository;
         _context = context;
+        _inputSanitizer = inputSanitizer;
     }
     
     public Task<IActionResult> OnGetAsync([FromQuery] int? pageNumber)
@@ -58,6 +65,8 @@ public class PublicModel : PageModel
             return RedirectToPage();
         }
     
+        var sanitizedText = _inputSanitizer.SanitizeCheepText(CheepText);
+        
         var author = _authorRepository.GetAuthorByName(userName);
 
         if (author == null)
@@ -77,7 +86,7 @@ public class PublicModel : PageModel
         var newCheep = new Cheep
         {
             Author = author,
-            Text = CheepText,
+            Text = sanitizedText,
             TimeStamp = DateTime.UtcNow
         };
 
