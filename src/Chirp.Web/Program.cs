@@ -21,6 +21,25 @@ builder.Services.AddScoped<IAuthorRepository, AuthorRepository>();
 builder.Services.AddScoped<ICheepService, CheepService>();
 builder.Services.AddScoped<IInputSanitizer, InputSanitizer>();
 
+builder.Services
+    .AddAuthentication(options =>
+    {
+        // Default scheme for cookies (used by Identity)
+        options.DefaultScheme = IdentityConstants.ApplicationScheme;
+        options.DefaultSignInScheme = IdentityConstants.ExternalScheme;
+    })
+    .AddGitHub(o =>
+    {
+        o.ClientId = builder.Configuration["github:clientId"];
+        o.ClientSecret = builder.Configuration["github:clientSecret"];
+        o.CallbackPath = "/signin-github";
+    });
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(30);
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+});
 builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddEntityFrameworkStores<ChirpContext>();
 
