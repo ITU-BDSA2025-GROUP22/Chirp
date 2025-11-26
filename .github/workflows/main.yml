@@ -31,7 +31,10 @@ jobs:
       run: pwsh tests/bin/Debug/net8.0/playwright.ps1 install --with-deps
      
     - name: Test
-      run: dotnet test Chirp.sln --no-build --verbosity normal
+      run: |
+        export GitHub__ClientId="${{ secrets.GITHUBCLIENTID }}"
+        export GitHub__ClientSecret="${{ secrets.GITHUBCLIENTSECRET }}"
+        dotnet test Chirp.sln --no-build --verbosity normal
      
 # Det hele minder rigtig meget om gradle. Det sådan i skal tænke det
 # hvor man builder, restore og tester sit projekt når man åbner
