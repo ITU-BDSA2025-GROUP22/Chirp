@@ -31,12 +31,11 @@ builder.Services
         options.DefaultScheme = IdentityConstants.ApplicationScheme;
         options.DefaultSignInScheme = IdentityConstants.ExternalScheme;
     })
-    .AddCookie()
-    .AddGitHub(options =>
+    .AddGitHub(o =>
     {
-        options.ClientId = builder.Configuration["Authentication:GitHub:ClientId"];
-        options.ClientSecret = builder.Configuration["Authentication:GitHub:ClientSecret"];
-        options.CallbackPath = "/signin-github";
+        o.ClientId = builder.Configuration["github:clientId"];
+        o.ClientSecret = builder.Configuration["github:clientSecret"];
+        o.CallbackPath = "/signin-github";
     });
 builder.Services.AddSession(options =>
 {
