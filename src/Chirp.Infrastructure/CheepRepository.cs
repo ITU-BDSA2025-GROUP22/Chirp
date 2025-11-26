@@ -59,6 +59,11 @@ public class CheepRepository : ICheepRepository
         return query;
     }
     
+    public int GetTotalCheepCount()
+    {
+        return _context.Cheeps.Count();
+    }
+    
     private static string UnixTimeStampToDateTimeString(DateTime dateTime)
     {
         dateTime = dateTime.ToLocalTime();

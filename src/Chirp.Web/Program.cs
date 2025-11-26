@@ -5,8 +5,6 @@ using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using Chirp.Web.Areas.Identity;
-using Microsoft.AspNetCore.Authentication.Cookies;
-using AspNet.Security.OAuth.GitHub;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,13 +14,12 @@ string? connectionString = builder.Configuration.GetConnectionString("DefaultCon
 var dbConn = new SqliteConnection(connectionString);
 await dbConn.OpenAsync();
 
-builder.Services
-    .AddDbContext<ChirpContext>(options => options.UseSqlite(dbConn))
-    .AddScoped<ICheepRepository, CheepRepository>()
-    .AddScoped<IAuthorRepository, AuthorRepository>()
-    .AddScoped<ICheepService, CheepService>()
-    .AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
-    .AddEntityFrameworkStores<ChirpContext>();
+builder.Services.AddDbContext<ChirpContext>(options => options.UseSqlite(dbConn));
+builder.Services.AddRazorPages();
+builder.Services.AddScoped<ICheepRepository, CheepRepository>();
+builder.Services.AddScoped<IAuthorRepository, AuthorRepository>();
+builder.Services.AddScoped<ICheepService, CheepService>();
+builder.Services.AddScoped<IInputSanitizer, InputSanitizer>();
 
 builder.Services
     .AddAuthentication(options =>
@@ -43,6 +40,8 @@ builder.Services.AddSession(options =>
     options.Cookie.HttpOnly = true;
     options.Cookie.IsEssential = true;
 });
+builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
+    .AddEntityFrameworkStores<ChirpContext>();
 
 var app = builder.Build();
 
@@ -63,9 +62,6 @@ if (!app.Environment.IsDevelopment())
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
-app.UseAuthentication();
-app.UseAuthorization();
-app.UseSession();
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
@@ -76,8 +72,9 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapRazorPages();
-
+    
 app.Run();
 
 // Used for API testing
 // A Program class had to exist in order for the tests to be able to reference it
+public partial class Program { }
