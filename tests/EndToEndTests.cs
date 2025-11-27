@@ -23,7 +23,35 @@ public class EndToEndTests : PageTest
     [SetUp]
     public async Task Setup()
     {
-        await Context.Tracing.StartAsync(new() { Screenshots = true, Snapshots = true });
+        // Start video/screenshots/trace for each test
+        await Context.Tracing.StartAsync(new()
+        {
+            Screenshots = true,
+            Snapshots = true,
+            Sources = true
+        });
+    }
+
+    [TearDown]
+    public async Task TearDown()
+    {
+        // Save stacktrace on test failure
+        if (TestContext.CurrentContext.Result.Outcome.Status == NUnit.Framework.Interfaces.TestStatus.Failed)
+        {
+            var tracePath = $"trace-{TestContext.CurrentContext.Test.Name}.zip";
+
+            await Context.Tracing.StopAsync(new()
+            {
+                Path = tracePath
+            });
+
+            TestContext.AddTestAttachment(tracePath);
+        }
+        else
+        {
+            // Stop tracing but do not save every trace on success
+            await Context.Tracing.StopAsync();
+        }
     }
 
     [Test]
@@ -53,6 +81,16 @@ public class EndToEndTests : PageTest
         await Expect(login).ToBeVisibleAsync();
         await Expect(login).ToHaveTextAsync("login");
         await Expect(login).ToHaveAttributeAsync("href", "/Identity/Account/Login");
+    }
+    
+    [Test]
+    public async Task CheepBoxIsHiddenWhenLoggedOut()
+    {
+        await Page.GotoAsync("https://1bdsagroup22chirp.azurewebsites.net/");
+
+        // The cheepbox div should not appear since no user is logged in
+        var cheepBox = Page.Locator(".cheepbox");
+        await Expect(cheepBox).Not.ToBeVisibleAsync();
     }
     
     // add more tests...
