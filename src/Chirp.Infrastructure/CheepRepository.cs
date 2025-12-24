@@ -1,6 +1,4 @@
-//using Microsoft.Data.Sqlite;
 using Chirp.Infrastructure;
-
 using Microsoft.EntityFrameworkCore;
 using Chirp.Core;
 
@@ -37,6 +35,7 @@ public class CheepRepository : ICheepRepository
     public void AddCheep(Cheep cheep)
     {
         _context.Cheeps.Add(cheep);
+        _context.SaveChanges();
     }
     
     public List<CheepViewModel> GetCheepsByAuthor(string author, int page, int pageSize = 32)
@@ -58,6 +57,35 @@ public class CheepRepository : ICheepRepository
     
         return query;
     }
+
+    public List<CheepViewModel> GetCheepsForTimeline(string user, int page, int pageSize = 32)
+    {
+        int offset = (page - 1) * pageSize;
+
+        var author = _context.Authors
+            .Include(a => a.Following)
+            .FirstOrDefault(a => a.Username == user);
+
+        if (author == null) return new List<CheepViewModel>();
+
+        var followingNames = author.Following.Select(a => a.Username).ToList();
+        followingNames.Add(user);
+
+        var query = _context.Cheeps
+            .Include(c => c.Author)
+            .Where(c => followingNames.Contains(c.Author.Username))
+            .OrderByDescending(c => c.TimeStamp)
+            .Select(c => new CheepViewModel(
+                c.Author.Username,
+                c.Text,
+                UnixTimeStampToDateTimeString(c.TimeStamp)
+            ))
+            .Skip(offset)
+            .Take(pageSize)
+            .ToList();
+
+        return query;
+    }
     
     public int GetTotalCheepCount()
     {
@@ -68,6 +96,5 @@ public class CheepRepository : ICheepRepository
     {
         dateTime = dateTime.ToLocalTime();
         return dateTime.ToString("MM/dd/yy H:mm:ss");
-      
     }
 }
