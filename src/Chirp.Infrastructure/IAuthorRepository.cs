@@ -8,4 +8,7 @@ public interface IAuthorRepository
     Author? GetAuthorByName(string name);
     Author? GetAuthorByEmail(string email);
     List<Author> GetAuthors(int page, int pageSize = 32);
+    void FollowAuthor(string followerName, string followingName);
+    void UnfollowAuthor(string followerName, string followingName);
+    List<string> GetFollowing(string authorName);
 }
