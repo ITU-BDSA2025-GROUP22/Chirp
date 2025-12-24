@@ -12,4 +12,3 @@ public class Author
     public List<Author> Following { get; set; } = new();
     public List<Author> Followers { get; set; } = new();
 }
-}
