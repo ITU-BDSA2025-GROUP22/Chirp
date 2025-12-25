@@ -12,9 +12,11 @@ public class PublicModel : PageModel
     private readonly ICheepRepository _cheepRepository;
     private readonly IAuthorRepository _authorRepository;
     private readonly ChirpContext _context;
-    private readonly IInputSanitizer _inputSanitizer;
 
     public List<CheepViewModel> Cheeps { get; set; } = new List<CheepViewModel>();
+    
+    public List<string> Following { get; set; } = new List<string>(); 
+
     public int CurrentPage { get; set; } = 1;
     public bool HasNextPage { get; set; }
     
@@ -24,17 +26,11 @@ public class PublicModel : PageModel
     [Display(Name = "Cheep Text")]
     public string CheepText { get; set; } = "";
 
-    public PublicModel(
-        ICheepRepository cheepRepository, 
-        IAuthorRepository authorRepository, 
-        ChirpContext context,
-        IInputSanitizer inputSanitizer
-        )
+    public PublicModel(ICheepRepository cheepRepository, IAuthorRepository authorRepository, ChirpContext context)
     {
         _cheepRepository = cheepRepository;
         _authorRepository = authorRepository;
         _context = context;
-        _inputSanitizer = inputSanitizer;
     }
     
     public Task<IActionResult> OnGetAsync([FromQuery] int? pageNumber)
@@ -43,8 +39,16 @@ public class PublicModel : PageModel
         
         Cheeps = _cheepRepository.GetCheeps(CurrentPage);
         
-        int totalCheeps = _cheepRepository.GetTotalCheepCount();
+        if (User.Identity?.IsAuthenticated == true)
+        {
+            var userName = User.Identity.Name;
+            if (userName != null)
+            {
+                Following = _authorRepository.GetFollowing(userName);
+            }
+        }
         
+        int totalCheeps = _cheepRepository.GetTotalCheepCount();
         HasNextPage = (CurrentPage * 32) < totalCheeps;
         
         return Task.FromResult<IActionResult>(Page());
@@ -65,8 +69,6 @@ public class PublicModel : PageModel
             return RedirectToPage();
         }
     
-        var sanitizedText = _inputSanitizer.SanitizeCheepText(CheepText);
-        
         var author = _authorRepository.GetAuthorByName(userName);
 
         if (author == null)
@@ -76,7 +78,9 @@ public class PublicModel : PageModel
                 Username = userName,
                 Email = userEmail,
                 Password = Guid.NewGuid().ToString(),
-                Cheeps = new List<Cheep>()
+                Cheeps = new List<Cheep>(),
+                Following = new List<Author>(),
+                Followers = new List<Author>()
             };
         
             _authorRepository.CreateAuthor(newAuthor);
@@ -86,14 +90,12 @@ public class PublicModel : PageModel
         var newCheep = new Cheep
         {
             Author = author,
-            Text = sanitizedText,
+            Text = CheepText,
             TimeStamp = DateTime.UtcNow
         };
 
         _cheepRepository.AddCheep(newCheep);
-
-        await _context.SaveChangesAsync();
-
+        
         return RedirectToPage();
     }
 }

@@ -29,6 +29,14 @@
                         <strong>
                             <a href="/@cheep.Author">@cheep.Author</a>
                         </strong>
+                        
+                        @if (Model.Following.Contains(cheep.Author))
+                        {
+                            <span style="color: #666; font-size: 0.9em; font-style: italic; margin-right: 5px;">
+                                • Following
+                            </span>
+                        }
+
                         @cheep.Message
                         <small>&mdash; @cheep.Timestamp</small>
                     </p>
@@ -63,14 +71,15 @@
     }
 
     .pagenavigation a {
+        padding: 8px 16px;
         text-decoration: none;
-        color: #26776F;
-        font-weight: bold;
-        font-size: 14px;
+        background-color: #f0f0f0;
+        border: 1px solid #ccc;
+        color: #333;
+        border-radius: 4px;
     }
 
     .pagenavigation a:hover {
-        text-decoration: underline;
-        color: #333;
+        background-color: #e0e0e0;
     }
 </style>
