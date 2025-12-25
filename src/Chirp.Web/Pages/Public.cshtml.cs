@@ -53,8 +53,8 @@ public class PublicModel : PageModel
         
         return Task.FromResult<IActionResult>(Page());
     }
-
-    public async Task<IActionResult> OnPostAsync()
+    
+    public IActionResult OnPost()
     {
         if (User.Identity?.IsAuthenticated != true)
         {
@@ -77,10 +77,10 @@ public class PublicModel : PageModel
             {
                 Username = userName,
                 Email = userEmail,
-                Password = Guid.NewGuid().ToString(),
                 Cheeps = new List<Cheep>(),
                 Following = new List<Author>(),
-                Followers = new List<Author>()
+                Followers = new List<Author>(),
+                Password = "None"
             };
         
             _authorRepository.CreateAuthor(newAuthor);
