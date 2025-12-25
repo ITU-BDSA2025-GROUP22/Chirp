@@ -98,4 +98,10 @@ public class PublicModel : PageModel
         
         return RedirectToPage();
     }
+    
+    public IActionResult OnPostLike()
+    {
+        
+        return RedirectToPage();
+    }
 }
