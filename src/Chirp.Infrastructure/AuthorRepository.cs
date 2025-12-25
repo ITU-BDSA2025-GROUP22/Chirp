@@ -1,4 +1,5 @@
 using Chirp.Core;
+using Microsoft.EntityFrameworkCore;
 
 namespace Chirp.Infrastructure;
 
@@ -14,6 +15,7 @@ public class AuthorRepository : IAuthorRepository
     public void CreateAuthor(Author author)
     {
         _context.Authors.Add(author);
+        _context.SaveChanges();
     }
     
     public Author? GetAuthorByName(string name)
@@ -36,10 +38,37 @@ public class AuthorRepository : IAuthorRepository
             .Take(pageSize)
             .ToList();
     }
-    
-    private static string UnixTimeStampToDateTimeString(DateTime dateTime)
+
+    public void FollowAuthor(string followerName, string followingName)
     {
-        dateTime = dateTime.ToLocalTime();
-        return dateTime.ToString("MM/dd/yy H:mm:ss");
+        var follower = _context.Authors.Include(a => a.Following).FirstOrDefault(a => a.Username == followerName);
+        var following = _context.Authors.FirstOrDefault(a => a.Username == followingName);
+
+        if (follower != null && following != null)
+        {
+            if (!follower.Following.Contains(following))
+            {
+                follower.Following.Add(following);
+                _context.SaveChanges();
+            }
+        }
+    }
+
+    public void UnfollowAuthor(string followerName, string followingName)
+    {
+        var follower = _context.Authors.Include(a => a.Following).FirstOrDefault(a => a.Username == followerName);
+        var following = _context.Authors.FirstOrDefault(a => a.Username == followingName);
+
+        if (follower != null && following != null)
+        {
+            follower.Following.Remove(following);
+            _context.SaveChanges();
+        }
+    }
+
+    public List<string> GetFollowing(string authorName)
+    {
+        var author = _context.Authors.Include(a => a.Following).FirstOrDefault(a => a.Username == authorName);
+        return author?.Following.Select(a => a.Username).ToList() ?? new List<string>();
     }
 }

@@ -13,9 +13,13 @@ public class ChirpContext : IdentityDbContext<ApplicationUser>
     
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<Author>();
-        modelBuilder.Entity<Cheep>();
-        
         base.OnModelCreating(modelBuilder);
+
+        modelBuilder.Entity<Cheep>().Property(c => c.Text).HasMaxLength(160);
+        
+        modelBuilder.Entity<Author>()
+            .HasMany(a => a.Following)
+            .WithMany(a => a.Followers)
+            .UsingEntity(j => j.ToTable("AuthorFollowers"));
     }
 }

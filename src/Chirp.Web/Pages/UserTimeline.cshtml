@@ -9,6 +9,25 @@
 
 <div>
     <h2> @routeName's Timeline </h2>
+
+    @if (User.Identity?.IsAuthenticated == true && routeName != null && User.Identity.Name != routeName.ToString())
+    {
+        <div style="margin-bottom: 20px;">
+            @if (Model.IsFollowing)
+            {
+                <form method="post" asp-page-handler="Unfollow" asp-route-author="@routeName">
+                    <button type="submit" class="btn btn-danger">Unfollow</button>
+                </form>
+            }
+            else
+            {
+                <form method="post" asp-page-handler="Follow" asp-route-author="@routeName">
+                    <button type="submit" class="btn btn-primary">Follow</button>
+                </form>
+            }
+        </div>
+    }
+
     @if (Model.Cheeps.Any())
     {
         <ul id="messagelist" class="cheeps">
@@ -20,6 +39,14 @@
                         <strong>
                             <a href="/@cheep.Author">@cheep.Author</a>
                         </strong>
+
+                        @if (Model.Following.Contains(cheep.Author))
+                        {
+                            <span style="color: #666; font-size: 0.9em; font-style: italic; margin-right: 5px;">
+                                • Following
+                            </span>
+                        }
+
                         @cheep.Message
                         <small>&mdash; @cheep.Timestamp</small>
                     </p>
@@ -32,5 +59,3 @@
         <em>There are no cheeps so far.</em>
     }
 </div>
-
-
