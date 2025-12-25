@@ -2,7 +2,7 @@ using Chirp.Infrastructure;
 
 namespace Chirp.Infrastructure;
 
-public record CheepViewModel(string Author, string Message, string Timestamp);
+public record CheepViewModel(string Author, string Message, string Timestamp, int CheepId);
 
 public interface ICheepService
 {
