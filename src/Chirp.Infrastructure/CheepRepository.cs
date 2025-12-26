@@ -23,8 +23,7 @@ public class CheepRepository : ICheepRepository
             .Select(c => new CheepViewModel(
                 c.Author.Username,
                 c.Text,
-                UnixTimeStampToDateTimeString(c.TimeStamp),
-                c.CheepId
+                UnixTimeStampToDateTimeString(c.TimeStamp)
             ))
             .Skip(offset)
             .Take(pageSize)
@@ -50,8 +49,7 @@ public class CheepRepository : ICheepRepository
             .Select(c => new CheepViewModel(
                 c.Author.Username,
                 c.Text,
-                UnixTimeStampToDateTimeString(c.TimeStamp),
-                c.CheepId
+                UnixTimeStampToDateTimeString(c.TimeStamp)
             ))
             .Skip(offset)
             .Take(pageSize)
@@ -80,8 +78,7 @@ public class CheepRepository : ICheepRepository
             .Select(c => new CheepViewModel(
                 c.Author.Username,
                 c.Text,
-                UnixTimeStampToDateTimeString(c.TimeStamp),
-                c.CheepId
+                UnixTimeStampToDateTimeString(c.TimeStamp)
             ))
             .Skip(offset)
             .Take(pageSize)
