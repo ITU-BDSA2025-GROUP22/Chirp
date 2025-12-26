@@ -4,7 +4,7 @@ namespace Chirp.Infrastructure;
 
 public interface ILikeRepository
 {
-    public void AddLike(Like like, int cheepId, int authorId);
+    public void AddLike(Like like);
     public void RemoveLike(Like like);
     public Like? GetByAuthorAndCheep(int authorId, int cheepId);
     public int GetLikeCount(int cheepId);

@@ -11,9 +11,11 @@ public class PublicModel : PageModel
 {
     private readonly ICheepRepository _cheepRepository;
     private readonly IAuthorRepository _authorRepository;
+    private readonly ILikeRepository _likeRepository;
+    private readonly ICheepService _cheepService;
     private readonly ChirpContext _context;
 
-    public List<CheepViewModel> Cheeps { get; set; } = new List<CheepViewModel>();
+    public List<ExpandedCheepViewModel> Cheeps { get; set; } = new List<ExpandedCheepViewModel>();
     
     public List<string> Following { get; set; } = new List<string>(); 
 
@@ -26,10 +28,18 @@ public class PublicModel : PageModel
     [Display(Name = "Cheep Text")]
     public string CheepText { get; set; } = "";
 
-    public PublicModel(ICheepRepository cheepRepository, IAuthorRepository authorRepository, ChirpContext context)
+    public PublicModel(
+        ICheepRepository cheepRepository, 
+        IAuthorRepository authorRepository, 
+        ILikeRepository likeRepository,
+        ICheepService cheepService,
+        ChirpContext context
+        )
     {
         _cheepRepository = cheepRepository;
         _authorRepository = authorRepository;
+        _likeRepository = likeRepository;
+        _cheepService = cheepService; 
         _context = context;
     }
     
@@ -37,16 +47,23 @@ public class PublicModel : PageModel
     {
         CurrentPage = pageNumber ?? 1;
         
-        Cheeps = _cheepRepository.GetCheeps(CurrentPage);
-        
+        // Get current user ID
+        int? currentUserId = null;
         if (User.Identity?.IsAuthenticated == true)
         {
             var userName = User.Identity.Name;
             if (userName != null)
             {
+                var author = _authorRepository.GetAuthorByName(userName);
+                if (author != null)
+                {
+                    currentUserId = author.AuthorId;
+                }
                 Following = _authorRepository.GetFollowing(userName);
             }
         }
+        
+        Cheeps = _cheepService.GetCheeps(CurrentPage, currentUserId);
         
         int totalCheeps = _cheepRepository.GetTotalCheepCount();
         HasNextPage = (CurrentPage * 32) < totalCheeps;
@@ -99,9 +116,68 @@ public class PublicModel : PageModel
         return RedirectToPage();
     }
     
-    public IActionResult OnPostLike()
+    public IActionResult OnPostLike(int cheepId)
     {
+        Console.WriteLine($"═══ LIKE BUTTON CLICKED ═══");
+        Console.WriteLine($"CheepId: {cheepId}");
         
+        // Check authentication
+        if (User.Identity?.IsAuthenticated != true)
+        {
+            return Unauthorized();
+        }
+        
+        // Get current user
+        var userName = User.Identity?.Name;
+        if (string.IsNullOrEmpty(userName))
+        {
+            Console.WriteLine("Username is null");
+            return RedirectToPage();
+        }
+        
+        // Get author
+        var author = _authorRepository.GetAuthorByName(userName);
+        if (author == null)
+        {
+            Console.WriteLine($"Author not found: {userName}");
+            return RedirectToPage();
+        }
+        
+        int authorId = author.AuthorId;
+        Console.WriteLine($"AuthorId: {authorId}");
+        
+        // Call service to handle like logic
+        _cheepService.LikeCheep(cheepId, authorId);
+        
+        Console.WriteLine("Like processed successfully");
+        TempData["SuccessMessage"] = $"✓ Liked cheep #{cheepId}";
+        
+        return RedirectToPage();
+    }
+    
+    // ✅ BONUS: Add dislike handler
+    public IActionResult OnPostDislike(int cheepId)
+    {
+        if (User.Identity?.IsAuthenticated != true)
+        {
+            return Unauthorized();
+        }
+        
+        var userName = User.Identity?.Name;
+        if (string.IsNullOrEmpty(userName))
+        {
+            return RedirectToPage();
+        }
+        
+        var author = _authorRepository.GetAuthorByName(userName);
+        if (author == null)
+        {
+            return RedirectToPage();
+        }
+        
+        _cheepService.DislikeCheep(cheepId, author.AuthorId);
+        
+        TempData["SuccessMessage"] = $"✓ Disliked cheep #{cheepId}";
         return RedirectToPage();
     }
 }

@@ -13,11 +13,8 @@ public class LikeRepository : ILikeRepository
         _context = context;
     }
     
-    public void AddLike(Like like, int cheepId, int authorId)
+    public void AddLike(Like like)
     {
-        // Set the foreign keys
-        like.CheepId = cheepId;
-        like.AuthorId = authorId;
         _context.Likes.Add(like);
         _context.SaveChanges();
     }

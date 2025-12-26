@@ -39,13 +39,26 @@
                         @cheep.Message
                         <small>&mdash; @cheep.Timestamp</small>
                     </p>
-                    <form method="post">
-                        <input type="hidden"/>
-                        @cheep.CheepId
-                        <button type="submit" asp-page-handler="Like">
-                            👍 Like
-                        </button>
-                    </form>
+                    <div class="cheep-actions">
+                        <form method="post" style="display: inline;">
+                            <input type="hidden" name="cheepId" value="@cheep.CheepId" />
+                            <button type="submit" 
+                                    asp-page-handler="Like"
+                                    class="@(cheep.UserHasLiked ? "active" : "")">
+                                👍 @cheep.LikeCount
+                            </button>
+                        </form>
+                        
+                        <!-- ✅ DISLIKE BUTTON -->
+                        <form method="post" style="display: inline;">
+                            <input type="hidden" name="cheepId" value="@cheep.CheepId" />
+                            <button type="submit" 
+                                    asp-page-handler="Dislike"
+                                    class="@(cheep.UserHasDisliked ? "active" : "")">
+                                👎 @cheep.DislikeCount
+                            </button>
+                        </form>
+                    </div>
                 </li>
             }
         </ul>

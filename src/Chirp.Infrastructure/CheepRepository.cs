@@ -19,6 +19,7 @@ public class CheepRepository : ICheepRepository
 
         var query = _context.Cheeps
             .Include(c => c.Author)
+            .Include(c => c.Likes)
             .OrderByDescending(c => c.TimeStamp)
             .Select(c => new CheepViewModel(
                 c.Author.Username,
@@ -45,6 +46,7 @@ public class CheepRepository : ICheepRepository
 
         var query = _context.Cheeps
             .Include(c => c.Author)
+            .Include(c => c.Likes)
             .Where(c => c.Author.Username == author)
             .OrderByDescending(c => c.TimeStamp)
             .Select(c => new CheepViewModel(

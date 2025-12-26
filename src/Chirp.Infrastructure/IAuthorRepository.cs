@@ -6,6 +6,7 @@ public interface IAuthorRepository
 {
     void CreateAuthor(Author author);
     Author? GetAuthorByName(string name);
+    public int? GetAuthorId(Author author);
     Author? GetAuthorByEmail(string email);
     List<Author> GetAuthors(int page, int pageSize = 32);
     void FollowAuthor(string followerName, string followingName);

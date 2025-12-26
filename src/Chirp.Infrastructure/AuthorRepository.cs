@@ -22,6 +22,11 @@ public class AuthorRepository : IAuthorRepository
     {
         return _context.Authors.FirstOrDefault(a => a.Username == name);
     }
+
+    public int? GetAuthorId(Author author)
+    {
+        return author.AuthorId;
+    }
     
     public Author? GetAuthorByEmail(string email)
     {

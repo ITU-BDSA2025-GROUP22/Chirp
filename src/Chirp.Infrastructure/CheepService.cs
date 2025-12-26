@@ -1,3 +1,4 @@
+using Chirp.Core;
 using Chirp.Infrastructure;
 
 namespace Chirp.Infrastructure;
@@ -19,6 +20,8 @@ public interface ICheepService
 {
     public List<ExpandedCheepViewModel> GetCheeps(int page, int? currentUserId);
     public List<ExpandedCheepViewModel> GetCheepsFromAuthor(string author, int page, int? currentUserId);
+    public void LikeCheep(int cheepId, int authorId);
+    public void DislikeCheep(int cheepId, int authorId);
 }
 
 public class CheepService : ICheepService
@@ -39,13 +42,7 @@ public class CheepService : ICheepService
         
         return EnrichWithExpandedData(simpleCheeps, currentUserId);
     }
-    
-    public List<ExpandedCheepViewModel> GetCheepsFromAuthor(string author, int page, int? currentUserId = null)
-    {
-        var simpleCheeps = _cheepRepository.GetCheepsByAuthor(author, page);
-        return EnrichWithExpandedData(simpleCheeps, currentUserId);
-    }
-    
+
     private List<ExpandedCheepViewModel> EnrichWithExpandedData(
         List<CheepViewModel> simpleCheeps, 
         int? currentUserId)
@@ -60,5 +57,72 @@ public class CheepService : ICheepService
             currentUserId.HasValue && _likeRepository.HasUserLiked(currentUserId.Value, cheep.CheepId),
             currentUserId.HasValue && _likeRepository.HasUserDisliked(currentUserId.Value, cheep.CheepId)
         )).ToList();
+    }
+
+    public List<ExpandedCheepViewModel> GetCheepsFromAuthor(string author, int page, int? currentUserId = null)
+    {
+        var simpleCheeps = _cheepRepository.GetCheepsByAuthor(author, page);
+        return EnrichWithExpandedData(simpleCheeps, currentUserId);
+    }
+
+    public void LikeCheep(int cheepId, int authorId)
+    {
+        // Check if user already interacted with this cheep
+        var existingLike = _likeRepository.GetByAuthorAndCheep(authorId, cheepId);
+        
+        if (existingLike != null)
+        {
+            if (existingLike.IsLike)
+            {
+                // Already liked - remove it (toggle off)
+                _likeRepository.RemoveLike(existingLike);
+                return;
+            }
+            else
+            {
+                // Was dislike - remove it first, then add like
+                _likeRepository.RemoveLike(existingLike);
+            }
+        }
+        
+        // Add new like
+        var like = new Like
+        {
+            CheepId = cheepId,
+            AuthorId = authorId,
+            IsLike = true
+        };
+        
+        _likeRepository.AddLike(like);
+    }
+    
+    public void DislikeCheep(int cheepId, int authorId)
+    {
+        var existingLike = _likeRepository.GetByAuthorAndCheep(authorId, cheepId);
+        
+        if (existingLike != null)
+        {
+            if (!existingLike.IsLike)
+            {
+                // Already disliked - remove it (toggle off)
+                _likeRepository.RemoveLike(existingLike);
+                return;
+            }
+            else
+            {
+                // Was like - remove it first, then add dislike
+                _likeRepository.RemoveLike(existingLike);
+            }
+        }
+        
+        // Add new dislike
+        var dislike = new Like
+        {
+            CheepId = cheepId,
+            AuthorId = authorId,
+            IsLike = false
+        };
+        
+        _likeRepository.AddLike(dislike);
     }
 }
