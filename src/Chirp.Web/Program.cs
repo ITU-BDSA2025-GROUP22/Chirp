@@ -5,6 +5,8 @@ using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using Chirp.Web.Areas.Identity;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Http;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -42,6 +44,26 @@ builder.Services.AddSession(options =>
 });
 builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddEntityFrameworkStores<ChirpContext>();
+
+
+//Configuring cookies (both internal and external)
+builder.Services.ConfigureApplicationCookie(opts =>
+{
+    //Internal (SameSite)
+    opts.Cookie.SameSite = SameSiteMode.Lax;
+    opts.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+    opts.Cookie.HttpOnly = true;
+});
+
+
+builder.Services.ConfigureExternalCookie(opts =>
+{
+    //External (OAuth)
+    opts.Cookie.SameSite = SameSiteMode.None;
+    opts.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+    opts.Cookie.HttpOnly = true;
+});
+
 
 var app = builder.Build();
 
