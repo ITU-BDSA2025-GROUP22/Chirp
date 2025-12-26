@@ -2,7 +2,7 @@ using Chirp.Infrastructure;
 
 namespace Chirp.Infrastructure;
 
-public record CheepViewModel(string Author, string Message, string Timestamp);
+public record CheepViewModel(string Author, string Message, string Timestamp, int CheepId);
 
 public record ExpandedCheepViewModel(
     int CheepId,
@@ -17,8 +17,8 @@ public record ExpandedCheepViewModel(
 
 public interface ICheepService
 {
-    public List<CheepViewModel> GetCheeps(int page);
-    public List<CheepViewModel> GetCheepsFromAuthor(string author, int page);
+    public List<ExpandedCheepViewModel> GetCheeps(int page, int? currentUserId);
+    public List<ExpandedCheepViewModel> GetCheepsFromAuthor(string author, int page, int? currentUserId);
 }
 
 public class CheepService : ICheepService
@@ -33,13 +33,32 @@ public class CheepService : ICheepService
         _likeRepository = likeRepository;
     }
     
-    public List<CheepViewModel> GetCheeps(int page)
+    public List<ExpandedCheepViewModel> GetCheeps(int page, int? currentUserId = null)
     {
-        return _cheepRepository.GetCheeps(page);
+        var simpleCheeps = _cheepRepository.GetCheeps(page);
+        
+        return EnrichWithExpandedData(simpleCheeps, currentUserId);
     }
     
-    public List<CheepViewModel> GetCheepsFromAuthor(string author, int page)
+    public List<ExpandedCheepViewModel> GetCheepsFromAuthor(string author, int page, int? currentUserId = null)
     {
-        return _cheepRepository.GetCheepsByAuthor(author, page);
+        var simpleCheeps = _cheepRepository.GetCheepsByAuthor(author, page);
+        return EnrichWithExpandedData(simpleCheeps, currentUserId);
+    }
+    
+    private List<ExpandedCheepViewModel> EnrichWithExpandedData(
+        List<CheepViewModel> simpleCheeps, 
+        int? currentUserId)
+    {
+        return simpleCheeps.Select(cheep => new ExpandedCheepViewModel(
+            cheep.CheepId,
+            cheep.Author,
+            cheep.Message,
+            cheep.Timestamp,
+            _likeRepository.GetLikeCount(cheep.CheepId),
+            _likeRepository.GetDislikeCount(cheep.CheepId),
+            currentUserId.HasValue && _likeRepository.HasUserLiked(currentUserId.Value, cheep.CheepId),
+            currentUserId.HasValue && _likeRepository.HasUserDisliked(currentUserId.Value, cheep.CheepId)
+        )).ToList();
     }
 }
