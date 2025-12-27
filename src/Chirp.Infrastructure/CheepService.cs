@@ -22,6 +22,7 @@ public interface ICheepService
     public List<ExpandedCheepViewModel> GetCheepsFromAuthor(string author, int page, int? currentUserId);
     public void LikeCheep(int cheepId, int authorId);
     public void DislikeCheep(int cheepId, int authorId);
+    public Author? GetAuthorFromCheepId(int cheepId);
 }
 
 public class CheepService : ICheepService
@@ -124,5 +125,11 @@ public class CheepService : ICheepService
         };
         
         _likeRepository.AddLike(dislike);
+    }
+
+    public Author? GetAuthorFromCheepId(int cheepId)
+    {
+        var cheep = _cheepRepository.GetCheepByCheepId(cheepId);
+        return cheep.Author;
     }
 }

@@ -102,4 +102,9 @@ public class CheepRepository : ICheepRepository
         dateTime = dateTime.ToLocalTime();
         return dateTime.ToString("MM/dd/yy H:mm:ss");
     }
+
+    public Cheep? GetCheepByCheepId(int cheepId)
+    {
+        return _context.Cheeps.FirstOrDefault(c => c.CheepId == cheepId);
+    }
 }

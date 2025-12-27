@@ -118,40 +118,26 @@ public class PublicModel : PageModel
     
     public IActionResult OnPostLike(int cheepId)
     {
-        Console.WriteLine($"═══ LIKE BUTTON CLICKED ═══");
-        Console.WriteLine($"CheepId: {cheepId}");
-        
-        // Check authentication
         if (User.Identity?.IsAuthenticated != true)
         {
             return Unauthorized();
         }
         
-        // Get current user
         var userName = User.Identity?.Name;
         if (string.IsNullOrEmpty(userName))
         {
-            Console.WriteLine("Username is null");
             return RedirectToPage();
         }
         
-        // Get author
         var author = _authorRepository.GetAuthorByName(userName);
         if (author == null)
         {
-            Console.WriteLine($"Author not found: {userName}");
             return RedirectToPage();
         }
         
-        int authorId = author.AuthorId;
-        Console.WriteLine($"AuthorId: {authorId}");
+        _cheepService.LikeCheep(cheepId, author.AuthorId);
         
-        // Call service to handle like logic
-        _cheepService.LikeCheep(cheepId, authorId);
-        
-        Console.WriteLine("Like processed successfully");
-        TempData["SuccessMessage"] = $"✓ Liked cheep #{cheepId}";
-        
+        TempData["SuccessMessage"] = $"✓ Disliked cheep #{cheepId}";
         return RedirectToPage();
     }
     
