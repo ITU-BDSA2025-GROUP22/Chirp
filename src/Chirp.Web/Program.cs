@@ -20,6 +20,7 @@ builder.Services.AddDbContext<ChirpContext>(options => options.UseSqlite(dbConn)
 builder.Services.AddRazorPages();
 builder.Services.AddScoped<ICheepRepository, CheepRepository>();
 builder.Services.AddScoped<IAuthorRepository, AuthorRepository>();
+builder.Services.AddScoped<ILikeRepository, LikeRepository>();
 builder.Services.AddScoped<ICheepService, CheepService>();
 builder.Services.AddScoped<IInputSanitizer, InputSanitizer>();
 
@@ -32,8 +33,10 @@ builder.Services
     })
     .AddGitHub(o =>
     {
-        o.ClientId = builder.Configuration["authentication:github:clientId"]!;
-        o.ClientSecret = builder.Configuration["authentication:github:clientsecret"]!;
+        //o.ClientId = builder.Configuration["authentication:github:clientId"]!;
+        //o.ClientSecret = builder.Configuration["authentication:github:clientsecret"]!;
+        o.ClientId = builder.Configuration["github:clientId"]!;
+        o.ClientSecret = builder.Configuration["github:clientsecret"]!;
         o.CallbackPath = "/signin-github";
     });
 builder.Services.AddSession(options =>

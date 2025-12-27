@@ -19,11 +19,13 @@ public class CheepRepository : ICheepRepository
 
         var query = _context.Cheeps
             .Include(c => c.Author)
+            .Include(c => c.Likes)
             .OrderByDescending(c => c.TimeStamp)
             .Select(c => new CheepViewModel(
                 c.Author.Username,
                 c.Text,
-                UnixTimeStampToDateTimeString(c.TimeStamp)
+                UnixTimeStampToDateTimeString(c.TimeStamp),
+                c.CheepId
             ))
             .Skip(offset)
             .Take(pageSize)
@@ -44,12 +46,14 @@ public class CheepRepository : ICheepRepository
 
         var query = _context.Cheeps
             .Include(c => c.Author)
+            .Include(c => c.Likes)
             .Where(c => c.Author.Username == author)
             .OrderByDescending(c => c.TimeStamp)
             .Select(c => new CheepViewModel(
                 c.Author.Username,
                 c.Text,
-                UnixTimeStampToDateTimeString(c.TimeStamp)
+                UnixTimeStampToDateTimeString(c.TimeStamp),
+                c.CheepId
             ))
             .Skip(offset)
             .Take(pageSize)
@@ -78,7 +82,8 @@ public class CheepRepository : ICheepRepository
             .Select(c => new CheepViewModel(
                 c.Author.Username,
                 c.Text,
-                UnixTimeStampToDateTimeString(c.TimeStamp)
+                UnixTimeStampToDateTimeString(c.TimeStamp),
+                c.CheepId
             ))
             .Skip(offset)
             .Take(pageSize)
@@ -96,5 +101,10 @@ public class CheepRepository : ICheepRepository
     {
         dateTime = dateTime.ToLocalTime();
         return dateTime.ToString("MM/dd/yy H:mm:ss");
+    }
+
+    public Cheep? GetCheepByCheepId(int cheepId)
+    {
+        return _context.Cheeps.FirstOrDefault(c => c.CheepId == cheepId);
     }
 }

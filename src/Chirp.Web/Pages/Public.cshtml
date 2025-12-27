@@ -18,7 +18,6 @@
             </form >
         </div>
     }
-
     @if (Model.Cheeps.Any())
     {
         <ul id="messagelist" class="cheeps">
@@ -40,6 +39,23 @@
                         @cheep.Message
                         <small>&mdash; @cheep.Timestamp</small>
                     </p>
+                    <div class="cheep-actions">
+                        <form method="post" asp-page-handler="Like" style="display: inline;">
+                            <input type="hidden" name="cheepId" value="@cheep.CheepId" />
+                            <button type="submit">
+                                👍 @cheep.LikeCount
+                            </button>
+                        </form>
+                        
+                        <!-- ✅ DISLIKE BUTTON -->
+                        <form method="post" style="display: inline;">
+                            <input type="hidden" name="cheepId" value="@cheep.CheepId" />
+                            <button type="submit" 
+                                    asp-page-handler="Dislike">
+                                👎 @cheep.DislikeCount
+                            </button>
+                        </form>
+                    </div>
                 </li>
             }
         </ul>
