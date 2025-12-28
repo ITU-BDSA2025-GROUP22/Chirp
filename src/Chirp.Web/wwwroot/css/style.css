@@ -79,6 +79,7 @@ a:hover {
 
 input[type="email"],
 input[type="tel"],
+input[type="text"],
 input[type="password"] {
     background: var(--bg-page);
     border: 1px solid var(--border-soft);
@@ -89,14 +90,7 @@ input[type="password"] {
     color: var(--text-main);
 }
 
-input[type="text"]{
-    background: var(--bg-page);
-    border: 1px solid var(--border-soft);
-    padding: 2px;
-    font-family: 'Trebuchet MS', sans-serif;
-    font-size: 14px;
-    border-radius: 2px;
-    color: var(--text-main);
+div.cheepbox input[type="text"] {
     width: 90%;
 }
 
