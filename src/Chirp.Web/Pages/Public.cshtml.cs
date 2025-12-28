@@ -120,7 +120,7 @@ public class PublicModel : PageModel
     {
         if (User.Identity?.IsAuthenticated != true)
         {
-            return Unauthorized();
+            return LocalRedirect("/Identity/Account/Login");
         }
         
         var userName = User.Identity?.Name;
@@ -146,7 +146,7 @@ public class PublicModel : PageModel
     {
         if (User.Identity?.IsAuthenticated != true)
         {
-            return Unauthorized();
+            return LocalRedirect("/Identity/Account/Login");
         }
         
         var userName = User.Identity?.Name;

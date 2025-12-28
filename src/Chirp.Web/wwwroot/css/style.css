@@ -33,7 +33,7 @@ Light mode
 Dark mode 
 */
 [data-theme="dark"] {
-    --bg-body: #ececec;
+    --bg-body: #313a4e;
     --bg-page: #374760;
     --bg-header: #26303f;
     --bg-nav: #486fa7;
@@ -61,7 +61,7 @@ Dark mode
    ========================= 
 */
 body {
-    background: #313a4e;
+    background: var(--bg-body);
     font-family: 'Trebuchet MS', sans-serif;
     font-size: 14px;
 }
