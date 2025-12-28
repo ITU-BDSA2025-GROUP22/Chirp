@@ -2,47 +2,91 @@
 <html lang="en">
 <head>
     <title>@ViewData["Chirp"]</title>
-    <link href="/css/style.css" rel="stylesheet" type="text/css" />
-    <link rel="icon" type="image/png" href="/favicon/favicon.ico">
+    <link href="/css/style.css?v=@DateTime.Now.Ticks" rel="stylesheet" />
+    <link id="favicon" rel="icon" type="image/png" href="/favicon/favicon_dark.ico">
 </head>
 <body>
-<div class=page>
+<div class="page">
     <h1>
-        <a href="/"><img src="/images/icon1.png" alt="Icon1"/></a>Chirp!
+        <a href="/">
+            <img id="site-logo" src="/favicon/favicon_dark.ico" alt="Chirp logo"/>
+        </a>
+        Chirp!
     </h1>
-    
-    <nav style="justify-content: space-between; display: flex; align-items: center; padding: 0 0.6rem; background-color: #f0f0f0;">
+
+    <nav style="justify-content: space-between; display: flex; align-items: center; padding: 0 0.6rem;">
         <div>
-            <a class="navigation_button" href="/" style="color: #333333;">public timeline</a>
+            <a class="navigation_button" href="/">public timeline</a>
             |
             @if (User.Identity?.IsAuthenticated == true)
             {
-                <a asp-page="/UserTimeline" asp-route-author="@User.Identity.Name" style="color: #333333;">my timeline</a>
+                <a asp-page="/UserTimeline" asp-route-author="@User.Identity.Name">my timeline</a>
                 <a>|</a>
-                <a class="navigation_button" href="/Identity/Account/Logout" style="color: #333333;">logout [@(User.Identity!.Name)]</a>
+
+                <a class="navigation_button" href="/Identity/Account/Logout">logout [@(User.Identity!.Name)]</a>
                 
                 <a>|</a>
                 
-                <a class="navigation_button" href="/Identity/Account/DeleteAccount" style="color: #b00020;"> delete account</a>
+                <a class="navigation_button" href="/Identity/Account/DeleteAccount"> delete account</a>
             }
             
             else
             {
-                <a class="navigation_button" href="/Identity/Account/Register" style="color: #333333;">register</a>
+                <a class="navigation_button" href="/Identity/Account/Register">register</a>
                 <a>|</a>
-                <a class="navigation_button" href="/Identity/Account/Login" style="color: #333333;">login</a>        
+                <a class="navigation_button" href="/Identity/Account/Login">login</a>
             }
         </div>
+        <button id="theme-toggle" type="button">
+            🌙
+        </button>
     </nav>
-    
+
     @await RenderSectionAsync("Scripts", required: false)
-    <div class=body>
+
+    <div class="body">
         @RenderBody()
     </div>
-    <div class=footer>
+
+    <div class="footer">
         Chirp &mdash; An ASP.NET Application
     </div>
 </div>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    const root = document.documentElement;
+    const toggleButton = document.getElementById("theme-toggle");
+    const favicon = document.getElementById("favicon");
+    const logo = document.getElementById("site-logo");
+
+    function applyTheme(theme) {
+        root.setAttribute("data-theme", theme);
+        localStorage.setItem("theme", theme);
+
+        // Toggle button icon
+        toggleButton.textContent = theme === "dark" ? "☀️" : "🌙";
+
+        // Favicon swap (cache-busted)
+        favicon.href = theme === "dark"
+            ? "/favicon/favicon_dark.ico?v=" + Date.now()
+            : "/favicon/favicon_light.ico?v=" + Date.now();
+
+        // Logo / frontpage image swap
+        logo.src = theme === "dark"
+            ? "/favicon/favicon_dark.ico"
+            : "/favicon/favicon_light.ico";
+    }
+
+    const savedTheme = localStorage.getItem("theme") || "dark";
+    applyTheme(savedTheme);
+
+    toggleButton.addEventListener("click", () => {
+        const current = root.getAttribute("data-theme");
+        applyTheme(current === "dark" ? "light" : "dark");
+    });
+});
+</script>
 
 </body>
 </html>
