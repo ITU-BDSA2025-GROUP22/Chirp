@@ -1,90 +1,188 @@
+﻿/* 
+   ===============
+   THEME VARIABLES
+   ===============
+*/
+/*
+Light mode 
+*/
+:root {
+    --text-cheep: #534949;
+    --bg-body: #eccaca;
+    --bg-page: #ffffff;
+    --bg-header: #cc6e6e;
+    --bg-nav: #DEE9E8;
+    --bg-footer: #eeeeee;
+    --bg-card: #F0FAF9;
+    --bg-message: #f3b9b9;
+    --bg-error: #FAE4E4;
+    --text-main: #571010;
+    --text-muted: #888;
+    --text-link: #26776F;
+    --text-link-hover: #af1a1a;
+    --text-invert: #ffffff;
+    --border-main: #cc6e6e;
+    --border-soft: #ccc;
+    --border-card: #DBF3F1;
+    --submit-bg: #571010;
+    --submit-border: #3b0707;
+    --button-bg: #cc6e6e;
+    --button-hover: #8b4949;
+}
+/* 
+Dark mode 
+*/
+[data-theme="dark"] {
+    --bg-body: #ececec;
+    --bg-page: #374760;
+    --bg-header: #26303f;
+    --bg-nav: #486fa7;
+    --bg-footer: #21395a;
+    --bg-card: #3b4354;
+    --bg-message: #7f1d1d;
+    --bg-error: #7f1d1d;
+    --text-main: #e5e7eb;
+    --text-cheep: #b1c5dc;
+    --text-muted: #5c82c2;
+    --text-link: #58c1b1;
+    --text-link-hover: #4bfae0;
+    --text-invert: #803535;
+    --border-main: #4b596f;
+    --border-soft: #4b5563;
+    --border-card: #424e60;
+    --submit-bg: #9a9494;
+    --submit-border: #d7adad;
+    --button-bg: #d7aeae;
+    --button-hover: #bb5858;
+}
+/* 
+   =========================
+   BASE STYLES (UNCHANGED)
+   ========================= 
+*/
 body {
-  background: #eccaca;
-  font-family: 'Trebuchet MS', sans-serif;
-  font-size: 14px;
+    background: #313a4e;
+    font-family: 'Trebuchet MS', sans-serif;
+    font-size: 14px;
 }
-
 a {
-  color: #26776F;
+    color: var(--text-link);
 }
-
 a:hover {
-  color: #333;
+    color: var(--text-link-hover);
 }
+/* 
+   ==================
+   INPUTS (UNCHANGED)
+   ==================
+ */
 
 input[type="email"],
 input[type="text"],
 input[type="tel"],
 input[type="password"] {
-    background: white;
-    border: 1px solid #e6c0bf;
+    background: var(--bg-page);
+    border: 1px solid var(--border-soft);
     padding: 2px;
     font-family: 'Trebuchet MS', sans-serif;
     font-size: 14px;
     border-radius: 2px;
-    -moz-border-radius: 2px;
-    -webkit-border-radius: 2px;
-    color: #571010;
+    color: var(--text-main);
 }
+
+/* 
+   ================================
+   SUBMIT BUTTONS (EXACT OLD STYLE)
+   ================================
+*/
 
 input[type="submit"] {
-  background: #571010;
-  border: 1px solid #3b0707;
-  padding: 1px 3px;
-  font-family: 'Trebuchet MS', sans-serif;
-  font-size: 14px;
-  font-weight: bold;
-  border-radius: 2px;
-  -moz-border-radius: 2px;
-  -webkit-border-radius: 2px;
-  color: white;
+    background: var(--submit-bg);
+    border: 1px solid var(--submit-border);
+    padding: 1px 3px;
+    font-family: 'Trebuchet MS', sans-serif;
+    font-size: 14px;
+    font-weight: bold;
+    border-radius: 2px;
+    color: var(--text-invert);
+    cursor: pointer;
+}
+input[type="submit"]:hover {
+    background: var(--button-hover);
+}
+/* 
+   =================================
+   GENERIC BUTTONS (EXACT OLD STYLE)
+   =================================
+*/
+button {
+    background-color: var(--button-bg);
+    border: none;
+    color: var(--text-invert);
+    padding: 8px 16px;
+    text-align: center;
+    cursor: pointer;
+}
+button:hover {
+    background-color: var(--button-hover);
 }
 
+/* 
+   =========================
+   PAGE LAYOUT (UNCHANGED)
+   ========================= 
+*/
+
 div.page {
-  background: white;
-  border: 1px solid #cc6e6e;
-  width: 700px;
-  margin: 30px auto;
+    background: var(--bg-page);
+    border: 1px solid var(--border-main);
+    width: 700px;
+    margin: 30px auto;
 }
 
 div.page > h1 {
-  background: #cc6e6e;
-  margin: 0;
-  padding: 10px 14px;
-  color: white;
-  letter-spacing: 1px;
-  text-shadow: 0 0 3px #772424;
-  font-weight: normal;
-  font-size: 80px;
+    background: var(--bg-header);
+    margin: 0;
+    padding: 10px 14px;
+    color: var(--text-invert);
+    letter-spacing: 1px;
+    text-shadow: 0 0 3px #2d0707;
+    font-weight: normal;
+    font-size: 80px;
 }
 
 div.page h1 img {
-  height: 1em;
+    height: 1em;
 }
 
-div.page div.navigation {
-  background: #DEE9E8;
-  padding: 4px 10px;
-  border-top: 1px solid #ccc;
-  border-bottom: 1px solid #eee;
-  color: #888;
-  font-size: 12px;
-  letter-spacing: 0.5px;
+/* 
+   ==========
+   NAVIGATION 
+   ==========
+*/
+div.page .navigation {
+    background: var(--bg-nav);
+    padding: 4px 10px;
+    border-top: 1px solid var(--border-soft);
+    border-bottom: 1px solid var(--border-soft);
+    color: var(--text-muted);
+    font-size: 12px;
+    letter-spacing: 0.5px;
 }
 
-div.page div.navigation a {
-  color: #444;
-  font-weight: bold;
+div.page .navigation a {
+    color: var(--text-main);
+    font-weight: bold;
 }
 
-div.page div.navigation form {
+div.page .navigation form {
     display: contents;
 }
 
-div.page div.navigation form button {
+div.page .navigation form button {
     padding: unset;
     background: unset;
-    color: #444;
+    color: var(--text-main);
     font-weight: bold;
     display: inline-block;
     font-size: unset;
@@ -93,199 +191,110 @@ div.page div.navigation form button {
     font-family: unset;
     letter-spacing: unset;
 }
-
+/* 
+   =======
+   CONTENT
+   =======
+*/
 div.page h2 {
-  margin: 0 0 15px 0;
-  color: #571010;
-  text-shadow: 0 1px 2px #ccc;
+    margin: 0 0 15px 0;
+    color: var(--text-main);
+    text-shadow: 0 1px 2px #ccc;
 }
-
 div.page div.body {
-  padding: 10px;
+    padding: 10px;
 }
-
 div.page div.footer {
-  background: #eee;
-  color: #888;
-  padding: 5px 10px;
-  font-size: 12px;
+    background: var(--bg-footer);
+    color: var(--text-muted);
+    padding: 5px 10px;
+    font-size: 12px;
 }
-
-div.page div.followstatus {
-  border: 1px solid #ccc;
-  background: #E3EBEA;
-  border-radius: 2px;
-  -moz-border-radius: 2px;
-  -webkit-border-radius: 2px;
-  padding: 3px;
-  font-size: 13px;
-}
-
+/* =============================
+   CHEEPS / TIMELINE (UNCHANGED)
+   ============================= 
+*/
 div.page ul.cheeps {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-
-div.page ul.cheeps li {
-  margin: 10px 0;
-  padding: 5px;
-  background: #F0FAF9;
-  border: 1px solid #DBF3F1;
-  border-radius: 2px;
-  -moz-border-radius: 5px;
-  -webkit-border-radius: 5px;
-  min-height: 48px;
-}
-
-div.page ul.cheeps p {
-  margin: 0;
-}
-
-div.page ul.cheeps li img {
-  float: left;
-  padding: 0 10px 0 0;
-}
-
-div.page ul.cheeps li small {
-  font-size: 0.9em;
-  color: #888;
-}
-
-div.page div.cheepbox {
-  margin: 10px 0;
-  padding: 5px;
-  background: #F0FAF9;
-  border: 1px solid #e29494;
-  border-radius: 2px;
-  -moz-border-radius: 5px;
-  -webkit-border-radius: 5px;
-}
-
-div.page div.cheepbox h3 {
-  margin: 0;
-  font-size: 1em;
-  color: #7e2c2c;
-}
-
-div.page div.cheepbox p {
-  margin: 0;
-}
-
-div.page div.cheepbox input[type="text"] {
-  width: 585px;
-}
-
-div.page div.cheepbox input[type="submit"] {
-  width: 70px;
-  margin-left: 5px;
-}
-
-div.message {
-  list-style: none;
-  margin: 10px 10px 0 10px;
-
-  background: #f3b9b9;
-  border: 1px solid #ce8181;
-  border-radius: 2px;
-  -moz-border-radius: 2px;
-  -webkit-border-radius: 2px;
-  padding: 4px;
-  font-size: 13px;
-}
-
-ul.message li {
-  background: #f3b9b9;
-  border: 1px solid #ce8181;
-  border-radius: 2px;
-  -moz-border-radius: 2px;
-  -webkit-border-radius: 2px;
-  padding: 4px;
-  font-size: 13px;
-}
-
-div.error {
-  margin: 10px 0;
-  background: #FAE4E4;
-  border: 1px solid #DD6F6F;
-  border-radius: 2px;
-  -moz-border-radius: 2px;
-  -webkit-border-radius: 2px;
-  padding: 4px;
-  font-size: 13px;
-}
-
-div.topics {
-  width: 180px;
-  height: 250px;
-  background: #ffffff;
-  border: 1px solid #e29494;
-  border-radius: 2px;
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  margin-left: 460px;
-  padding: 10px;
-}
-
-ul.topic {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-
-li.topic {
-  margin: 10px 0;
-  padding: 5px;
-  background: #F0FAF9;
-  border: 1px solid #DBF3F1;
-  border-radius: 2px;
-  -moz-border-radius: 5px;
-  -webkit-border-radius: 5px;
-  min-height: 20px;
-}
-
-form * {
-    margin: 2px 0;
-}
-
-button {
-    background-color: #cc6e6e;
-    border: none;
-    color: white;
-    padding: 8px 16px;
-    text-align: center;
-    text-decoration: none;
-    cursor: pointer;
-}
-
-button:hover {
-    background-color: #8b4949;
-}
-
-ul.nav {
-    list-style-type: none;
+    list-style: none;
     margin: 0;
     padding: 0;
-    overflow: hidden;
-    background-color: #cc6e6e;
+    color: var(--text-cheep);
 }
-
-ul.nav li {
+div.page ul.cheeps li {
+    margin: 10px 0;
+    padding: 5px;
+    background: var(--bg-card);
+    border: 1px solid var(--border-card);
+    border-radius: 5px;
+    min-height: 48px;
+}
+div.page ul.cheeps p {
+    margin: 0;
+}
+div.page ul.cheeps li img {
     float: left;
+    padding: 0 10px 0 0;
 }
-
-ul.nav li a {
-    display: block;
-    color: white;
-    text-align: center;
-    padding: 8px 8px;
+div.page ul.cheeps li small {
+    font-size: 0.9em;
+    color: var(--text-muted);
+}
+/* 
+   =========
+   CHEEP BOX
+   =========
+*/
+div.page div.cheepbox {
+    margin: 10px 0;
+    padding: 5px;
+    background: var(--bg-card);
+    border: 1px solid var(--border-main);
+    border-radius: 5px;
+}
+div.page div.cheepbox h3 {
+    margin: 0;
+    font-size: 1em;
+    color: var(--text-main);
+}
+div.page div.cheepbox p {
+    margin: 0;
+}
+/* 
+   =================
+   MESSAGES / ERRORS
+   ================= 
+*/
+div.message,
+ul.message li {
+    background: var(--bg-message);
+    border: 1px solid var(--border-main);
+    border-radius: 2px;
+    padding: 4px;
+    font-size: 13px;
+}
+div.error {
+    margin: 10px 0;
+    background: var(--bg-error);
+    border: 1px solid var(--border-main);
+}
+#theme-toggle {
+    background: none;
+    border: 2px solid var(--border-soft);
+    border-radius: 15px;
+    padding: 5px 8px;
+    cursor: pointer;
+    font-size: 15px;
+    color: var(--text-main);
+}
+#theme-toggle:hover {
+    background: var(--bg-card);
+}
+h1 a {
     text-decoration: none;
+    outline: none;
 }
 
-ul.nav li a:hover {
-    background-color: #8b4949;
+h1 a:focus,
+h1 a:active {
+    outline: none;
 }
-
-
