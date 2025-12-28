@@ -2,11 +2,11 @@
 title: "Chirp!"
 subtitle: "Project Report"
 author:
-  - "Tore"
-  - "Timothy"
-  - "Muneeb"
-  - "Nikolaj"
-  - "Jakob"
+  - "Tore Engberg"
+  - "Timothy Lubowa"
+  - "Muneeb Hussain"
+  - "Nikolai Li"
+  - "Jakob Juhl"
 date: "2026-01-02"
 toc: true
 ---
@@ -70,5 +70,6 @@ This will run every test using in-memory Sqlite databases.
 We use the MIT license
 ## LLMs, ChatGPT, Gemini, and others
 ChatGPT and Gemini was used minimally, and no production code was copied directly from them. It was mainly used to clarify concepts and interpret error messages. Github copilot was also used for the same purpose of explaining error messages related to workflows. Stackoverflow and the official documentation often proved more efficient and reliable than AI suggestions since they have a very narrow context of the project.
+
 
 
