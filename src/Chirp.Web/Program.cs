@@ -5,6 +5,8 @@ using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using Chirp.Web.Areas.Identity;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Http;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,6 +20,7 @@ builder.Services.AddDbContext<ChirpContext>(options => options.UseSqlite(dbConn)
 builder.Services.AddRazorPages();
 builder.Services.AddScoped<ICheepRepository, CheepRepository>();
 builder.Services.AddScoped<IAuthorRepository, AuthorRepository>();
+builder.Services.AddScoped<ILikeRepository, LikeRepository>();
 builder.Services.AddScoped<ICheepService, CheepService>();
 builder.Services.AddScoped<IInputSanitizer, InputSanitizer>();
 
@@ -30,8 +33,10 @@ builder.Services
     })
     .AddGitHub(o =>
     {
-        o.ClientId = builder.Configuration["authentication:github:clientId"]!;
-        o.ClientSecret = builder.Configuration["authentication:github:clientsecret"]!;
+        //o.ClientId = builder.Configuration["authentication:github:clientId"]!;
+        //o.ClientSecret = builder.Configuration["authentication:github:clientsecret"]!;
+        o.ClientId = builder.Configuration["github:clientId"]!;
+        o.ClientSecret = builder.Configuration["github:clientsecret"]!;
         o.CallbackPath = "/signin-github";
     });
 builder.Services.AddSession(options =>
@@ -42,6 +47,26 @@ builder.Services.AddSession(options =>
 });
 builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddEntityFrameworkStores<ChirpContext>();
+
+
+//Configuring cookies (both internal and external)
+builder.Services.ConfigureApplicationCookie(opts =>
+{
+    //Internal (SameSite)
+    opts.Cookie.SameSite = SameSiteMode.Lax;
+    opts.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+    opts.Cookie.HttpOnly = true;
+});
+
+
+builder.Services.ConfigureExternalCookie(opts =>
+{
+    //External (OAuth)
+    opts.Cookie.SameSite = SameSiteMode.None;
+    opts.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+    opts.Cookie.HttpOnly = true;
+});
+
 
 var app = builder.Build();
 
