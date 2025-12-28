@@ -6,15 +6,18 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using Chirp.Infrastructure;
+using System.Security.Claims;
+using System.Text.Json;
+
 
 [Authorize]
-public class DeleteModel : PageModel
+public class ManageDataModel  : PageModel
 {
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly SignInManager<ApplicationUser> _signInManager;
     private readonly ChirpContext _db;
 
-    public DeleteModel(
+    public ManageDataModel(
         UserManager<ApplicationUser> userManager,
         SignInManager<ApplicationUser> signInManager,
         ChirpContext db)
@@ -46,10 +49,70 @@ public class DeleteModel : PageModel
         return Page();
     }
 
-    public async Task<IActionResult> OnPostAsync()
+    //Export Userdata
+    public async Task<IActionResult> OnPostDownloadAsync()
     {
         var user = await _userManager.GetUserAsync(User);
-        if (user == null) return NotFound("Unable to load user.");
+        if (user == null) return Unauthorized();
+        
+        // Userdata
+        var identityPart = new
+        {
+            user.Id,
+            user.UserName,
+            user.Email,
+            user.PhoneNumber
+        };
+        var logins = await _userManager.GetLoginsAsync(user);
+        var externalLogins = logins.Select(l => new
+        {
+            l.LoginProvider,
+            l.ProviderKey,
+            l.ProviderDisplayName
+        }).ToList();
+        
+        // Chirp domain data (project to DTO to avoid cycles)
+        var authorExport = await _db.Authors
+            .Where(a => a.Username == user.UserName || (user.Email != null && a.Email == user.Email))
+            .Select(a => new
+            {
+                a.AuthorId,
+                a.Username,
+                a.Email,
+
+                Cheeps = a.Cheeps
+                    .OrderByDescending(c => c.TimeStamp)
+                    .Select(c => new { c.CheepId, c.Text, c.TimeStamp })
+                    .ToList(),
+
+                Following = a.Following.Select(x => x.Username).ToList(),
+                Followers = a.Followers.Select(x => x.Username).ToList()
+            })
+            .SingleOrDefaultAsync();
+
+        var export = new
+        {
+            ExportedAtUtc = DateTime.UtcNow,
+            Identity = identityPart,
+            ExternalLogins = externalLogins,
+            Chirp = authorExport
+        };
+
+        var jsonBytes = JsonSerializer.SerializeToUtf8Bytes(export, new JsonSerializerOptions
+        {
+            WriteIndented = true
+        });
+
+        var fileName = $"chirp-mydata-{DateTime.UtcNow:yyyyMMdd-HHmmss}.json";
+        return File(jsonBytes, "application/json", fileName);
+    }
+
+
+    //Delete Userdata
+    public async Task<IActionResult> OnPostDeleteAsync()
+    {
+        var user = await LoadUserAsync();
+        if (user == null) return Unauthorized();
 
         RequirePassword = await _userManager.HasPasswordAsync(user);
 
@@ -70,15 +133,13 @@ public class DeleteModel : PageModel
         }
 
         //Delete userdata (Authors/Cheeps/follow-relations), matched on username/Email
-        var username = user.UserName;
-        var email = user.Email;
-
         //Get relations such that follow links are wiped completely
         var author = await _db.Authors
             .Include(a => a.Cheeps)
             .Include(a => a.Followers)
             .Include(a => a.Following)
-            .SingleOrDefaultAsync(a => a.Username == username || (email != null && a.Email == email));
+            .SingleOrDefaultAsync(a =>
+                a.Username == user.UserName || (user.Email != null && a.Email == user.Email));
 
         if (author != null)
         {
@@ -106,5 +167,29 @@ public class DeleteModel : PageModel
         //Logs out and redirects to front page.
         await _signInManager.SignOutAsync();
         return RedirectToPage("/Public", new { area = "" });
+    }
+
+
+    //Helper method
+    private async Task<ApplicationUser> LoadUserAsync()
+    {
+        var user = await _userManager.GetUserAsync(User);
+        if (user != null) return user;
+
+        var name = User.Identity?.Name;
+        if (!string.IsNullOrWhiteSpace(name))
+        {
+            user = await _userManager.FindByNameAsync(name);
+            if (user != null) return user;
+        }
+
+        var email = User.FindFirstValue(ClaimTypes.Email);
+        if (!string.IsNullOrWhiteSpace(email))
+        {
+            user = await _userManager.FindByEmailAsync(email);
+            if (user != null) return user;
+        }
+
+        return null;
     }
 }

@@ -1,0 +1,41 @@
+﻿@page
+@model ManageDataModel
+@{
+    ViewData["Title"] = "My data";
+}
+<h1>My Data</h1>
+
+
+<section>
+    <h2>Download your account data</h2>
+    <p>Export your entire Chirp userdata history to Json format</p>
+    
+    <form method="post" asp-page-handler="Download">
+        <button type="submit">Download my data</button>
+    </form>
+</section>
+
+<hr />
+
+<section>
+    <h2>Delete account</h2>
+    <p>This will permanently delete your account and your Chirp data. This cannot be undone.</p>
+    
+    <form method="post" asp-page-handler="Delete">
+        @if (Model.RequirePassword)
+        {
+            <div>
+                <label asp-for="Input.Password"></label>
+                <input asp-for="Input.Password" />
+                <span asp-validation-for="Input.Password"></span>
+            </div>
+        }
+        <button type="submit">Yes, delete my account</button>
+        <a asp-page="/Account/Manage/Index">Cancel</a>
+    </form>
+</section>
+
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
