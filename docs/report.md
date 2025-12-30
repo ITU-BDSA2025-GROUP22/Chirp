@@ -25,9 +25,15 @@ The domain model diagram illustrates the data structure of the Chirp application
 
 ![This figure shows how our Model is structured. Its structured after the union architecture model](Diagram/UnionA.png)
 
-Thus model illustrates the architecture of our chirp application which is constructed after the principals of onion architecture. The system is devided by three layers. Chirp.Core, Chirp.Web, Chirp.Infrastructure. Det outer most layer Chirp.Web consists of the visual that the applications presents. The middle layer Chirp.Infrastructure is responsible for the data flow, services and integration with the database, and the inner most layer Chirp.Core is responsible for the domain models and logik for the application. Each layer is independent of its outer layers
+This model illustrates the architecture of our chirp application which is constructed after the principals of onion architecture. The system is devided by three layers. Chirp.Core, Chirp.Web, Chirp.Infrastructure. Det outer most layer Chirp.Web consists of the visual that the applications presents. The middle layer Chirp.Infrastructure is responsible for the data flow, services and integration with the database, and the inner most layer Chirp.Core is responsible for the domain models and logik for the application. Each layer is independent of its outer layers
 
 ## Architecture of deployed application
+![ASP.NET flow diagram](Diagram/aspnetflow.PNG)
+
+The application is built using ASP.NET Core and is deployed as a web application on Azure App Service. ASP.NET Core provides the framework and built-in templates, including Razor Pages for server-side page rendering and authentication services for user login and access control.
+
+Clients interact with the system through a web browser using HTTPS, requesting Razor Pages that are processed on the server. The Azure App Service handles authentication requests via the authentication service and accesses persistent application data through a database using Entity Framework Core.
+
 ![The diagram illustrates the deployment architecture on Microsoft Azure.](Diagram/azure-deployment.png)
 
 The diagram illustrates the deployment architecture on Microsoft Azure. Users access the application via a web browser, which connects securely to the Azure App Service using HTTPS. Inside the server, the application logic runs alongside a local dump.sql file, which is used for data storage instead of an external database server. Finally, GitHub is integrated as a third-party service to handle user authentication.
@@ -133,6 +139,7 @@ This will run every test using in-memory Sqlite databases.
 We use the MIT license
 ## LLMs, ChatGPT, Gemini, and others
 ChatGPT and Gemini was used minimally, and no production code was copied directly from them. It was mainly used to clarify concepts and interpret error messages. Github copilot was also used for the same purpose of explaining error messages related to workflows. Stackoverflow and the official documentation often proved more efficient and reliable than AI suggestions since they have a very narrow context of the project.
+
 
 
 
