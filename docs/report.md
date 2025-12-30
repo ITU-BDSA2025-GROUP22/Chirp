@@ -45,9 +45,9 @@ The diagram illustrates the deployment architecture on Microsoft Azure. Users ac
 ## Sequence of functionality/calls through _Chirp!
 *With a UML sequence diagram, illustrate the flow of messages and data through your Chirp! application. Start with an HTTP request that is send by an unauthorized user to the root endpoint of your application and end with the completely rendered web-page that is returned to the user.*
 ### HTTP Request made by an Unauthorized user
-![This Diagram illustrates the flow of data and requests made by unauthorized users.](AppSeq_UnAuthorized)
+![This Diagram illustrates the flow of data and requests made by unauthorized users.](Diagram/AppSeq_UnAuthorized.png)
 ### HTTP Request made by an authorized user
-![This Diagram illustrates the flow of data and requests made by authorized users.](Diagram/AppSeq_Authorized)
+![This Diagram illustrates the flow of data and requests made by authorized users.](Diagram/AppSeq_Authorized.png)
 
 *Make sure that your illustration is complete. That is, likely for many of you there will be different kinds of "calls" and responses. Some HTTP calls and responses, some calls and responses in C# and likely some more. (Note the previous sentence is vague on purpose. I want that you create a complete illustration.)*
 
@@ -103,6 +103,7 @@ This will run every test using in-memory Sqlite databases.
 We use the MIT license
 ## LLMs, ChatGPT, Gemini, and others
 ChatGPT and Gemini was used minimally, and no production code was copied directly from them. It was mainly used to clarify concepts and interpret error messages. Github copilot was also used for the same purpose of explaining error messages related to workflows. Stackoverflow and the official documentation often proved more efficient and reliable than AI suggestions since they have a very narrow context of the project.
+
 
 
 
