@@ -34,8 +34,49 @@ Thus model illustrates the architecture of our chirp application which is constr
 *Make sure that the illustrations are in line with the actual behavior of your application.*
 ## Sequence of functionality/calls through _Chirp!
 *With a UML sequence diagram, illustrate the flow of messages and data through your Chirp! application. Start with an HTTP request that is send by an unauthorized user to the root endpoint of your application and end with the completely rendered web-page that is returned to the user.*
+### HTTP Request made by Unauthorized user
 
+```mermaid
+sequenceDiagram
+    autonumber
+    actor Client as Browser
+    participant Web as Chirp.Web (ASP.NET Core)
+    participant Router as Routing + Razor Pages
+    participant Page as Public.cshtml.cs
+    participant Service as Chirp.Infrastructure<br/>CheepService
+    participant Repo as Chirp.Infrastructure<br/>Repositories
+    participant DB as SQLite Database
+    participant View as Razor View Engine
+    
+    Client->>Web: HTTP GET "/"
+    Web->>Router: Match route
+    Router-->>Web: Endpoint = /Public
+
+    Web->>Page: OnGetAsync()
+
+    Page->>Service: GetCheeps(page, userId)
+
+    Service->>Repo: GetCheeps()
+    Repo->>DB: SELECT FROM Cheeps ORDER BY Timestamp
+    DB-->>Repo: Cheep rows
+    Repo-->>Service: List<Cheep>
+
+    loop For each cheep
+        Service->>Repo: GetLikeCount(cheepId)
+        Repo->>DB: SELECT COUNT(*) FROM Likes WHERE CheepId
+        DB-->>Repo: Count
+        Repo-->>Service: Like/Dislike counts
+    end
+
+    Service-->>Page: ExpandedCheepViewModels
+    Page->>View: Render Public.cshtml
+    View-->>Web: HTML
+    Web-->>Client: HTTP 200 OK + HTML
+```
+
+                           
 *Make sure that your illustration is complete. That is, likely for many of you there will be different kinds of "calls" and responses. Some HTTP calls and responses, some calls and responses in C# and likely some more. (Note the previous sentence is vague on purpose. I want that you create a complete illustration.)*
+
 # Process
 
 ## Build, test, release, and deployment
@@ -88,6 +129,7 @@ This will run every test using in-memory Sqlite databases.
 We use the MIT license
 ## LLMs, ChatGPT, Gemini, and others
 ChatGPT and Gemini was used minimally, and no production code was copied directly from them. It was mainly used to clarify concepts and interpret error messages. Github copilot was also used for the same purpose of explaining error messages related to workflows. Stackoverflow and the official documentation often proved more efficient and reliable than AI suggestions since they have a very narrow context of the project.
+
 
 
 
