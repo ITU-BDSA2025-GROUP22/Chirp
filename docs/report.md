@@ -43,13 +43,16 @@ The diagram illustrates the deployment architecture on Microsoft Azure. Users ac
 
 *Make sure that the illustrations are in line with the actual behavior of your application.*
 ## Sequence of functionality/calls through _Chirp!
-*With a UML sequence diagram, illustrate the flow of messages and data through your Chirp! application. Start with an HTTP request that is send by an unauthorized user to the root endpoint of your application and end with the completely rendered web-page that is returned to the user.*
+For our web application the sequence of data flow shares an overall arhictectural structure. The main difference occurs when two types of users try to make requests to the application. Unauthenticated users, who are not logged will get, and authenticated users, who are logged in. Both requests pass through the ASP.NET core pipeline, to return a rendered Razor view to the user client. When no authentication identity can be resolved, the client is served a lightweight read-only site. In contrast, when an authentication is resolved, the user is served a more enriched experience. 
+
 ### HTTP Request made by an Unauthorized user
+This sequence diagram shows an unauthenticated user requesting to access the Chirp web application. When a HTTPS request is made to the Chirp timeline, the request is directed through ASP.NET Core middleware pipeline, into the web layer, through the services and infrastructure layers, in the end returning the HTML page. The middleware will check if the user is logged in, sicne they are not, they will only gain access to the public timeline - which does not require any authentication.
 ![This Diagram illustrates the flow of data and requests made by unauthorized users.](Diagram/AppSeq_UnAuthorized.png)
 ### HTTP Request made by an authorized user
+This sequence diagram shows an authenthicated user requesting to access the Chirp web application. The core pipeline for sequences of data during requests, is mostly identical when the user is authenticated. Though when the user is authenticated, the users auth token are checked, and is confirmed to access the endpoints. This in turns changes how the website looks for the user, e.g. the authenticated user will see a text box to post cheeps. In the devlogs we see that a query is made against all authors (Authenticated users), then user specific checks are made, such as their likes and follows, for their own custom timeline - Data which is unaccessible if the user is not authenticated. 
 ![This Diagram illustrates the flow of data and requests made by authorized users.](Diagram/AppSeq_Authorized.png)
 
-*Make sure that your illustration is complete. That is, likely for many of you there will be different kinds of "calls" and responses. Some HTTP calls and responses, some calls and responses in C# and likely some more. (Note the previous sentence is vague on purpose. I want that you create a complete illustration.)*
+
 
 # Process
 
@@ -103,6 +106,7 @@ This will run every test using in-memory Sqlite databases.
 We use the MIT license
 ## LLMs, ChatGPT, Gemini, and others
 ChatGPT and Gemini was used minimally, and no production code was copied directly from them. It was mainly used to clarify concepts and interpret error messages. Github copilot was also used for the same purpose of explaining error messages related to workflows. Stackoverflow and the official documentation often proved more efficient and reliable than AI suggestions since they have a very narrow context of the project.
+
 
 
 
