@@ -57,9 +57,10 @@ This sequence diagram shows an authenthicated user requesting to access the Chir
 # Process
 
 ## Build, test, release, and deployment
-*Illustrate with a UML activity diagram how your Chirp! applications are build, tested, released, and deployed. That is, illustrate the flow of activities in your respective GitHub Actions workflows.*
+![The activity diagram illustrates the three automated workflows in GitHub Actions.](Diagram/workflow-activity.png)
 
-*Describe the illustration briefly, i.e., how your application is built, tested, released, and deployed.*
+The activity diagram illustrates the three automated workflows in GitHub Actions. The first two columns show the Continuous Integration and Deployment processes, where code is automatically tested with Playwright and deployed to Azure when files are changed. The third column shows the release workflow, which builds and publishes the tool whenever a new version tag is pushed.
+
 ## Team work
 *Show a screenshot of your project board right before hand-in. Briefly describe which tasks are still unresolved, i.e., which features are missing from your applications or which functionality is incomplete.*
 
@@ -113,6 +114,7 @@ This will run every test using in-memory Sqlite databases.
 We use the MIT license
 ## LLMs, ChatGPT, Gemini, and others
 ChatGPT and Gemini was used minimally, and no production code was copied directly from them. It was mainly used to clarify concepts and interpret error messages. Github copilot was also used for the same purpose of explaining error messages related to workflows. Stackoverflow and the official documentation often proved more efficient and reliable than AI suggestions since they have a very narrow context of the project.
+
 
 
 
