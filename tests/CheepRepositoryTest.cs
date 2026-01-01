@@ -1,4 +1,4 @@
-﻿using Chirp.Infrastructure;
+using Chirp.Infrastructure;
 using Chirp.Core;
 using Microsoft.EntityFrameworkCore; 
 using Xunit;
@@ -6,9 +6,18 @@ using System.Linq;
 
 namespace Chirp.Tests;
 
+/// <summary>
+/// The cheep repository tests class
+/// </summary>
 public class CheepRepositoryTests
 {   
+    /// <summary>
+    /// The repository
+    /// </summary>
     private readonly CheepRepository _repository;
+    /// <summary>
+    /// The context
+    /// </summary>
     private readonly ChirpContext _context;
 
     /// <summary>

@@ -20,12 +20,18 @@ namespace PlaywrightTests;
 
 public class EndToEndTests : PageTest
 {
+    /// <summary>
+    /// Setup this instance
+    /// </summary>
     [SetUp]
     public async Task Setup()
     {
         await Context.Tracing.StartAsync(new() { Screenshots = true, Snapshots = true });
     }
 
+    /// <summary>
+    /// Tests that new user can register account
+    /// </summary>
     [Test]
     public async Task NewUserCanRegisterAccount()
     {
@@ -42,6 +48,9 @@ public class EndToEndTests : PageTest
         await Page.GetByRole(AriaRole.Button, new() { Name = "Register" }).ClickAsync();
     }
 
+    /// <summary>
+    /// Tests that unregistered user cannot access authors
+    /// </summary>
     [Test]
     public async Task UnregisteredUserCannotAccessAuthors()
     {

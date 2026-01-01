@@ -1,12 +1,21 @@
-﻿using Chirp.Infrastructure;
+using Chirp.Infrastructure;
 using Chirp.Core;
 using Microsoft.EntityFrameworkCore; 
 
 namespace Chirp.Tests;
 
+/// <summary>
+/// The author repository tests class
+/// </summary>
 public class AuthorRepositoryTests
 {   
+    /// <summary>
+    /// The repository
+    /// </summary>
     private readonly IAuthorRepository _repository;
+    /// <summary>
+    /// The context
+    /// </summary>
     private readonly ChirpContext _context;
 
     /// <summary>
