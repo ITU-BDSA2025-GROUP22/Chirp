@@ -66,7 +66,13 @@ This sequence diagram shows an authenthicated user requesting to access the Chir
 *Briefly describe and illustrate the flow of activities that happen from the new creation of an issue (task description), over development, etc. until a feature is finally merged into the main branch of your repository.*
 
 ### Project board
+![project board screenshot](Diagram/projectboard.PNG).
+
+A project board was created for each project session. This screenshot illustrates the different phases that issues progressed through before being marked as complete for Sessions 1–5. From Session 6 onward, separate project boards were created for each session to provide a clearer overview.
+
+The only unresolved task is “Add Documentation”, as the code has not yet been fully documented.
 ### Activity flow
+
 
 ## How to make _Chirp!_ work locally
 Requirements to run _Chirp!_ locally:
@@ -106,6 +112,7 @@ This will run every test using in-memory Sqlite databases.
 We use the MIT license
 ## LLMs, ChatGPT, Gemini, and others
 ChatGPT and Gemini was used minimally, and no production code was copied directly from them. It was mainly used to clarify concepts and interpret error messages. Github copilot was also used for the same purpose of explaining error messages related to workflows. Stackoverflow and the official documentation often proved more efficient and reliable than AI suggestions since they have a very narrow context of the project.
+
 
 
 
