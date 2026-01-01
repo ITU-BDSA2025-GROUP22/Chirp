@@ -3,8 +3,15 @@ using Chirp.Core;
 using Chirp.Infrastructure;
 using Chirp.Web;
 
+/// <summary>
+/// The db initializer class
+/// </summary>
 public static class DbInitializer
 {
+    /// <summary>
+    /// Seeds the database using the specified context
+    /// </summary>
+    /// <param name="context">The context</param>
     public static void SeedDatabase(ChirpContext context)
     {
         if (!(context.Authors.Any() && context.Cheeps.Any()))

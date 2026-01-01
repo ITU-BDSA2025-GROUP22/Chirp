@@ -1,4 +1,4 @@
-﻿#nullable disable
+#nullable disable
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -10,13 +10,32 @@ using System.Security.Claims;
 using System.Text.Json;
 
 
+/// <summary>
+/// The manage data model class
+/// </summary>
+/// <seealso cref="PageModel"/>
 [Authorize]
 public class ManageDataModel  : PageModel
 {
+    /// <summary>
+    /// The user manager
+    /// </summary>
     private readonly UserManager<ApplicationUser> _userManager;
+    /// <summary>
+    /// The sign in manager
+    /// </summary>
     private readonly SignInManager<ApplicationUser> _signInManager;
+    /// <summary>
+    /// The db
+    /// </summary>
     private readonly ChirpContext _db;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="ManageDataModel"/> class
+    /// </summary>
+    /// <param name="userManager">The user manager</param>
+    /// <param name="signInManager">The sign in manager</param>
+    /// <param name="db">The db</param>
     public ManageDataModel(
         UserManager<ApplicationUser> userManager,
         SignInManager<ApplicationUser> signInManager,
@@ -27,18 +46,34 @@ public class ManageDataModel  : PageModel
         _db = db;
     }
 
+    /// <summary>
+    /// Gets or sets the value of the require password
+    /// </summary>
     public bool RequirePassword { get; private set; }
 
+    /// <summary>
+    /// Gets or sets the value of the input
+    /// </summary>
     [BindProperty]
     public InputModel Input { get; set; }
 
+    /// <summary>
+    /// The input model class
+    /// </summary>
     public class InputModel
     {
+        /// <summary>
+        /// Gets or sets the value of the password
+        /// </summary>
         [DataType(DataType.Password)]
         [Display(Name = "Password")]
         public string Password { get; set; }
     }
 
+    /// <summary>
+    /// Ons the get
+    /// </summary>
+    /// <returns>A task containing the action result</returns>
     public async Task<IActionResult> OnGetAsync()
     {
         var user = await _userManager.GetUserAsync(User);
@@ -50,6 +85,10 @@ public class ManageDataModel  : PageModel
     }
 
     //Export Userdata
+    /// <summary>
+    /// Ons the post download
+    /// </summary>
+    /// <returns>A task containing the action result</returns>
     public async Task<IActionResult> OnPostDownloadAsync()
     {
         var user = await _userManager.GetUserAsync(User);
@@ -109,6 +148,11 @@ public class ManageDataModel  : PageModel
 
 
     //Delete Userdata
+    /// <summary>
+    /// Ons the post delete
+    /// </summary>
+    /// <exception cref="InvalidOperationException"></exception>
+    /// <returns>A task containing the action result</returns>
     public async Task<IActionResult> OnPostDeleteAsync()
     {
         var user = await LoadUserAsync();
@@ -171,6 +215,10 @@ public class ManageDataModel  : PageModel
 
 
     //Helper method
+    /// <summary>
+    /// Loads the user
+    /// </summary>
+    /// <returns>A task containing the application user</returns>
     private async Task<ApplicationUser> LoadUserAsync()
     {
         var user = await _userManager.GetUserAsync(User);

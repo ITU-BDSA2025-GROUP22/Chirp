@@ -1,17 +1,38 @@
-﻿using Chirp.Core;
+using Chirp.Core;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace Chirp.Infrastructure;
 
+/// <summary>
+/// The chirp context class
+/// </summary>
+/// <seealso cref="IdentityDbContext{ApplicationUser}"/>
 public class ChirpContext : IdentityDbContext<ApplicationUser>
 {
+    /// <summary>
+    /// Gets or sets the value of the cheeps
+    /// </summary>
     public DbSet<Cheep> Cheeps { get; set; }
+    /// <summary>
+    /// Gets or sets the value of the authors
+    /// </summary>
     public DbSet<Author> Authors { get; set; }
+    /// <summary>
+    /// Gets or sets the value of the likes
+    /// </summary>
     public DbSet<Like> Likes { get; set; }
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="ChirpContext"/> class
+    /// </summary>
+    /// <param name="options">The options</param>
     public ChirpContext(DbContextOptions<ChirpContext> options) : base(options) {}
     
+    /// <summary>
+    /// Ons the model creating using the specified model builder
+    /// </summary>
+    /// <param name="modelBuilder">The model builder</param>
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);

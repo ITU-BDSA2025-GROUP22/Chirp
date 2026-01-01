@@ -26,16 +26,50 @@ using Microsoft.Extensions.Logging;
 
 namespace Chirp.Web.Areas.Identity.Pages.Account
 {
+    /// <summary>
+    /// The register model class
+    /// </summary>
+    /// <seealso cref="PageModel"/>
     public class RegisterModel : PageModel
     {
+        /// <summary>
+        /// The sign in manager
+        /// </summary>
         private readonly SignInManager<ApplicationUser> _signInManager;
+        /// <summary>
+        /// The user manager
+        /// </summary>
         private readonly UserManager<ApplicationUser> _userManager;
+        /// <summary>
+        /// The user store
+        /// </summary>
         private readonly IUserStore<ApplicationUser> _userStore;
+        /// <summary>
+        /// The email store
+        /// </summary>
         private readonly IUserEmailStore<ApplicationUser> _emailStore;
+        /// <summary>
+        /// The logger
+        /// </summary>
         private readonly ILogger<RegisterModel> _logger;
+        /// <summary>
+        /// The email sender
+        /// </summary>
         private readonly IEmailSender _emailSender;
+        /// <summary>
+        /// The author repository
+        /// </summary>
         private readonly IAuthorRepository _authorRepository;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RegisterModel"/> class
+        /// </summary>
+        /// <param name="userManager">The user manager</param>
+        /// <param name="userStore">The user store</param>
+        /// <param name="signInManager">The sign in manager</param>
+        /// <param name="logger">The logger</param>
+        /// <param name="emailSender">The email sender</param>
+        /// <param name="authorRepository">The author repository</param>
         public RegisterModel(
             UserManager<ApplicationUser> userManager,
             IUserStore<ApplicationUser> userStore,
@@ -79,6 +113,9 @@ namespace Chirp.Web.Areas.Identity.Pages.Account
         /// </summary>
         public class InputModel
         {
+            /// <summary>
+            /// Gets or sets the value of the user name
+            /// </summary>
             [Required]
             public string UserName { get; set; }
 
@@ -117,12 +154,21 @@ namespace Chirp.Web.Areas.Identity.Pages.Account
         }
 
 
+        /// <summary>
+        /// Ons the get using the specified return url
+        /// </summary>
+        /// <param name="returnUrl">The return url</param>
         public async Task OnGetAsync(string returnUrl = null)
         {
             ReturnUrl = returnUrl;
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
         }
 
+        /// <summary>
+        /// Ons the post using the specified return url
+        /// </summary>
+        /// <param name="returnUrl">The return url</param>
+        /// <returns>A task containing the action result</returns>
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
         {
             returnUrl??= Url.Content("~/");
@@ -182,6 +228,11 @@ namespace Chirp.Web.Areas.Identity.Pages.Account
             return Page();
         }
 
+        /// <summary>
+        /// Creates the user
+        /// </summary>
+        /// <exception cref="InvalidOperationException"></exception>
+        /// <returns>The application user</returns>
         private ApplicationUser CreateUser()
         {
             try
@@ -196,6 +247,11 @@ namespace Chirp.Web.Areas.Identity.Pages.Account
             }
         }
 
+        /// <summary>
+        /// Gets the email store
+        /// </summary>
+        /// <exception cref="NotSupportedException">The default UI requires a user store with email support.</exception>
+        /// <returns>An user email store of application user</returns>
         private IUserEmailStore<ApplicationUser> GetEmailStore()
         {
             if (!_userManager.SupportsUserEmail)

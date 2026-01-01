@@ -18,11 +18,26 @@ using Microsoft.Extensions.Logging;
 
 namespace Chirp.Web.Areas.Identity.Pages.Account
 {
+    /// <summary>
+    /// The login model class
+    /// </summary>
+    /// <seealso cref="PageModel"/>
     public class LoginModel : PageModel
     {
+        /// <summary>
+        /// The sign in manager
+        /// </summary>
         private readonly SignInManager<ApplicationUser> _signInManager;
+        /// <summary>
+        /// The logger
+        /// </summary>
         private readonly ILogger<LoginModel> _logger;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="LoginModel"/> class
+        /// </summary>
+        /// <param name="signInManager">The sign in manager</param>
+        /// <param name="logger">The logger</param>
         public LoginModel(SignInManager<ApplicationUser> signInManager, ILogger<LoginModel> logger)
         {
             _signInManager = signInManager;
@@ -84,6 +99,10 @@ namespace Chirp.Web.Areas.Identity.Pages.Account
             public bool RememberMe { get; set; }
         }
 
+        /// <summary>
+        /// Ons the get using the specified return url
+        /// </summary>
+        /// <param name="returnUrl">The return url</param>
         public async Task OnGetAsync(string returnUrl = null)
         {
             if (!string.IsNullOrEmpty(ErrorMessage))
@@ -100,6 +119,11 @@ namespace Chirp.Web.Areas.Identity.Pages.Account
             ReturnUrl = returnUrl;
         }
 
+        /// <summary>
+        /// Ons the post using the specified return url
+        /// </summary>
+        /// <param name="returnUrl">The return url</param>
+        /// <returns>A task containing the action result</returns>
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
         {
             returnUrl ??= Url.Content("~/");
