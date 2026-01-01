@@ -27,132 +27,6 @@ public class EndToEndTests : PageTest
     }
 
     [Test]
-    public async Task NewUserCanRegisterAccountAndLogin() //Would be easier to split into 2 tests, but not feasible while database resets users 
-    {
-        //Register part
-        //start from front page and click register page
-        await Page.GotoAsync("https://1bdsagroup22chirp.azurewebsites.net/");
-        await Page.GetByRole(AriaRole.Link, new() { Name = "Register" }).ClickAsync();
-        
-        //locator variables for register page
-        var username = Page.GetByRole(AriaRole.Textbox, new() { Name = "Username" });
-        var email =  Page.GetByRole(AriaRole.Textbox, new() { Name = "Email" });
-        var password  = Page.GetByRole(AriaRole.Textbox, new() { Name = "Password", Exact = true });
-        var confirmPassword  = Page.GetByRole(AriaRole.Textbox, new() { Name = "Confirm Password", Exact = true });
-        var registerButton = Page.GetByRole(AriaRole.Button, new() { Name = "Register" });
-        var githubButton = Page.GetByRole(AriaRole.Button, new() { Name = "GitHub" });
-
-        //Check elements are visible
-        await Expect(username).ToBeVisibleAsync();
-        await Expect(email).ToBeVisibleAsync();
-        await Expect(password).ToBeVisibleAsync();
-        await Expect(confirmPassword).ToBeVisibleAsync();
-        await Expect(registerButton).ToBeVisibleAsync();
-        await Expect(githubButton).ToBeVisibleAsync();
-        
-        //type in account info and click register
-        var randomUsername = GenerateUsername();
-        var RandomPassword = GeneratePassword();
-        
-        await username.ClickAsync();
-        await username.FillAsync(randomUsername);
-        await email.ClickAsync();
-        await email.FillAsync("name@example.com");
-        await password.ClickAsync();
-        await password.FillAsync(RandomPassword);
-        await confirmPassword.ClickAsync();
-        await confirmPassword.FillAsync(RandomPassword);
-        await registerButton.ClickAsync();
-        
-        //Check redirect url, confirm email, then click confirm email
-        await Expect(Page).ToHaveURLAsync(new Regex(".*/Identity/Account/RegisterConfirmation\\b.*"));
-        await Expect(Page.GetByText("This app does not currently")).ToBeVisibleAsync();
-        await Expect(Page.GetByRole(AriaRole.Link, new() { Name = "Click here to confirm your" })).ToBeVisibleAsync();
-        await Page.GetByRole(AriaRole.Link, new() { Name = "Click here to confirm your" }).ClickAsync();
-
-        //check redirect url again
-        await Expect(Page).ToHaveURLAsync(new Regex(".*/Identity/Account/ConfirmEmail\\b.*"));
-        await Expect(Page.GetByRole(AriaRole.Heading, new() { Name = "Confirm email" })).ToBeVisibleAsync();
-        
-        
-        
-        //Login part
-        //Begin by directing to login page
-        await Page.GetByRole(AriaRole.Link, new() { Name = "login" }).ClickAsync();
-        
-        //check all page elements are visible
-        await Expect(Page.GetByRole(AriaRole.Textbox, new() { Name = "Username" })).ToBeVisibleAsync();
-        await Expect(Page.GetByRole(AriaRole.Textbox, new() { Name = "Password" })).ToBeVisibleAsync();
-        await Expect(Page.GetByRole(AriaRole.Checkbox, new() { Name = "Remember me?" })).ToBeVisibleAsync();
-        await Expect(Page.GetByRole(AriaRole.Button, new() { Name = "Log in" })).ToBeVisibleAsync();
-        await Expect(Page.GetByRole(AriaRole.Link, new() { Name = "Forgot your password?" })).ToBeVisibleAsync();
-        await Expect(Page.GetByRole(AriaRole.Link, new() { Name = "Register as a new user" })).ToBeVisibleAsync();
-        await Expect(Page.GetByRole(AriaRole.Link, new() { Name = "Resend email confirmation" })).ToBeVisibleAsync();
-        
-        //fill out account info and check off remember me, then click log in
-        await Page.GetByRole(AriaRole.Textbox, new() { Name = "Username" }).ClickAsync();
-        await Page.GetByRole(AriaRole.Textbox, new() { Name = "Username" }).ClickAsync();
-        await Page.GetByRole(AriaRole.Textbox, new() { Name = "Username" }).FillAsync(randomUsername);
-        await Page.GetByRole(AriaRole.Textbox, new() { Name = "Password" }).ClickAsync();
-        await Page.GetByRole(AriaRole.Textbox, new() { Name = "Password" }).FillAsync(randomUsername);
-        await Expect(Page.GetByRole(AriaRole.Checkbox, new() { Name = "Remember me?" })).Not.ToBeCheckedAsync();
-        await Page.GetByRole(AriaRole.Checkbox, new() { Name = "Remember me?" }).CheckAsync();
-        await Expect(Page.GetByRole(AriaRole.Checkbox, new() { Name = "Remember me?" })).ToBeCheckedAsync();
-        await Page.GetByRole(AriaRole.Button, new() { Name = "Log in" }).ClickAsync();
-        
-        //Check redirect has sent us to the homepage and "my timeline", "logout" and "my data" tabs are visible and reachable by click
-        await Expect(Page).ToHaveURLAsync("https://1bdsagroup22chirp.azurewebsites.net/dentity/Account/Logout");
-        await Expect(Page.GetByRole(AriaRole.Link, new() { Name = "my timeline" })).ToBeVisibleAsync();
-        await Expect(Page.GetByRole(AriaRole.Link, new() { Name = "logout [" + randomUsername + "]" })).ToBeVisibleAsync();
-        await Expect(Page.GetByRole(AriaRole.Link, new() { Name = "my data" })).ToBeVisibleAsync();
-        await Page.GetByRole(AriaRole.Link, new() { Name = "my timeline" }).ClickAsync();
-        await Expect(Page).ToHaveURLAsync("https://1bdsagroup22chirp.azurewebsites.net/" + randomUsername);
-        await Page.GetByRole(AriaRole.Link, new() { Name = "logout [" + randomUsername + "]" }).ClickAsync();
-        await Expect(Page).ToHaveURLAsync("https://1bdsagroup22chirp.azurewebsites.net/dentity/Account/Logout");
-        await Page.GetByRole(AriaRole.Link, new() { Name = "my data" }).ClickAsync();
-        await Expect(Page).ToHaveURLAsync("https://1bdsagroup22chirp.azurewebsites.net/dentity/Account/ManageData");
-    }
-    
-    [Test]
-    public async Task UnregisteredAccountCannotLogin()
-    {
-        await Page.GotoAsync("https://1bdsagroup22chirp.azurewebsites.net/");
-        await Page.GetByRole(AriaRole.Link, new() { Name = "login" }).ClickAsync();
-        var username = Page.GetByRole(AriaRole.Textbox, new() { Name = "Username" });
-        var password = Page.GetByRole(AriaRole.Textbox, new() { Name = "Password" });
-        var loginButton = Page.GetByRole(AriaRole.Textbox, new() { Name = "Log in" });
-        await Expect(username).ToBeVisibleAsync();
-        await Expect(username).ToHaveTextAsync("Username");
-        await Expect(password).ToBeVisibleAsync();
-        await Expect(password).ToHaveTextAsync("Password");
-        await Expect(loginButton).ToBeVisibleAsync();
-        await Expect(loginButton).ToHaveTextAsync("Log in");
-        
-        await Expect(Page.GetByRole(AriaRole.Link, new() { Name = "Forgot your password?" })).ToBeVisibleAsync();
-        await Expect(Page.GetByRole(AriaRole.Link, new() { Name = "Register as a new user" })).ToBeVisibleAsync();
-        await Expect(Page.GetByRole(AriaRole.Link, new() { Name = "Resend email confirmation" })).ToBeVisibleAsync();
-        
-        //try to log in without filling out information
-        await Page.GetByRole(AriaRole.Button, new() { Name = "Log in" }).ClickAsync();
-        await Expect(Page.GetByText("The Username field is")).ToBeVisibleAsync();
-        await Expect(Page.GetByText("The Password field is required.")).ToBeVisibleAsync();
-        
-        //Try to log in with wrong password
-        await Page.GetByRole(AriaRole.Textbox, new() { Name = "Username" }).ClickAsync();
-        await Page.GetByRole(AriaRole.Textbox, new() { Name = "Username" }).FillAsync("username");
-        await Page.GetByRole(AriaRole.Textbox, new() { Name = "Password" }).ClickAsync();
-        await Page.GetByRole(AriaRole.Textbox, new() { Name = "Password" }).FillAsync("NotAPassword");
-        await Page.GetByRole(AriaRole.Button, new() { Name = "Log in" }).ClickAsync();
-        await Expect(Page.GetByText("Invalid login attempt.")).ToBeVisibleAsync();
-        
-        //Try to log in without password
-        await Page.GetByRole(AriaRole.Textbox, new() { Name = "Username" }).ClickAsync();
-        await Page.GetByRole(AriaRole.Textbox, new() { Name = "Username" }).FillAsync("username");
-        await Page.GetByRole(AriaRole.Button, new() { Name = "Log in" }).ClickAsync();
-        await Expect(Page.GetByText("The Password field is")).ToBeVisibleAsync();
-    }
-
-    [Test]
     public async Task UnregisteredUserCannotAccessAuthors()
     {
         await Page.GotoAsync("https://1bdsagroup22chirp.azurewebsites.net/");
@@ -166,161 +40,7 @@ public class EndToEndTests : PageTest
     }
 
     [Test]
-    public async Task UnregisteredUserCannotLikeCheep()
-    {
-        //redirect to login page when liking cheeps without being logged in
-        await Page.GotoAsync("https://1bdsagroup22chirp.azurewebsites.net/");
-        await Page.GetByRole(AriaRole.Button, new() { Name = "👍" }).First.ClickAsync();
-        await Page.GetByRole(AriaRole.Button, new() { Name = "👍" }).First.ClickAsync();
-        await Expect(Page).ToHaveURLAsync("https://1bdsagroup22chirp.azurewebsites.net/Identity/Account/Login");
-
-        //helperfunction automates register and login of account
-        await RegisterAndLogin();
-
-        //go to public timeline and like posts
-        await Expect(Page).ToHaveURLAsync("https://1bdsagroup22chirp.azurewebsites.net");
-        await Page.GetByRole(AriaRole.Link, new() { Name = "public timeline" }).ClickAsync();
-        await Page.GetByRole(AriaRole.Button, new() { Name = "👍" }).First.ClickAsync();
-        await Page.GetByRole(AriaRole.Button, new() { Name = "👎" }).Nth(1).ClickAsync();
-        await Page.GetByRole(AriaRole.Button, new() { Name = "👍" }).Nth(2).ClickAsync();
-        await Page.GetByRole(AriaRole.Button, new() { Name = "👍" }).Nth(4).ClickAsync();
-        
-        //test that cheeps are liked/disliked
-        await Expect(Page).ToHaveURLAsync("https://1bdsagroup22chirp.azurewebsites.net");
-        var likeButton = Page.GetByRole(AriaRole.Button, new() { Name = "👍" });
-        var dislikeButton = Page.GetByRole(AriaRole.Button, new PageGetByRoleOptions() { Name = "👎" });
-        await Expect(likeButton.First).ToHaveTextAsync("👍 1");
-        await Expect(dislikeButton.First).ToHaveTextAsync("👎");
-        await Expect(dislikeButton.Nth(1)).ToHaveTextAsync("👎 1");
-        await Expect(likeButton.Nth(2)).ToHaveTextAsync("👍 1");
-        await Expect(likeButton.Nth(4)).ToHaveTextAsync("👍 1");
-        
-        //dislike a liked post and like a disliked post and check that opposite attribute (like/dislike) has been removed 
-        await dislikeButton.First.ClickAsync();
-        await Expect(likeButton.First).ToHaveTextAsync("👍 0");
-        await Expect(dislikeButton.First).ToHaveTextAsync("👎 1");
-        await likeButton.Nth(1).ClickAsync();
-        await Expect(dislikeButton.Nth(1)).ToHaveTextAsync("👎 0");
-        await Expect(likeButton.Nth(1)).ToHaveTextAsync("👍 1");
-    }
-
-    [Test]
-    public async Task PostCheepAndLike()
-    {
-        await Page.GotoAsync("https://1bdsagroup22chirp.azurewebsites.net/");
-        await RegisterAndLogin();
-        
-        //share post and like it
-        Page.Locator("#CheepText").ClickAsync();
-        await Page.Locator("#CheepText").FillAsync("Who likes their own post?");
-        await Page.GetByRole(AriaRole.Button, new() { Name = "Share" }).ClickAsync();
-        await Page.GetByRole(AriaRole.Button, new() { Name = "👍" }).First.ClickAsync();
-        
-        //Test that post is visible on timeline
-        var cheep = Page.GetByRole(AriaRole.Listitem).Filter(new() { HasText = "Who likes their own post?" });
-        await Expect(cheep).ToBeVisibleAsync();
-        await Expect(cheep).ToHaveTextAsync("Who likes their own post?");
-            
-        //Click on own name and go to my Timeline
-        await Page.GetByRole(AriaRole.Link, new() { Name = "user_" }).ClickAsync();
-        await Expect(cheep).ToBeVisibleAsync();
-    }
-
-    [Test]
-    public async Task FollowAndCheckTimeline()
-    {
-        await Page.GotoAsync("https://1bdsagroup22chirp.azurewebsites.net/");
-        await RegisterAndLogin();
-    }
-
-    [Test]
-    public async Task ChangeTheme()
-    {
-        
-    }
-
-    [Test]
-    public async Task DeleteAccount()
-    {
-        
-    }
-
-    [Test]
-    public async Task DownloadUserData()
-    {
-        
-    }
-
-    [Test]
-    public async Task NewUserCanRegisterAccountViaGithubOAuth()
-    {
-        
-    }
-
-    [Test]
-    public async Task RegisterAccountErrorTextVisibility()
-    {
-        
-    }
-    
-    //helper classes
-    private async Task RegisterAndLogin()
-    {
-        await Page.GotoAsync("https://1bdsagroup22chirp.azurewebsites.net/");
-        await Page.GetByRole(AriaRole.Link, new() { Name = "Register" }).ClickAsync();
-        
-        //locator variables
-        
-        var username = Page.GetByRole(AriaRole.Textbox, new() { Name = "Username" });
-        var email =  Page.GetByRole(AriaRole.Textbox, new() { Name = "Email" });
-        var password  = Page.GetByRole(AriaRole.Textbox, new() { Name = "Password", Exact = true });
-        var confirmPassword  = Page.GetByRole(AriaRole.Textbox, new() { Name = "Confirm Password", Exact = true });
-        var registerButton = Page.GetByRole(AriaRole.Button, new() { Name = "Register" });
-        
-        //type in account info, click register, then confirm email
-        var randomUsername = GenerateUsername();
-        var randomPassword= GeneratePassword();
-        
-        await username.ClickAsync();
-        await username.FillAsync(randomUsername);
-        await email.ClickAsync();
-        await email.FillAsync("name@example.com");
-        await password.ClickAsync();
-        await password.FillAsync(randomPassword);
-        await confirmPassword.ClickAsync();
-        await confirmPassword.FillAsync(randomPassword);
-        await registerButton.ClickAsync();
-        await Page.GetByRole(AriaRole.Link, new() { Name = "Click here to confirm your" }).ClickAsync();
-        
-        //direct to login page and log into account
-        await Page.GetByRole(AriaRole.Link, new() { Name = "Login" }).ClickAsync();
-        await Page.GetByRole(AriaRole.Textbox, new() { Name = "Username" }).ClickAsync();
-        await Page.GetByRole(AriaRole.Textbox, new() { Name = "Username" }).FillAsync(randomUsername);
-        await Page.GetByRole(AriaRole.Textbox, new() { Name = "Username" }).PressAsync("Tab");
-        await Page.GetByRole(AriaRole.Textbox, new() { Name = "Password" }).FillAsync(randomPassword);
-        await Page.GetByRole(AriaRole.Textbox, new() { Name = "Password" }).PressAsync("Enter");
-        await Page.GetByRole(AriaRole.Button, new() { Name = "Log in" }).ClickAsync();
-        
-        //redirect to homepage
-        await Page.GetByRole(AriaRole.Link, new() { Name = "public timeline" }).ClickAsync();
-    }
-    
-    private string GeneratePassword()
-    {
-        var rnd = Guid.NewGuid().ToString("N").Substring(0, 6);
-        return $"A.{rnd}";
-    }
-    
-    private string GenerateUsername()
-    {
-        return "user_" + Guid.NewGuid().ToString("N").Substring(0, 8);
-    }
-
-
-    //Tests that work are bellow here
-
-    [Test]
-    public async Task UnregisteredUserCannotLikeChirps()
+    public async Task UnregisteredUserCannotLikeCheeps()
     {
         await Page.GotoAsync("https://1bdsagroup22chirp.azurewebsites.net/");
         
@@ -366,7 +86,7 @@ public class EndToEndTests : PageTest
     }
 
     [Test]
-    public async Task RegisterPageVisibility()
+    public async Task RegisterPageElementVisibility()
     {
         await Page.GotoAsync("https://1bdsagroup22chirp.azurewebsites.net/Identity/Account/Register");
         
@@ -425,21 +145,311 @@ public class EndToEndTests : PageTest
         await Expect(Page).ToHaveURLAsync(new Regex(".*/Identity/Account/RegisterConfirmation\\b.*"));
         await Expect(Page.GetByRole(AriaRole.Heading, new() { Name = "Register confirmation" })).ToBeVisibleAsync();
         await Expect(Page.GetByRole(AriaRole.Link, new() { Name = "Click here to confirm your" })).ToBeVisibleAsync();
-        //await Page.GetByRole(AriaRole.Link, new() { Name = "Click here to confirm your" }).ClickAsync();
         
-        //Check link to microsoft documentation works then go back and clicl confirm email link
+        //Check link to microsoft documentation works then go back and click confirm email link
         await Expect(Page.GetByRole(AriaRole.Link, new() { Name = "these docs" })).ToHaveAttributeAsync("href", "https://aka.ms/aspaccountconf");
         await Expect(Page.GetByRole(AriaRole.Link, new() { Name = "these docs" })).ToHaveAttributeAsync("href", "https://aka.ms/aspaccountconf");
         await Page.GetByRole(AriaRole.Link, new() { Name = "these docs" }).ClickAsync();
         await Expect(Page).ToHaveURLAsync("https://learn.microsoft.com/en-us/aspnet/core/security/authentication/accconfirm?view=aspnetcore-10.0&tabs=visual-studio");
         await Page.GotoAsync("https://1bdsagroup22chirp.azurewebsites.net/Identity/Account/RegisterConfirmation?email=" + email + "&returnUrl=%2F");
         await Expect(Page).ToHaveURLAsync(new Regex(".*/Identity/Account/RegisterConfirmation\\b.*"));
-        
-        //check url again
         await Page.GetByRole(AriaRole.Link, new() { Name = "Click here to confirm your" }).ClickAsync();
+
+        //check url again
         await Expect(Page).ToHaveURLAsync(new Regex(".*/Identity/Account/ConfirmEmail\\b.*"));
         await Expect(Page.GetByRole(AriaRole.Heading, new() { Name = "Confirm email" })).ToBeVisibleAsync();
-        
     }
+
+    [Test]
+    public async Task RegisterInfoFillWarnings()
+    {
+        await Page.GotoAsync("https://1bdsagroup22chirp.azurewebsites.net/Identity/Account/Register");
+        
+        //Fill no boxes
+        await Page.GetByRole(AriaRole.Button, new() { Name = "Register" }).ClickAsync();
+        await Expect(Page.GetByText("The UserName field is")).ToBeVisibleAsync();
+        await Expect(Page.GetByText("The Email field is required.")).ToBeVisibleAsync();
+        await Expect(Page.GetByText("The Password field is")).ToBeVisibleAsync();
+
+        //password is too short
+        await Page.GetByRole(AriaRole.Textbox, new() { Name = "Password", Exact = true }).ClickAsync();
+        await Page.GetByRole(AriaRole.Textbox, new() { Name = "Password", Exact = true }).FillAsync("s");
+        await Page.GetByRole(AriaRole.Button, new() { Name = "Register" }).ClickAsync();
+        await Expect(Page.GetByText("The Password must be at least")).ToBeVisibleAsync();
+        await Page.GetByText("The password and confirmation").ClickAsync();
+        
+        //check all password warnings
+        await Page.GetByRole(AriaRole.Textbox, new() { Name = "Username" }).ClickAsync();
+        await Page.GetByRole(AriaRole.Textbox, new() { Name = "Username" }).FillAsync("user");
+        await Page.GetByRole(AriaRole.Textbox, new() { Name = "Username" }).PressAsync("Tab");
+        await Page.GetByRole(AriaRole.Textbox, new() { Name = "Email" }).FillAsync("user@gmail.com");
+        await Page.GetByRole(AriaRole.Textbox, new() { Name = "Password", Exact = true }).ClickAsync();
+        await Page.GetByRole(AriaRole.Textbox, new() { Name = "Password", Exact = true }).FillAsync("abcdef");
+        await Page.GetByRole(AriaRole.Textbox, new() { Name = "Confirm Password" }).ClickAsync();
+        await Page.GetByRole(AriaRole.Textbox, new() { Name = "Confirm Password" }).FillAsync("abcdef");
+        await Page.GetByRole(AriaRole.Button, new() { Name = "Register" }).ClickAsync();
+        await Expect(Page.GetByText("Passwords must have at least one non alphanumeric character.")).ToBeVisibleAsync();
+        await Expect(Page.GetByText("Passwords must have at least one digit ('0'-'9')")).ToBeVisibleAsync();
+        await Expect(Page.GetByText("Passwords must have at least one uppercase ('A'-'Z')")).ToBeVisibleAsync();
+        
+        await Page.GetByRole(AriaRole.Textbox, new() { Name = "Password", Exact = true }).ClickAsync();
+        await Page.GetByRole(AriaRole.Textbox, new() { Name = "Password", Exact = true }).FillAsync("123456");
+        await Page.GetByRole(AriaRole.Textbox, new() { Name = "Confirm Password" }).ClickAsync();
+        await Page.GetByRole(AriaRole.Textbox, new() { Name = "Confirm Password" }).FillAsync("123456");
+        await Page.GetByRole(AriaRole.Button, new() { Name = "Register" }).ClickAsync();
+        await Expect(Page.GetByText("Passwords must have at least one non alphanumeric character.")).ToBeVisibleAsync();
+        await Expect(Page.GetByText("Passwords must have at least one lowercase ('a'-'z')")).ToBeVisibleAsync();
+        await Expect(Page.GetByText("Passwords must have at least one uppercase ('A'-'Z')")).ToBeVisibleAsync();
+        
+        //try to register with username that is already taken
+        var username = GenerateUsername();
+        var password = GeneratePassword();
+        await RegisterHelper(username, password);
+        await Page.GotoAsync("https://1bdsagroup22chirp.azurewebsites.net/Identity/Account/Register");
+        await Page.GetByRole(AriaRole.Textbox, new() { Name = "Username" }).ClickAsync();
+        await Page.GetByRole(AriaRole.Textbox, new() { Name = "Username" }).FillAsync(username);
+        await Page.GetByRole(AriaRole.Textbox, new() { Name = "Email" }).ClickAsync();
+        await Page.GetByRole(AriaRole.Textbox, new() { Name = "Email" }).FillAsync("username@gmail.com");
+        await Page.GetByRole(AriaRole.Textbox, new() { Name = "Password", Exact = true }).ClickAsync();
+        await Page.GetByRole(AriaRole.Textbox, new() { Name = "Password", Exact = true }).FillAsync(password);
+        await Page.GetByRole(AriaRole.Textbox, new() { Name = "Confirm Password" }).ClickAsync();
+        await Page.GetByRole(AriaRole.Textbox, new() { Name = "Confirm Password" }).FillAsync(password);
+        await Page.GetByRole(AriaRole.Button, new() { Name = "Register" }).ClickAsync();
+        await Expect(Page.GetByText("Username '" + username + "' is already taken.")).ToBeVisibleAsync();
+
+    }
+
+
+    //Login tests
+
+    [Test]
+    public async Task LoginPageElementVisibility()
+    {
+        await Page.GotoAsync("https://1bdsagroup22chirp.azurewebsites.net/Identity/Account/Login");
+        await Expect(Page.GetByRole(AriaRole.Textbox, new() { Name = "Username" })).ToBeVisibleAsync();
+        await Expect(Page.GetByRole(AriaRole.Textbox, new() { Name = "Password" })).ToBeVisibleAsync();
+        await Expect(Page.GetByText("Username")).ToBeVisibleAsync();
+        await Page.GetByText("Password", new() { Exact = true }).ClickAsync();
+
+        await Expect(Page.GetByText("Remember me?")).ToBeVisibleAsync();
+        await Expect(Page.GetByRole(AriaRole.Button, new() { Name = "Log in" })).ToBeVisibleAsync();
+        await Expect(Page.GetByRole(AriaRole.Link, new() { Name = "Forgot your password?" })).ToBeVisibleAsync();
+        await Expect(Page.GetByRole(AriaRole.Link, new() { Name = "Register as a new user" })).ToBeVisibleAsync();
+        await Expect(Page.GetByRole(AriaRole.Link, new() { Name = "Resend email confirmation" })).ToBeVisibleAsync();
+        await Expect(Page.GetByRole(AriaRole.Button, new() { Name = "GitHub" })).ToBeVisibleAsync();
+        await Page.GotoAsync("https://1bdsagroup22chirp.azurewebsites.net/Identity/Account/Login");
+
+    }
+
+
+    [Test]
+    public async Task LogIntoAccount()
+    {
+        //register new account first
+        var username = GenerateUsername();
+        var password = GeneratePassword();
+        await RegisterHelper(username, password);
+        
+        //fill out info and click log in
+        await Page.GotoAsync("https://1bdsagroup22chirp.azurewebsites.net/Identity/Account/Login");
+        await Page.GetByRole(AriaRole.Textbox, new() { Name = "Username" }).ClickAsync();
+        await Page.GetByRole(AriaRole.Textbox, new() { Name = "Username" }).FillAsync(username);
+        await Page.GetByRole(AriaRole.Textbox, new() { Name = "Password" }).ClickAsync();
+        await Page.GetByRole(AriaRole.Textbox, new() { Name = "Password" }).FillAsync(password);
+        await Expect(Page.GetByRole(AriaRole.Textbox, new() { Name = "Username" })).ToHaveValueAsync(username);
+        await Expect(Page.GetByRole(AriaRole.Textbox, new() { Name = "Password" })).ToHaveValueAsync(password);
+        await Page.GetByRole(AriaRole.Checkbox, new() { Name = "Remember me?" }).CheckAsync();
+        await Expect(Page.GetByRole(AriaRole.Checkbox, new() { Name = "Remember me?" })).ToBeCheckedAsync();
+        await Page.GetByRole(AriaRole.Checkbox, new() { Name = "Remember me?" }).UncheckAsync();
+        await Expect(Page.GetByRole(AriaRole.Checkbox, new() { Name = "Remember me?" })).Not.ToBeCheckedAsync();
+        await Page.GetByRole(AriaRole.Checkbox, new() { Name = "Remember me?" }).CheckAsync();
+        await Page.GetByRole(AriaRole.Button, new() { Name = "Log in" }).ClickAsync();
+
+        
+        //assert url is /logout, and "my timeline", "logout" and "my data" tabs are visible after logging in
+        await Expect(Page).ToHaveURLAsync("https://1bdsagroup22chirp.azurewebsites.net");
+        await Expect(Page.GetByRole(AriaRole.Link, new() { Name = "my timeline" })).ToBeVisibleAsync();
+        await Expect(Page.GetByRole(AriaRole.Link, new() { Name = "logout ["+ username + "]" })).ToBeVisibleAsync();
+        await Expect(Page.GetByRole(AriaRole.Link, new() { Name = "my data" })).ToBeVisibleAsync();
+        
+        //Go to log out page and log out, then check redirect to /login works
+        await Page.GetByRole(AriaRole.Link, new() { Name = "logout [" + username + "]" }).ClickAsync();
+        await Expect(Page).ToHaveURLAsync("https://1bdsagroup22chirp.azurewebsites.net/Identity/Account/Logout");
+        await Page.GetByRole(AriaRole.Button, new() { Name = "Click here to Logout" }).ClickAsync();
+        await Expect(Page).ToHaveURLAsync("https://1bdsagroup22chirp.azurewebsites.net/Identity/Account/Login?ReturnUrl=%2FIdentity%2FAccount%2FLogout");
+    }
+
+    [Test]
+    public async Task LoginInfoFillWarnings()
+    {
+        await Page.GotoAsync("https://1bdsagroup22chirp.azurewebsites.net/Identity/Account/Login");
+        
+        //Click login with no username or password filled
+        await Page.GetByRole(AriaRole.Button, new() { Name = "Log in" }).ClickAsync();
+        await Expect(Page.GetByText("The Username field is")).ToBeVisibleAsync();
+        await Expect(Page.GetByText("The Password field is")).ToBeVisibleAsync();
+        
+        //invalid login
+        await Page.GetByRole(AriaRole.Textbox, new() { Name = "Username" }).ClickAsync();
+        await Page.GetByRole(AriaRole.Textbox, new() { Name = "Username" }).FillAsync("j");
+        await Page.GetByRole(AriaRole.Textbox, new() { Name = "Password" }).ClickAsync();
+        await Page.GetByRole(AriaRole.Textbox, new() { Name = "Password" }).FillAsync("j");
+        await Page.GetByRole(AriaRole.Button, new() { Name = "Log in" }).ClickAsync();
+        await Expect(Page.GetByText("Invalid login attempt.")).ToBeVisibleAsync();
+    }
+
+    [Test]
+    public async Task ForgotYourPasswordLink()
+    {
+        await Page.GotoAsync("https://1bdsagroup22chirp.azurewebsites.net/Identity/Account/Login");
+        
+        //check visibility and url once clicked and redirected to /forgotPassword
+        await Expect(Page.GetByRole(AriaRole.Link, new() { Name = "Forgot your password?" })).ToBeVisibleAsync();
+        await Page.GetByRole(AriaRole.Link, new() { Name = "Forgot your password?" }).ClickAsync();
+        await Expect(Page).ToHaveURLAsync("https://1bdsagroup22chirp.azurewebsites.net/Identity/Account/ForgotPassword");
+        
+        //check visibility of elements and fill out email, then click reset password button
+        await Expect(Page.GetByRole(AriaRole.Textbox, new() { Name = "Email" })).ToBeVisibleAsync();
+        await Expect(Page.GetByText("Email", new() { Exact = true })).ToBeVisibleAsync();
+        await Expect(Page.GetByRole(AriaRole.Button, new() { Name = "Reset Password" })).ToBeVisibleAsync();
+        await Page.GetByRole(AriaRole.Button, new() { Name = "Reset Password" }).ClickAsync();
+        await Expect(Page.GetByText("The Email field is required.")).ToBeVisibleAsync();
+        await Page.GetByRole(AriaRole.Textbox, new() { Name = "Email" }).ClickAsync();
+        await Page.GetByRole(AriaRole.Textbox, new() { Name = "Email" }).FillAsync("name@example.com");
+        await Expect(Page.GetByRole(AriaRole.Textbox, new() { Name = "Email" })).ToHaveValueAsync("name@example.com");
+        await Page.GetByRole(AriaRole.Button, new() { Name = "Reset Password" }).ClickAsync();
+        
+        //check redirected url
+        await Expect(Page).ToHaveURLAsync("https://1bdsagroup22chirp.azurewebsites.net/Identity/Account/ForgotPasswordConfirmation");
+    }
+
+    [Test]
+    public async Task RegisterAsANewUserLink()
+    {
+        await Page.GotoAsync("https://1bdsagroup22chirp.azurewebsites.net/Identity/Account/Login");
+        
+        //check visibility and confirm url is "/register?returnURL" after click
+        await Expect(Page.GetByRole(AriaRole.Link, new() { Name = "Register as a new user" })).ToBeVisibleAsync();
+        await Page.GetByRole(AriaRole.Link, new() { Name = "Register as a new user" }).ClickAsync();
+        await Expect(Page)
+            .ToHaveURLAsync("https://1bdsagroup22chirp.azurewebsites.net/Identity/Account/Register?returnUrl=%2F");
+    }
+
+    [Test]
+    public async Task ResendEmailConfirmationLink()
+    {
+        await Page.GotoAsync("https://1bdsagroup22chirp.azurewebsites.net/Identity/Account/Login");
+        
+        //check visibility and confirm url after click
+        await Expect(Page.GetByRole(AriaRole.Link, new() { Name = "Resend email confirmation" })).ToBeVisibleAsync();
+        await Page.GetByRole(AriaRole.Link, new() { Name = "Resend email confirmation" }).ClickAsync();
+        await Expect(Page).ToHaveURLAsync("https://1bdsagroup22chirp.azurewebsites.net/Identity/Account/ResendEmailConfirmation");
+
+        //fill out email and check visibility of verification confirmation
+        await Expect(Page.GetByRole(AriaRole.Textbox, new() { Name = "Email" })).ToBeEmptyAsync();
+        await Expect(Page.GetByRole(AriaRole.Button, new() { Name = "Resend" })).ToBeVisibleAsync();
+        await Page.GetByRole(AriaRole.Textbox, new() { Name = "Email" }).ClickAsync();
+        await Page.GetByRole(AriaRole.Textbox, new() { Name = "Email" }).FillAsync("name@example.com");
+        await Page.GetByRole(AriaRole.Button, new() { Name = "Resend" }).ClickAsync();
+        await Expect(Page.GetByText("Verification email sent.")).ToBeVisibleAsync();
+    }
+
+    [Test]
+    public async Task LoginWithGithubButton()
+    {
+        await Page.GotoAsync("https://1bdsagroup22chirp.azurewebsites.net/Identity/Account/Register");
+        await Expect(Page.GetByRole(AriaRole.Button, new() { Name = "GitHub" })).ToBeVisibleAsync();
+        await Page.GetByRole(AriaRole.Button, new() { Name = "GitHub" }).ClickAsync();
+        await Expect(Page).ToHaveURLAsync(new Regex("https://github.com/login\\b.*"));
+    }
+
+
+    //UerTimeline tests
+
+    [Test]
+    public async Task FollowUser()
+    {
+        //Register and login
+        var username =  GenerateUsername();
+        var password = GeneratePassword();
+        await LoginHelper(username, password);
+        
+        //Check visibility of user on public timeline, then click their username link
+        await Page.GotoAsync("https://1bdsagroup22chirp.azurewebsites.net/");
+        await Expect(Page.GetByRole(AriaRole.Paragraph).Filter(new() { HasText = "Jacqualine Gilcoine Starbuck" }).GetByRole(AriaRole.Link)).ToBeVisibleAsync();
+        await Page.GetByRole(AriaRole.Paragraph).Filter(new() { HasText = "Jacqualine Gilcoine Starbuck" }).GetByRole(AriaRole.Link).ClickAsync();
+        
+        //assert url redirect, then check visibility of user timeline and follow button 
+        await Expect(Page).ToHaveURLAsync(new Regex("https://1bdsagroup22chirp.azurewebsites.net/Jacqualine%20Gilcoine\\b.*"));
+        await Expect(Page.GetByRole(AriaRole.Heading, new() { Name = "Jacqualine Gilcoine's Timeline" })).ToBeVisibleAsync();
+        await Expect(Page.GetByRole(AriaRole.Button, new() { Name = "Follow" })).ToBeVisibleAsync();
+        await Expect(Page.Locator("form")).ToContainTextAsync("Follow");
+        
+        //check that button changes to unfollow after clicking it
+        await Page.GetByRole(AriaRole.Button, new() { Name = "Follow" }).ClickAsync();
+        await Expect(Page.Locator("form")).ToContainTextAsync("Unfollow");
+
+        //Go to users personal timeline and assert that followed user shows up on timeline
+        await Page.GetByRole(AriaRole.Link, new() { Name = "my timeline" }).ClickAsync();
+        await Expect(Page.GetByRole(AriaRole.Paragraph).Filter(new() { HasText = "Jacqualine Gilcoine • Following Starbuck now is what we hear the worst. — 08/01" }).GetByRole(AriaRole.Link)).ToBeVisibleAsync();
+        await Expect(Page.GetByText(username + "'s Timeline Jacqualine")).ToBeVisibleAsync();
+    }
+
     
+    
+
+    //Helper functions
+
+    private string GeneratePassword()
+    {
+        var rnd = Guid.NewGuid().ToString("N").Substring(0, 6);
+        return $"A.{rnd}";
+    }
+
+    private string GenerateUsername()
+    {
+        return "user_" + Guid.NewGuid().ToString("N").Substring(0, 8);
+    }
+
+    private async Task RegisterHelper(String username, String password)
+    {
+        await Page.GotoAsync("https://1bdsagroup22chirp.azurewebsites.net/Identity/Account/Register");
+        
+        //Generate random user info
+        var randomUsername = username;
+        var RandomPassword = password;
+        var email = randomUsername + "@gmail.com";
+        
+        //Type in userinfo
+        await Page.GetByRole(AriaRole.Textbox, new() { Name = "Username" }).ClickAsync();
+        await Page.GetByRole(AriaRole.Textbox, new() { Name = "Username" }).FillAsync(randomUsername);
+        await Page.GetByRole(AriaRole.Textbox, new() { Name = "Email" }).ClickAsync();
+        await Page.GetByRole(AriaRole.Textbox, new() { Name = "Email" }).FillAsync(email);
+        await Page.GetByRole(AriaRole.Textbox, new() { Name = "Password", Exact = true }).ClickAsync();
+        await Page.GetByRole(AriaRole.Textbox, new() { Name = "Password", Exact = true }).FillAsync(RandomPassword);
+        await Page.GetByRole(AriaRole.Textbox, new() { Name = "Confirm Password" }).ClickAsync();
+        await Page.GetByRole(AriaRole.Textbox, new() { Name = "Confirm Password" }).FillAsync(RandomPassword);
+        
+        //Click register, check url, then confirm email 
+        await Page.GetByRole(AriaRole.Button, new() { Name = "Register" }).ClickAsync();
+        await Page.GetByRole(AriaRole.Link, new() { Name = "Click here to confirm your" }).ClickAsync();
+
+        //Click back to public timeline 
+        await Page.GetByRole(AriaRole.Link, new() { Name = "public timeline" }).ClickAsync();
+    }
+
+    private async Task LoginHelper(String username, String password)
+    {
+        //Register user
+        await RegisterHelper(username, password);
+        
+        //go to login and fill out info, then go to public timeline
+        await Page.GotoAsync("https://1bdsagroup22chirp.azurewebsites.net/Identity/Account/Login");
+        await Page.GetByRole(AriaRole.Textbox, new() { Name = "Username" }).ClickAsync();
+        await Page.GetByRole(AriaRole.Textbox, new() { Name = "Username" }).FillAsync(username);
+        await Page.GetByRole(AriaRole.Textbox, new() { Name = "Password" }).ClickAsync();
+        await Page.GetByRole(AriaRole.Textbox, new() { Name = "Password" }).FillAsync(password);
+        await Page.GetByRole(AriaRole.Button, new() { Name = "Log in" }).ClickAsync();
+        await Page.GetByRole(AriaRole.Link, new() { Name = "my timeline" }).ClickAsync();
+    }
 }
