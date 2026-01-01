@@ -42,7 +42,7 @@ jobs:
           tag="${GITHUB_REF_NAME:-${{ github.event.release.tag_name }}}"
           release_name="Program-$tag-${{ matrix.target }}"
           
-          dotnet publish Chirp.sln \
+          dotnet publish src/Chirp.Web/Chirp.Web.csproj \
           --framework net8.0 --runtime "${{ matrix.target }}" \
           -c Release \
           -p:PublishSingleFile=true \
