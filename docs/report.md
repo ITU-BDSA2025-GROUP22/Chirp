@@ -69,7 +69,6 @@ Effective teamwork is crucial for managing our project efficiently. This section
 
 A project board was created for each project session. This screenshot illustrates the different phases that issues progressed through before being marked as complete for Sessions 1–5. From Session 6 onward, separate project boards were created for each session. Perhaps this made things unclear and incoherent and we should have just used a single project board for all issues.
 
-The only unresolved task is “Add Documentation”, as the code has not yet been fully documented.
 ### Activity flow
 ![activity flow diagram](Diagram/activityflow.PNG)
 
@@ -112,6 +111,7 @@ This will run every test using in-memory Sqlite databases.
 We use the MIT license
 ## LLMs, ChatGPT, Gemini, and others
 ChatGPT and Gemini was used minimally, and no production code was copied directly from them. It was mainly used to clarify concepts and interpret error messages. Github copilot was also used for the same purpose of explaining error messages related to workflows. Stackoverflow and the official documentation often proved more efficient and reliable than AI suggestions since they have a very narrow context of the project.
+
 
 
 
