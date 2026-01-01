@@ -590,6 +590,23 @@ public class EndToEndTests : PageTest
         
         //Assert users cheep has been deleted and is not part of public timeline anymore
         await Expect(Page.GetByRole(AriaRole.Listitem).Filter(new() { HasText = username + " I wont exist in a sec" }).Locator("div")).Not.ToBeVisibleAsync();
+    }
+
+    [Test]
+    public async Task UserCantLoginAfterDeletingUserdata()
+    {
+        //Register and login
+        var username = GenerateUsername();
+        var password = GeneratePassword();
+        await LoginHelper(username, password);
+        
+        //Go to "My Data" page and assert url
+        await Page.GetByRole(AriaRole.Link, new() { Name = "my data" }).ClickAsync();
+        
+        //Delete userdata
+        await Page.GetByRole(AriaRole.Textbox, new() { Name = "Password" }).ClickAsync();
+        await Page.GetByRole(AriaRole.Textbox, new() { Name = "Password" }).FillAsync(password);
+        await Page.GetByRole(AriaRole.Button, new() { Name = "Yes, delete my account" }).ClickAsync();
         
         //Assert login info is not recognized by chirp anymore
         await Page.GetByRole(AriaRole.Link, new() { Name = "login" }).ClickAsync();
@@ -599,9 +616,8 @@ public class EndToEndTests : PageTest
         await Page.GetByRole(AriaRole.Textbox, new() { Name = "Password" }).FillAsync(password);
         await Page.GetByRole(AriaRole.Button, new() { Name = "Log in" }).ClickAsync();
         await Expect(Page.GetByText("Invalid login attempt.")).ToBeVisibleAsync();
+        
     }
-    
-    
 
     //Helper functions
 
