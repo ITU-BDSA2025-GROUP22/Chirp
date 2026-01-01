@@ -62,9 +62,7 @@ This sequence diagram shows an authenthicated user requesting to access the Chir
 The activity diagram illustrates the three automated workflows in GitHub Actions. The first two columns show the Continuous Integration and Deployment processes, where code is automatically tested with Playwright and deployed to Azure when files are changed. The third column shows the release workflow, which builds and publishes the tool whenever a new version tag is pushed.
 
 ## Team work
-*Show a screenshot of your project board right before hand-in. Briefly describe which tasks are still unresolved, i.e., which features are missing from your applications or which functionality is incomplete.*
-
-*Briefly describe and illustrate the flow of activities that happen from the new creation of an issue (task description), over development, etc. until a feature is finally merged into the main branch of your repository.*
+Effective teamwork is crucial for managing our project efficiently. This section outlines our collaborative workflow, focusing on how we organize tasks using Project Boards and how we handle development through our Activity Flow. These processes help us maintain structure, ensuring that every new feature is properly implemented, reviewed, and integrated into the application.
 
 ### Project board
 ![project board screenshot](Diagram/projectboard.PNG)
@@ -114,6 +112,7 @@ This will run every test using in-memory Sqlite databases.
 We use the MIT license
 ## LLMs, ChatGPT, Gemini, and others
 ChatGPT and Gemini was used minimally, and no production code was copied directly from them. It was mainly used to clarify concepts and interpret error messages. Github copilot was also used for the same purpose of explaining error messages related to workflows. Stackoverflow and the official documentation often proved more efficient and reliable than AI suggestions since they have a very narrow context of the project.
+
 
 
 
