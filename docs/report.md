@@ -42,14 +42,14 @@ The diagram illustrates the deployment architecture on Microsoft Azure. Users ac
 ### Register, Cheep and Like
 
 ![The diagram illustrates the road in which a users must follow when they first enter the application.](Diagram/Register-Cheep-Like.png)
-
+A non authorized user first sees the public timeline. From this page, the user can choose to register and afterwards log in. During registration, the user can choose to register using GitHub. If the registration is not successful, an error message is displayed. If the registration is successful, the user can log in. After logging in, the user is shown the registered public timeline. At this stage, the user can type a cheep and like cheeps from other users. When a cheep is typed, the system checks if it is valid. If the cheep is valid, it is posted and displayed on the timeline. If the cheep is not valid, it is not posted and the user stays on the timeline. While on the timeline A users can choose to like a cheep.
 
 
 ### Follow and Unfollow
 ![The diagram illustrates the Road in which a user can follow and unfollow other users.](Diagram/Follow-Unfollow.png)
-*Illustrate typical scenarios of a user journey through your Chirp! application. That is, start illustrating the first page that is presented to a non-authorized user, illustrate what a non-authorized user can do with your Chirp! application, and finally illustrate what a user can do after authentication.*
 
-*Make sure that the illustrations are in line with the actual behavior of your application.*
+The user starts by viewing the public timeline while being authenticated. From the timeline, the user can click on a cheep author’s username, which opens the author’s personal timeline. The system then checks whether the user already follows this author. If the user does not follow the author, the user can choose to follow them. If the user already follows the author, the user can choose to unfollow them. After following or unfollowing, the user remains on the author’s timeline and can continue browsing cheeps. When trying to open a dummy users timeline no cheeps will be displayed since they are apart of a dummy databse used for initialization.
+
 ## Sequence of functionality/calls through _Chirp!
 For our web application the sequence of data flow shares an overall arhictectural structure. The main difference occurs when two types of users try to make requests to the application. Unauthenticated users, who are not logged will get, and authenticated users, who are logged in. Both requests pass through the ASP.NET core pipeline, to return a rendered Razor view to the user client. When no authentication identity can be resolved, the client is served a lightweight read-only site. In contrast, when an authentication is resolved, the user is served a more enriched experience. 
 
@@ -119,6 +119,7 @@ This will run every test using in-memory Sqlite databases.
 We use the MIT license
 ## LLMs, ChatGPT, Gemini, and others
 ChatGPT and Gemini was used minimally, and no production code was copied directly from them. It was mainly used to clarify concepts and interpret error messages. Github copilot was also used for the same purpose of explaining error messages related to workflows. Stackoverflow and the official documentation often proved more efficient and reliable than AI suggestions since they have a very narrow context of the project.
+
 
 
 
