@@ -66,14 +66,15 @@ This sequence diagram shows an authenthicated user requesting to access the Chir
 *Briefly describe and illustrate the flow of activities that happen from the new creation of an issue (task description), over development, etc. until a feature is finally merged into the main branch of your repository.*
 
 ### Project board
-![project board screenshot](Diagram/projectboard.PNG).
+![project board screenshot](Diagram/projectboard.PNG)
 
-A project board was created for each project session. This screenshot illustrates the different phases that issues progressed through before being marked as complete for Sessions 1–5. From Session 6 onward, separate project boards were created for each session to provide a clearer overview.
+A project board was created for each project session. This screenshot illustrates the different phases that issues progressed through before being marked as complete for Sessions 1–5. From Session 6 onward, separate project boards were created for each session. Perhaps this made things unclear and incoherent and we should have just used a single project board for all issues.
 
 The only unresolved task is “Add Documentation”, as the code has not yet been fully documented.
 ### Activity flow
+![activity flow diagram](Diagram/activityflow.PNG)
 
-
+The workflow activities start with the weekly lectures, where new material is introduced. Next, the README_PROJECT.md file provides descriptions of how the material is to be implemented. From there, issues are created for each new feature described in the project. These issues are assigned to members, who branch out from the main branch to implement their respective tasks. Once an issue is implemented, a pull request is created for other members to review the new feature’s code. If the code is valid and all tests pass, the pull request can be closed and merged into the main branch, and the old feature branch can be deleted.
 ## How to make _Chirp!_ work locally
 Requirements to run _Chirp!_ locally:
 * .NET 8.0.x SDK
@@ -112,6 +113,7 @@ This will run every test using in-memory Sqlite databases.
 We use the MIT license
 ## LLMs, ChatGPT, Gemini, and others
 ChatGPT and Gemini was used minimally, and no production code was copied directly from them. It was mainly used to clarify concepts and interpret error messages. Github copilot was also used for the same purpose of explaining error messages related to workflows. Stackoverflow and the official documentation often proved more efficient and reliable than AI suggestions since they have a very narrow context of the project.
+
 
 
 
