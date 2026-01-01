@@ -39,6 +39,14 @@ Clients interact with the system through a web browser using HTTPS, requesting R
 The diagram illustrates the deployment architecture on Microsoft Azure. Users access the application via a web browser, which connects securely to the Azure App Service using HTTPS. Inside the server, the application logic runs alongside a local dump.sql file, which is used for data storage instead of an external database server. Finally, GitHub is integrated as a third-party service to handle user authentication.
 
 ## User activities
+### Register, Cheep and Like
+
+![The diagram illustrates the road in which a users must follow when they first enter the application.](Diagram/Register-Cheep-Like.png)
+
+
+
+### Follow and Unfollow
+![The diagram illustrates the Road in which a user can follow and unfollow other users.](Diagram/Follow-Unfollow.png)
 *Illustrate typical scenarios of a user journey through your Chirp! application. That is, start illustrating the first page that is presented to a non-authorized user, illustrate what a non-authorized user can do with your Chirp! application, and finally illustrate what a user can do after authentication.*
 
 *Make sure that the illustrations are in line with the actual behavior of your application.*
@@ -111,6 +119,7 @@ This will run every test using in-memory Sqlite databases.
 We use the MIT license
 ## LLMs, ChatGPT, Gemini, and others
 ChatGPT and Gemini was used minimally, and no production code was copied directly from them. It was mainly used to clarify concepts and interpret error messages. Github copilot was also used for the same purpose of explaining error messages related to workflows. Stackoverflow and the official documentation often proved more efficient and reliable than AI suggestions since they have a very narrow context of the project.
+
 
 
 
