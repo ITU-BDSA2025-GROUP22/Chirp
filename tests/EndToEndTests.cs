@@ -26,6 +26,25 @@ public class EndToEndTests : PageTest
         await Context.Tracing.StartAsync(new() { Screenshots = true, Snapshots = true });
     }
 
+    //THEME TEST
+    [Test]
+    public async Task ThemeButtonChanges()
+    {
+        
+        await Page.GotoAsync("https://1bdsagroup22chirp.azurewebsites.net/");
+        
+        //check visibility and value of theme button changes when clicked
+        await Expect(Page.GetByRole(AriaRole.Button, new() { Name = "☀️" })).ToBeVisibleAsync();
+        await Expect(Page.Locator("#theme-toggle")).ToContainTextAsync("☀️");
+        await Page.GetByRole(AriaRole.Button, new() { Name = "☀️" }).ClickAsync();
+        await Expect(Page.GetByRole(AriaRole.Button, new() { Name = "🌙" })).ToBeVisibleAsync();
+        await Expect(Page.Locator("#theme-toggle")).ToContainTextAsync("🌙");
+        await Page.GetByRole(AriaRole.Button, new() { Name = "🌙" }).ClickAsync();
+        await Expect(Page.Locator("#theme-toggle")).ToContainTextAsync("☀️");
+    }
+
+    
+    //UNREGISTERED USER TESTS
     [Test]
     public async Task UnregisteredUserCannotAccessAuthors()
     {
@@ -56,22 +75,6 @@ public class EndToEndTests : PageTest
     }
 
     [Test]
-    public async Task ThemeButtonChanges()
-    {
-        
-        await Page.GotoAsync("https://1bdsagroup22chirp.azurewebsites.net/");
-        
-        //check visibility and value of theme button changes when clicked
-        await Expect(Page.GetByRole(AriaRole.Button, new() { Name = "☀️" })).ToBeVisibleAsync();
-        await Expect(Page.Locator("#theme-toggle")).ToContainTextAsync("☀️");
-        await Page.GetByRole(AriaRole.Button, new() { Name = "☀️" }).ClickAsync();
-        await Expect(Page.GetByRole(AriaRole.Button, new() { Name = "🌙" })).ToBeVisibleAsync();
-        await Expect(Page.Locator("#theme-toggle")).ToContainTextAsync("🌙");
-        await Page.GetByRole(AriaRole.Button, new() { Name = "🌙" }).ClickAsync();
-        await Expect(Page.Locator("#theme-toggle")).ToContainTextAsync("☀️");
-    }
-
-    [Test]
     public async Task UnregisteredUserCanViewOtherAccountTimelines()
     {
         await Page.GotoAsync("https://1bdsagroup22chirp.azurewebsites.net/");
@@ -85,6 +88,7 @@ public class EndToEndTests : PageTest
         await Expect(Page).ToHaveURLAsync(new Regex(".*/Jacqualine%20Gilcoine/?$"));
     }
 
+    //REGISTER TESTS
     [Test]
     public async Task RegisterPageElementVisibility()
     {
@@ -220,8 +224,7 @@ public class EndToEndTests : PageTest
     }
 
 
-    //Login tests
-
+    //LOGIN TESTS
     [Test]
     public async Task LoginPageElementVisibility()
     {
@@ -240,8 +243,7 @@ public class EndToEndTests : PageTest
         await Page.GotoAsync("https://1bdsagroup22chirp.azurewebsites.net/Identity/Account/Login");
 
     }
-
-
+    
     [Test]
     public async Task LogIntoAccount()
     {
@@ -364,10 +366,9 @@ public class EndToEndTests : PageTest
     }
 
 
-    //UerTimeline tests
-
+    //USER TIMELINE TESTS
     [Test]
-    public async Task FollowUser()
+    public async Task UserCanFollowUsersAndViewPostsInPersonalTimeline()
     {
         //Register and login
         var username =  GenerateUsername();
@@ -389,12 +390,156 @@ public class EndToEndTests : PageTest
         await Page.GetByRole(AriaRole.Button, new() { Name = "Follow" }).ClickAsync();
         await Expect(Page.Locator("form")).ToContainTextAsync("Unfollow");
 
-        //Go to users personal timeline and assert that followed user shows up on timeline
+        //Go to users personal timeline and assert that followed user's posts shows up on timeline
         await Page.GetByRole(AriaRole.Link, new() { Name = "my timeline" }).ClickAsync();
         await Expect(Page.GetByRole(AriaRole.Paragraph).Filter(new() { HasText = "Jacqualine Gilcoine • Following Starbuck now is what we hear the worst. — 08/01" }).GetByRole(AriaRole.Link)).ToBeVisibleAsync();
         await Expect(Page.GetByText(username + "'s Timeline Jacqualine")).ToBeVisibleAsync();
     }
 
+    [Test]
+    public async Task UserCanLikeCheeps()
+    {
+        await Page.GotoAsync("https://1bdsagroup22chirp.azurewebsites.net/");
+        
+        //Register and login
+        var username =  GenerateUsername();
+        var password = GeneratePassword();
+        await LoginHelper(username, password);
+        
+        //Go to public timeline
+        await Page.GetByRole(AriaRole.Link, new() { Name = "public timeline" }).ClickAsync();
+        
+        //Assert visibility and value of like/dislike buttons
+        await Expect(Page.GetByRole(AriaRole.Button, new() { Name = "👍" }).First).ToBeVisibleAsync();
+        await Expect(Page.GetByRole(AriaRole.Button, new() { Name = "👎" }).First).ToBeVisibleAsync();
+        await Expect(Page.Locator("#messagelist")).ToContainTextAsync("👍 0");
+        await Expect(Page.Locator("#messagelist")).ToContainTextAsync("👎 0");
+        
+        //Like the post, then unlike the post
+        await Page.GetByRole(AriaRole.Button, new() { Name = "👍" }).First.ClickAsync();
+        await Expect(Page.Locator("#messagelist")).ToContainTextAsync("👍 1");
+        await Page.GetByRole(AriaRole.Button, new() { Name = "👍 1" }).ClickAsync();
+        await Expect(Page.Locator("#messagelist")).ToContainTextAsync("👍 0");
+        
+        //click like then dislike to remove like automatically
+        await Page.GetByRole(AriaRole.Button, new() { Name = "👍" }).First.ClickAsync();
+        await Page.GetByRole(AriaRole.Button, new() { Name = "👎" }).First.ClickAsync();
+        await Expect(Page.Locator("#messagelist")).ToContainTextAsync("👍 0");
+        await Expect(Page.Locator("#messagelist")).ToContainTextAsync("👎 1");
+        await Page.GetByRole(AriaRole.Button, new() { Name = "👍" }).First.ClickAsync();
+        await Expect(Page.Locator("#messagelist")).ToContainTextAsync("👎 0");
+        await Page.GetByRole(AriaRole.Button, new() { Name = "👍" }).First.ClickAsync();
+        await Expect(Page.Locator("#messagelist")).ToContainTextAsync("👍 0");
+        await Expect(Page.Locator("#messagelist")).ToContainTextAsync("👎 0");
+    }
+
+    [Test]
+    public async Task UserCanPostCheepAndViewInPersonalTimeline()
+    {
+        await Page.GotoAsync("https://1bdsagroup22chirp.azurewebsites.net/");
+
+        //Register and login
+        var username =  GenerateUsername();
+        var password = GeneratePassword();
+        await LoginHelper(username, password);
+        
+        //Go to public timeline
+        await Page.GetByRole(AriaRole.Link, new() { Name = "public timeline" }).ClickAsync();
+        
+        //Check visibility of share elements 
+        await Expect(Page.GetByText("What's on your mind " + username + "? Share")).ToBeVisibleAsync();
+        await Expect(Page.GetByRole(AriaRole.Button, new() { Name = "Share" })).ToBeVisibleAsync();
+        
+        //Post cheep and check visibility
+        await Page.Locator("#CheepText").ClickAsync();
+        await Page.Locator("#CheepText").FillAsync("I hate Stuart Little that rat bastard");
+        await Expect(Page.Locator("#CheepText")).ToHaveValueAsync("I hate Stuart Little that rat bastard");
+        await Page.GetByRole(AriaRole.Button, new() { Name = "Share" }).ClickAsync();
+        await Expect(Page.GetByRole(AriaRole.Listitem).Filter(new() { HasText = username + " I hate Stuart Little" }).Locator("div")).ToBeVisibleAsync();
+        await Expect(Page.GetByRole(AriaRole.Link, new() { Name = "my timeline" })).ToBeVisibleAsync();
+        
+        //Go to personal timeline, assert url, then check that the cheep is visible
+        await Page.GetByRole(AriaRole.Link, new() { Name = "my timeline" }).ClickAsync();
+        await Expect(Page).ToHaveURLAsync("https://1bdsagroup22chirp.azurewebsites.net/" + username);
+        await Expect(Page.GetByRole(AriaRole.Heading, new() { Name = username + "'s Timeline" })).ToBeVisibleAsync();
+        await Expect(Page.GetByRole(AriaRole.Listitem)).ToBeVisibleAsync();
+        await Expect(Page.GetByText(username + " I hate Stuart Little")).ToBeVisibleAsync();
+        await Expect(Page.Locator("div").Nth(2)).ToBeVisibleAsync();
+    }
+
+    //MY DATA PAGE TESTS
+    [Test]
+    public async Task MyDataPageVisibility()
+    {
+        await Page.GotoAsync("https://1bdsagroup22chirp.azurewebsites.net/");
+
+        //Register and login
+        var username =  GenerateUsername();
+        var password = GeneratePassword();
+        await LoginHelper(username, password);
+        
+        //Go to "My Data" page and assert url
+        await Page.GetByRole(AriaRole.Link, new() { Name = "my data" }).ClickAsync();
+        await Expect(Page).ToHaveURLAsync("https://1bdsagroup22chirp.azurewebsites.net/Identity/Account/ManageData");
+        
+        //Assert visibility of page elements
+        await Expect(Page.GetByRole(AriaRole.Heading, new() { Name = "My Data" })).ToBeVisibleAsync();
+        await Expect(Page.GetByRole(AriaRole.Heading, new() { Name = "Download your account data" })).ToBeVisibleAsync();
+        await Expect(Page.GetByRole(AriaRole.Button, new() { Name = "Download my data" })).ToBeVisibleAsync();
+        await Expect(Page.GetByRole(AriaRole.Heading, new() { Name = "Delete account" })).ToBeVisibleAsync();
+        await Expect(Page.GetByRole(AriaRole.Button, new() { Name = "Yes, delete my account" })).ToBeVisibleAsync();
+        await Expect(Page.GetByRole(AriaRole.Textbox, new() { Name = "Password" })).ToBeVisibleAsync();
+    }
+
+    [Test]
+    public async Task UserCanDeleteTheirUserdata()
+    {
+        //Register and login
+        var username =  GenerateUsername();
+        var password = GeneratePassword();
+        await LoginHelper(username, password);
+        
+        //Assert account tabs are visible once logged in
+        await Expect(Page.GetByRole(AriaRole.Link, new() { Name = "my timeline" })).ToBeVisibleAsync();
+        await Expect(Page.GetByRole(AriaRole.Link, new() { Name = "logout [" + username + "]" })).ToBeVisibleAsync();
+        await Expect(Page.GetByRole(AriaRole.Link, new() { Name = "my data" })).ToBeVisibleAsync();
+        
+        //Go to timeline, like another users cheep and publish a cheep
+        await Page.GetByRole(AriaRole.Link, new() { Name = "public timeline" }).ClickAsync();
+        await Page.GetByRole(AriaRole.Button, new() { Name = "👍" }).First.ClickAsync();
+        await Page.Locator("#CheepText").FillAsync("I wont exist in a sec");
+        await Page.GetByRole(AriaRole.Button, new() { Name = "Share" }).ClickAsync();
+        await Expect(Page.GetByRole(AriaRole.Listitem).Filter(new() { HasText = username + " I wont exist in a sec" }).Locator("div")).ToBeVisibleAsync();
+        
+        //Go to "My Data" page and assert url
+        await Page.GetByRole(AriaRole.Link, new() { Name = "my data" }).ClickAsync();
+        await Expect(Page).ToHaveURLAsync("https://1bdsagroup22chirp.azurewebsites.net/Identity/Account/ManageData");
+        
+        //Delete userdata
+        await Page.GetByRole(AriaRole.Textbox, new() { Name = "Password" }).ClickAsync();
+        await Page.GetByRole(AriaRole.Textbox, new() { Name = "Password" }).FillAsync(password);
+        await Page.GetByRole(AriaRole.Button, new() { Name = "Yes, delete my account" }).ClickAsync();
+        
+        //Assert url is frontpage now that userdata is deleted
+        await Expect(Page).ToHaveURLAsync("https://1bdsagroup22chirp.azurewebsites.net/");
+        
+        //Assert account tabs are not visible anymore
+        await Expect(Page.GetByRole(AriaRole.Link, new() { Name = "my timeline" })).Not.ToBeVisibleAsync();
+        await Expect(Page.GetByRole(AriaRole.Link, new() { Name = "logout [" + username + "]" })).Not.ToBeVisibleAsync();
+        await Expect(Page.GetByRole(AriaRole.Link, new() { Name = "my data" })).Not.ToBeVisibleAsync();
+        
+        //Assert users cheep has been deleted and is not part of public timeline anymore
+        await Expect(Page.GetByRole(AriaRole.Listitem).Filter(new() { HasText = username + " I wont exist in a sec" }).Locator("div")).Not.ToBeVisibleAsync();
+        
+        //Assert login info is not recognized by chirp anymore
+        await Page.GetByRole(AriaRole.Link, new() { Name = "login" }).ClickAsync();
+        await Page.GetByRole(AriaRole.Textbox, new() { Name = "Username" }).ClickAsync();
+        await Page.GetByRole(AriaRole.Textbox, new() { Name = "Username" }).FillAsync(username);
+        await Page.GetByRole(AriaRole.Textbox, new() { Name = "Username" }).PressAsync("Tab");
+        await Page.GetByRole(AriaRole.Textbox, new() { Name = "Password" }).FillAsync(password);
+        await Page.GetByRole(AriaRole.Button, new() { Name = "Log in" }).ClickAsync();
+        await Expect(Page.GetByText("Invalid login attempt.")).ToBeVisibleAsync();
+    }
     
     
 
