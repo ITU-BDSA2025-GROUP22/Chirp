@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Chirp.Core;
@@ -7,27 +7,69 @@ using System.Security.Claims;
 
 namespace Chirp.Web.Pages;
 
+/// <summary>
+/// The public model class
+/// </summary>
+/// <seealso cref="PageModel"/>
 public class PublicModel : PageModel
 {
+    /// <summary>
+    /// The cheep repository
+    /// </summary>
     private readonly ICheepRepository _cheepRepository;
+    /// <summary>
+    /// The author repository
+    /// </summary>
     private readonly IAuthorRepository _authorRepository;
+    /// <summary>
+    /// The like repository
+    /// </summary>
     private readonly ILikeRepository _likeRepository;
+    /// <summary>
+    /// The cheep service
+    /// </summary>
     private readonly ICheepService _cheepService;
+    /// <summary>
+    /// The context
+    /// </summary>
     private readonly ChirpContext _context;
 
+    /// <summary>
+    /// Gets or sets the value of the cheeps
+    /// </summary>
     public List<ExpandedCheepViewModel> Cheeps { get; set; } = new List<ExpandedCheepViewModel>();
     
+    /// <summary>
+    /// Gets or sets the value of the following
+    /// </summary>
     public List<string> Following { get; set; } = new List<string>(); 
 
+    /// <summary>
+    /// Gets or sets the value of the current page
+    /// </summary>
     public int CurrentPage { get; set; } = 1;
+    /// <summary>
+    /// Gets or sets the value of the has next page
+    /// </summary>
     public bool HasNextPage { get; set; }
     
+    /// <summary>
+    /// Gets or sets the value of the cheep text
+    /// </summary>
     [BindProperty]
     [Required]
     [StringLength(160, ErrorMessage = "Maximum length is 160")]
     [Display(Name = "Cheep Text")]
     public string CheepText { get; set; } = "";
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="PublicModel"/> class
+    /// </summary>
+    /// <param name="cheepRepository">The cheep repository</param>
+    /// <param name="authorRepository">The author repository</param>
+    /// <param name="likeRepository">The like repository</param>
+    /// <param name="cheepService">The cheep service</param>
+    /// <param name="context">The context</param>
     public PublicModel(
         ICheepRepository cheepRepository, 
         IAuthorRepository authorRepository, 
@@ -43,6 +85,11 @@ public class PublicModel : PageModel
         _context = context;
     }
     
+    /// <summary>
+    /// Ons the get using the specified page number
+    /// </summary>
+    /// <param name="pageNumber">The page number</param>
+    /// <returns>A task containing the action result</returns>
     public Task<IActionResult> OnGetAsync([FromQuery] int? pageNumber)
     {
         CurrentPage = pageNumber ?? 1;
@@ -71,6 +118,10 @@ public class PublicModel : PageModel
         return Task.FromResult<IActionResult>(Page());
     }
     
+    /// <summary>
+    /// Ons the post
+    /// </summary>
+    /// <returns>The action result</returns>
     public IActionResult OnPost()
     {
         if (User.Identity?.IsAuthenticated != true)
@@ -116,6 +167,11 @@ public class PublicModel : PageModel
         return RedirectToPage();
     }
     
+    /// <summary>
+    /// Ons the post like using the specified cheep id
+    /// </summary>
+    /// <param name="cheepId">The cheep id</param>
+    /// <returns>The action result</returns>
     public IActionResult OnPostLike(int cheepId)
     {
         if (User.Identity?.IsAuthenticated != true)
@@ -142,6 +198,11 @@ public class PublicModel : PageModel
     }
     
     // ✅ BONUS: Add dislike handler
+    /// <summary>
+    /// Ons the post dislike using the specified cheep id
+    /// </summary>
+    /// <param name="cheepId">The cheep id</param>
+    /// <returns>The action result</returns>
     public IActionResult OnPostDislike(int cheepId)
     {
         if (User.Identity?.IsAuthenticated != true)

@@ -20,6 +20,9 @@ namespace PlaywrightTests;
 
 public class EndToEndTests : PageTest
 {
+    /// <summary>
+    /// Setup this instance
+    /// </summary>
     [SetUp]
     public async Task Setup()
     {
