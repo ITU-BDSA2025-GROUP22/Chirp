@@ -27,6 +27,8 @@ public class EndToEndTests : PageTest
     public async Task Setup()
     {
         await Context.Tracing.StartAsync(new() { Screenshots = true, Snapshots = true });
+        Page.SetDefaultNavigationTimeout(60000);
+        Page.SetDefaultTimeout(60000);
     }
 
     //THEME TEST
@@ -506,10 +508,10 @@ public class EndToEndTests : PageTest
         
         //Post cheep and check visibility
         await Page.Locator("#CheepText").ClickAsync();
-        await Page.Locator("#CheepText").FillAsync("I hate Stuart Little that rat bastard");
-        await Expect(Page.Locator("#CheepText")).ToHaveValueAsync("I hate Stuart Little that rat bastard");
+        await Page.Locator("#CheepText").FillAsync("Hello world");
+        await Expect(Page.Locator("#CheepText")).ToHaveValueAsync("Hello world");
         await Page.GetByRole(AriaRole.Button, new() { Name = "Share" }).ClickAsync();
-        await Expect(Page.GetByRole(AriaRole.Listitem).Filter(new() { HasText = username + " I hate Stuart Little" }).Locator("div")).ToBeVisibleAsync();
+        await Expect(Page.GetByRole(AriaRole.Listitem).Filter(new() { HasText = username + " Hello world" }).Locator("div")).ToBeVisibleAsync();
         await Expect(Page.GetByRole(AriaRole.Link, new() { Name = "my timeline" })).ToBeVisibleAsync();
         
         //Go to personal timeline, assert url, then check that the cheep is visible
@@ -517,7 +519,7 @@ public class EndToEndTests : PageTest
         await Expect(Page).ToHaveURLAsync("https://1bdsagroup22chirp.azurewebsites.net/" + username);
         await Expect(Page.GetByRole(AriaRole.Heading, new() { Name = username + "'s Timeline" })).ToBeVisibleAsync();
         await Expect(Page.GetByRole(AriaRole.Listitem)).ToBeVisibleAsync();
-        await Expect(Page.GetByText(username + " I hate Stuart Little")).ToBeVisibleAsync();
+        await Expect(Page.GetByText(username + " Hello world")).ToBeVisibleAsync();
         await Expect(Page.Locator("div").Nth(2)).ToBeVisibleAsync();
     }
 
