@@ -1,12 +1,14 @@
 ---
 title: "Chirp!"
 subtitle: "Project Report"
+subtitle: "Course: Design Analysis and Software Architecture"
+subtitle: "Course code: BSANDSA1KU"
 author:
-  - "Tore Engberg"
-  - "Timothy Lubowa"
-  - "Muneeb Hussain"
-  - "Nikolai Li"
-  - "Jakob Juhl"
+  - "Tore Engberg, teng@itu.dk"
+  - "Timothy Lubowa, tlub@itu.dk"
+  - "Muneeb Hussain, muhu@itu.dk"
+  - "Nikolai Li, nlil@itu.dk"
+  - "Jakob Juhl, jjuh@itu.dk"
 date: "2026-01-02"
 toc: true
 ---
