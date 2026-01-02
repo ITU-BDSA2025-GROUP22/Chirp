@@ -671,7 +671,7 @@ public class EndToEndTests : PageTest
         
         //Click register, check url, then confirm email 
         await Page.GetByRole(AriaRole.Button, new() { Name = "Register" }).ClickAsync();
-        await Page.GetByRole(AriaRole.Link, new() { Name = "Click here to confirm your" }).ClickAsync();
+        await Page.GetByRole(AriaRole.Link, new() { Name = new Regex("confirm", RegexOptions.IgnoreCase).ToString()}).ClickAsync();
 
         //Click back to public timeline 
         await Page.GetByRole(AriaRole.Link, new() { Name = "public timeline" }).ClickAsync();
