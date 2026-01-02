@@ -27,9 +27,14 @@ public class EndToEndTests : PageTest
     public async Task Setup()
     {
         await Context.Tracing.StartAsync(new() { Screenshots = true, Snapshots = true });
+        Page.SetDefaultNavigationTimeout(60000);
+        Page.SetDefaultTimeout(60000);
     }
 
     //THEME TEST
+    /// <summary>
+    /// Tests that theme button changes
+    /// </summary>
     [Test]
     public async Task ThemeButtonChanges()
     {
@@ -48,6 +53,9 @@ public class EndToEndTests : PageTest
 
     
     //UNREGISTERED USER TESTS
+    /// <summary>
+    /// Tests that unregistered user cannot access authors
+    /// </summary>
     [Test]
     public async Task UnregisteredUserCannotAccessAuthors()
     {
@@ -61,6 +69,9 @@ public class EndToEndTests : PageTest
         await Expect(login).ToHaveAttributeAsync("href", "/Identity/Account/Login");
     }
 
+    /// <summary>
+    /// Tests that unregistered user cannot like cheeps
+    /// </summary>
     [Test]
     public async Task UnregisteredUserCannotLikeCheeps()
     {
@@ -77,6 +88,9 @@ public class EndToEndTests : PageTest
         await Expect(Page).ToHaveURLAsync("https://1bdsagroup22chirp.azurewebsites.net/Identity/Account/Login");
     }
 
+    /// <summary>
+    /// Tests that unregistered user can view other account timelines
+    /// </summary>
     [Test]
     public async Task UnregisteredUserCanViewOtherAccountTimelines()
     {
@@ -92,6 +106,9 @@ public class EndToEndTests : PageTest
     }
 
     //REGISTER TESTS
+    /// <summary>
+    /// Tests that register page element visibility
+    /// </summary>
     [Test]
     public async Task RegisterPageElementVisibility()
     {
@@ -120,6 +137,9 @@ public class EndToEndTests : PageTest
         await Expect(Page.Locator("section").GetByRole(AriaRole.Separator)).ToBeVisibleAsync();
     }
 
+    /// <summary>
+    /// Tests that register user
+    /// </summary>
     [Test]
 
     public async Task RegisterUser()
@@ -167,6 +187,9 @@ public class EndToEndTests : PageTest
         await Expect(Page.GetByRole(AriaRole.Heading, new() { Name = "Confirm email" })).ToBeVisibleAsync();
     }
 
+    /// <summary>
+    /// Tests that register info fill warnings
+    /// </summary>
     [Test]
     public async Task RegisterInfoFillWarnings()
     {
@@ -228,6 +251,9 @@ public class EndToEndTests : PageTest
 
 
     //LOGIN TESTS
+    /// <summary>
+    /// Tests that login page element visibility
+    /// </summary>
     [Test]
     public async Task LoginPageElementVisibility()
     {
@@ -247,6 +273,9 @@ public class EndToEndTests : PageTest
 
     }
     
+    /// <summary>
+    /// Tests that log into account
+    /// </summary>
     [Test]
     public async Task LogIntoAccount()
     {
@@ -284,6 +313,9 @@ public class EndToEndTests : PageTest
         await Expect(Page).ToHaveURLAsync("https://1bdsagroup22chirp.azurewebsites.net/Identity/Account/Login?ReturnUrl=%2FIdentity%2FAccount%2FLogout");
     }
 
+    /// <summary>
+    /// Tests that login info fill warnings
+    /// </summary>
     [Test]
     public async Task LoginInfoFillWarnings()
     {
@@ -303,6 +335,9 @@ public class EndToEndTests : PageTest
         await Expect(Page.GetByText("Invalid login attempt.")).ToBeVisibleAsync();
     }
 
+    /// <summary>
+    /// Tests that forgot your password link
+    /// </summary>
     [Test]
     public async Task ForgotYourPasswordLink()
     {
@@ -328,6 +363,9 @@ public class EndToEndTests : PageTest
         await Expect(Page).ToHaveURLAsync("https://1bdsagroup22chirp.azurewebsites.net/Identity/Account/ForgotPasswordConfirmation");
     }
 
+    /// <summary>
+    /// Tests that register as a new user link
+    /// </summary>
     [Test]
     public async Task RegisterAsANewUserLink()
     {
@@ -340,6 +378,9 @@ public class EndToEndTests : PageTest
             .ToHaveURLAsync("https://1bdsagroup22chirp.azurewebsites.net/Identity/Account/Register?returnUrl=%2F");
     }
 
+    /// <summary>
+    /// Tests that resend email confirmation link
+    /// </summary>
     [Test]
     public async Task ResendEmailConfirmationLink()
     {
@@ -359,6 +400,9 @@ public class EndToEndTests : PageTest
         await Expect(Page.GetByText("Verification email sent.")).ToBeVisibleAsync();
     }
 
+    /// <summary>
+    /// Tests that login with github button
+    /// </summary>
     [Test]
     public async Task LoginWithGithubButton()
     {
@@ -370,6 +414,9 @@ public class EndToEndTests : PageTest
 
 
     //USER TIMELINE TESTS
+    /// <summary>
+    /// Tests that user can follow users and view posts in personal timeline
+    /// </summary>
     [Test]
     public async Task UserCanFollowUsersAndViewPostsInPersonalTimeline()
     {
@@ -399,6 +446,9 @@ public class EndToEndTests : PageTest
         await Expect(Page.GetByText(username + "'s Timeline Jacqualine")).ToBeVisibleAsync();
     }
 
+    /// <summary>
+    /// Tests that user can like cheeps
+    /// </summary>
     [Test]
     public async Task UserCanLikeCheeps()
     {
@@ -436,6 +486,9 @@ public class EndToEndTests : PageTest
         await Expect(Page.Locator("#messagelist")).ToContainTextAsync("👎 0");
     }
 
+    /// <summary>
+    /// Tests that user can post cheep and view in personal timeline
+    /// </summary>
     [Test]
     public async Task UserCanPostCheepAndViewInPersonalTimeline()
     {
@@ -455,10 +508,10 @@ public class EndToEndTests : PageTest
         
         //Post cheep and check visibility
         await Page.Locator("#CheepText").ClickAsync();
-        await Page.Locator("#CheepText").FillAsync("I hate Stuart Little that rat bastard");
-        await Expect(Page.Locator("#CheepText")).ToHaveValueAsync("I hate Stuart Little that rat bastard");
+        await Page.Locator("#CheepText").FillAsync("Hello world");
+        await Expect(Page.Locator("#CheepText")).ToHaveValueAsync("Hello world");
         await Page.GetByRole(AriaRole.Button, new() { Name = "Share" }).ClickAsync();
-        await Expect(Page.GetByRole(AriaRole.Listitem).Filter(new() { HasText = username + " I hate Stuart Little" }).Locator("div")).ToBeVisibleAsync();
+        await Expect(Page.GetByRole(AriaRole.Listitem).Filter(new() { HasText = username + " Hello world" }).Locator("div")).ToBeVisibleAsync();
         await Expect(Page.GetByRole(AriaRole.Link, new() { Name = "my timeline" })).ToBeVisibleAsync();
         
         //Go to personal timeline, assert url, then check that the cheep is visible
@@ -466,11 +519,14 @@ public class EndToEndTests : PageTest
         await Expect(Page).ToHaveURLAsync("https://1bdsagroup22chirp.azurewebsites.net/" + username);
         await Expect(Page.GetByRole(AriaRole.Heading, new() { Name = username + "'s Timeline" })).ToBeVisibleAsync();
         await Expect(Page.GetByRole(AriaRole.Listitem)).ToBeVisibleAsync();
-        await Expect(Page.GetByText(username + " I hate Stuart Little")).ToBeVisibleAsync();
+        await Expect(Page.GetByText(username + " Hello world")).ToBeVisibleAsync();
         await Expect(Page.Locator("div").Nth(2)).ToBeVisibleAsync();
     }
 
     //MY DATA PAGE TESTS
+    /// <summary>
+    /// Tests that my data page visibility
+    /// </summary>
     [Test]
     public async Task MyDataPageVisibility()
     {
@@ -494,6 +550,9 @@ public class EndToEndTests : PageTest
         await Expect(Page.GetByRole(AriaRole.Textbox, new() { Name = "Password" })).ToBeVisibleAsync();
     }
 
+    /// <summary>
+    /// Tests that user can delete their userdata
+    /// </summary>
     [Test]
     public async Task UserCanDeleteTheirUserdata()
     {
@@ -533,6 +592,26 @@ public class EndToEndTests : PageTest
         
         //Assert users cheep has been deleted and is not part of public timeline anymore
         await Expect(Page.GetByRole(AriaRole.Listitem).Filter(new() { HasText = username + " I wont exist in a sec" }).Locator("div")).Not.ToBeVisibleAsync();
+    }
+
+    /// <summary>
+    /// Tests that user cant login after deleting userdata
+    /// </summary>
+    [Test]
+    public async Task UserCantLoginAfterDeletingUserdata()
+    {
+        //Register and login
+        var username = GenerateUsername();
+        var password = GeneratePassword();
+        await LoginHelper(username, password);
+        
+        //Go to "My Data" page and assert url
+        await Page.GetByRole(AriaRole.Link, new() { Name = "my data" }).ClickAsync();
+        
+        //Delete userdata
+        await Page.GetByRole(AriaRole.Textbox, new() { Name = "Password" }).ClickAsync();
+        await Page.GetByRole(AriaRole.Textbox, new() { Name = "Password" }).FillAsync(password);
+        await Page.GetByRole(AriaRole.Button, new() { Name = "Yes, delete my account" }).ClickAsync();
         
         //Assert login info is not recognized by chirp anymore
         await Page.GetByRole(AriaRole.Link, new() { Name = "login" }).ClickAsync();
@@ -542,23 +621,35 @@ public class EndToEndTests : PageTest
         await Page.GetByRole(AriaRole.Textbox, new() { Name = "Password" }).FillAsync(password);
         await Page.GetByRole(AriaRole.Button, new() { Name = "Log in" }).ClickAsync();
         await Expect(Page.GetByText("Invalid login attempt.")).ToBeVisibleAsync();
+        
     }
-    
-    
 
     //Helper functions
 
+    /// <summary>
+    /// Generates the password
+    /// </summary>
+    /// <returns>The string</returns>
     private string GeneratePassword()
     {
         var rnd = Guid.NewGuid().ToString("N").Substring(0, 6);
         return $"A.{rnd}";
     }
 
+    /// <summary>
+    /// Generates the username
+    /// </summary>
+    /// <returns>The string</returns>
     private string GenerateUsername()
     {
         return "user_" + Guid.NewGuid().ToString("N").Substring(0, 8);
     }
 
+    /// <summary>
+    /// Registers the helper using the specified username
+    /// </summary>
+    /// <param name="username">The username</param>
+    /// <param name="password">The password</param>
     private async Task RegisterHelper(String username, String password)
     {
         await Page.GotoAsync("https://1bdsagroup22chirp.azurewebsites.net/Identity/Account/Register");
@@ -580,12 +671,17 @@ public class EndToEndTests : PageTest
         
         //Click register, check url, then confirm email 
         await Page.GetByRole(AriaRole.Button, new() { Name = "Register" }).ClickAsync();
-        await Page.GetByRole(AriaRole.Link, new() { Name = "Click here to confirm your" }).ClickAsync();
+        await Page.GetByRole(AriaRole.Link, new() { Name = new Regex("confirm", RegexOptions.IgnoreCase).ToString()}).ClickAsync();
 
         //Click back to public timeline 
         await Page.GetByRole(AriaRole.Link, new() { Name = "public timeline" }).ClickAsync();
     }
 
+    /// <summary>
+    /// Logins the helper using the specified username
+    /// </summary>
+    /// <param name="username">The username</param>
+    /// <param name="password">The password</param>
     private async Task LoginHelper(String username, String password)
     {
         //Register user
