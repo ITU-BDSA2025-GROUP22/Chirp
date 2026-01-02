@@ -592,6 +592,9 @@ public class EndToEndTests : PageTest
         await Expect(Page.GetByRole(AriaRole.Listitem).Filter(new() { HasText = username + " I wont exist in a sec" }).Locator("div")).Not.ToBeVisibleAsync();
     }
 
+    /// <summary>
+    /// Tests that user cant login after deleting userdata
+    /// </summary>
     [Test]
     public async Task UserCantLoginAfterDeletingUserdata()
     {
